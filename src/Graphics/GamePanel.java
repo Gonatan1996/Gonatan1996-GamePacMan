@@ -28,54 +28,51 @@ public class GamePanel extends JPanel implements Runnable{
         setFocusable(true);
     }
 
-    public void update(PacMan pacMan) {
-       int x = pacMan.getPoint().x,
+    public void updatePacMan(PacMan pacMan) {
+           int x = pacMan.getPoint().x,
                y = pacMan.getPoint().y,
-        tempX = x / width_height,tempY = y / width_height;
+               tempX = x / width_height,
+               tempY = y / width_height;
+
 
        if (ketHandler.up){
            if (tempX * width_height == x){
                if (numOfElement[(y - speed) / width_height][tempX] != 1){
-                   pacMan.getPoint().y -= speed;
-                   pacMan.image = new ImageIcon("src/Images/pacmanUp.jpg");
-                   Coins.upDateCoins(pacMan,numOfElement,tempX,(y - speed) / width_height);
+                   upDateMoveUp(pacMan);
+                 //  Coins.upDateCoins(pacMan,numOfElement,(y - speed) / width_height,tempX);
                }
            } else if (numOfElement[(y - speed) / width_height][tempX] != 1 &&
                    numOfElement[(y - speed) / width_height][tempX + 1] != 1) {
-               pacMan.getPoint().y -= speed;
-               pacMan.image = new ImageIcon("src/Images/pacmanUp.jpg");
+               upDateMoveUp(pacMan);
            }
        }
 
        else if (ketHandler.down) {
            if (tempX * width_height == x) {
                if (numOfElement[(y + width_height ) / width_height][tempX] != 1){
-                   pacMan.getPoint().y += speed;
-                   pacMan.image = new ImageIcon("src/Images/pacmandown.jpg");
-                   Coins.upDateCoins(pacMan,numOfElement,tempX,(y + width_height ) / width_height);
+                   upDateMoveDown(pacMan);
+                  // Coins.upDateCoins(pacMan,numOfElement,tempX,(y + width_height ) / width_height);
                }
            } else if (numOfElement[(y + width_height) / width_height][tempX] != 1 &&
                    numOfElement[(y + width_height ) / width_height][tempX + 1] != 1) {
-               pacMan.getPoint().y += speed;
-               pacMan.image = new ImageIcon("src/Images/pacmandown.jpg");
+               upDateMoveDown(pacMan);
            }
        }
 
        else if (ketHandler.left) {
            if (tempY * width_height == y){
-               if ((x - speed)/ width_height == 0){
-                   pacMan.getPoint().x = 700;
-                   pacMan.image = new ImageIcon("src/Images/pacman.jpg");
-               }
                if (numOfElement[tempY][(x - speed)/ width_height] != 1) {
-                  pacMan.getPoint().x -= speed;
-                  pacMan.image = new ImageIcon("src/Images/pacman.jpg");
-                  Coins.upDateCoins(pacMan,numOfElement,tempX,tempY);
+                   if ((x - speed)/ width_height == 0){
+                       pacMan.getPoint().x = 700;
+                       pacMan.image = new ImageIcon("src/Images/pacman.jpg");
+                   }else {
+                    upDateMoveLeft(pacMan);
+                 //   Coins.upDateCoins(pacMan,numOfElement,tempX,tempY);
+                 }
                }
            } else if (numOfElement[tempY][(x - speed) / width_height] != 1 &&
                    numOfElement[tempY + 1][(x - speed)/ width_height] != 1) {
-               pacMan.getPoint().x -= speed;
-               pacMan.image = new ImageIcon("src/Images/pacman.jpg");
+               upDateMoveLeft(pacMan);
            }
        }
 
@@ -86,23 +83,30 @@ public class GamePanel extends JPanel implements Runnable{
                    pacMan.image = new ImageIcon("src/Images/pacManBack.jpg");
                }
                else if (numOfElement[tempY][(x + width_height) / width_height] != 1){
-                   pacMan.getPoint().x += speed;
-                   pacMan.image = new ImageIcon("src/Images/pacManBack.jpg");
-                   Coins.upDateCoins(pacMan,numOfElement,(x + width_height) / width_height,tempY);
+                   upDateMoveRight(pacMan);
+                  // Coins.upDateCoins(pacMan,numOfElement,(x + width_height) / width_height,tempY);
                }
            } else if (numOfElement[tempY][(x + width_height) / width_height] != 1 &&
                    numOfElement[tempY + 1][(x + width_height) / width_height] != 1) {
-               pacMan.getPoint().x += speed;
-               pacMan.image = new ImageIcon("src/Images/pacManBack.jpg");
+               upDateMoveRight(pacMan);
            }
 
        }
     }
 
-    public void createScreen(int [][] numOfElement, Graphics g, PacMan pacMan,
+    private void upDateMoveRight(PacMan pacMan) {
+        pacMan.getPoint().x += speed;
+        pacMan.image = new ImageIcon("src/Images/pacManBack.jpg");
+    }
+
+    private void upDateMoveLeft(PacMan pacMan) {
+        pacMan.getPoint().x -= speed;
+        pacMan.image = new ImageIcon("src/Images/pacman.jpg");
+    }
+
+    public void createScreen(int [][] board, Graphics g, PacMan pacMan,
                              Ghost ghostPink, Ghost ghostYellow, Ghost ghostGreen, Ghost ghostRed) {
 
-        int[][] board = numOfElement;
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 x = j * width_height;
@@ -114,7 +118,6 @@ public class GamePanel extends JPanel implements Runnable{
                 } else if (board[i][j] == 2) {
                     g.setColor(Color.orange);
                     g.fillOval(x + 7, y + 7, 13, 13);
-                   // Coins coins = new Coins(x, y);
                 } else if (board[i][j] == 3) {
                     g.setColor(Color.red);
                     g.fillOval(x + 5, y + 3, 20, 20);
@@ -140,6 +143,16 @@ public class GamePanel extends JPanel implements Runnable{
         g.drawImage(pacMan.getImage(),pacMan.getPoint().x,pacMan.getPoint().y,width_height,width_height,this);
 
     }
+    public void upDateMoveUp(PacMan pacMan){
+        pacMan.getPoint().y -= speed;
+        pacMan.image = new ImageIcon("src/Images/pacmanUp.jpg");
+    }
+    public void upDateMoveDown(PacMan pacMan){
+        pacMan.getPoint().y += speed;
+        pacMan.image = new ImageIcon("src/Images/pacmandown.jpg");
+    }
+
+
     public static int[][] numOfElement(){
         // Empty = 0,Block = 1,Coins = 2,BigCoins = 3,
         // PacMan = 4,GhostPink = 5,GhostYellow = 6,
@@ -185,11 +198,12 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     public void run() {
         while (true){
-            update(pacMan);
+            updatePacMan(pacMan);
+            Coins.upDateCoins(pacMan,numOfElement);
             repaint();
 
             try {
-                Thread.sleep(20);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

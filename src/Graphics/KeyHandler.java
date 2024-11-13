@@ -1,5 +1,7 @@
 package Graphics;
 
+import Objects.PacMan;
+
 import javax.swing.*;
 import java.awt.event.*;
 
@@ -22,21 +24,57 @@ import java.awt.event.*;
         public void keyPressed(KeyEvent e) {
             int code = e.getKeyCode();
             switch (code){
-                case KeyEvent.VK_UP -> up = true;
-                case KeyEvent.VK_DOWN -> down = true;
-                case KeyEvent.VK_LEFT -> left = true;
-                case KeyEvent.VK_RIGHT -> right = true;
+                case KeyEvent.VK_UP -> {
+                    up = true;
+                    flipToFalse("Up");
+                }
+                case KeyEvent.VK_DOWN -> {
+                    down = true;
+                    flipToFalse("Down");
+                }
+                case KeyEvent.VK_LEFT -> {
+                    left = true;
+                    flipToFalse("Left");
+                }
+                case KeyEvent.VK_RIGHT -> {
+                    right = true;
+                    flipToFalse("Right");
+                }
             }
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-            int code = e.getKeyCode();
-            switch (code){
-                case KeyEvent.VK_UP -> up = false;
-                case KeyEvent.VK_DOWN -> down = false;
-                case KeyEvent.VK_LEFT -> left = false;
-                case KeyEvent.VK_RIGHT -> right = false;
+//
+//            int code = e.getKeyCode();
+//            switch (code){
+//                case KeyEvent.VK_UP -> up = false;
+//                case KeyEvent.VK_DOWN -> down = false;
+//                case KeyEvent.VK_LEFT -> left = false;
+//                case KeyEvent.VK_RIGHT -> right = false;
+//            }
+        }
+
+        public void flipToFalse(String tru){
+            if (tru.equals("Up")){
+                down = false;
+                left = false;
+                right = false;
+            }
+            else if (tru.equals("Down")){
+                up = false;
+                left = false;
+                right = false;
+            }
+            else if (tru.equals("Left")){
+                up = false;
+                down = false;
+                right = false;
+            }
+            else if (tru.equals("Right")){
+                up = false;
+                down = false;
+                left = false;
             }
         }
 
