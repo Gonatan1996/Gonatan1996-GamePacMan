@@ -5,14 +5,18 @@ import java.awt.*;
 
 public class PacMan extends GeneralElement implements Speed {
     private int life = 3;
+    int score;
+    Thread thread;
 
-    public PacMan(int x,int y) {
-        setPoint(x,y);
+
+    public PacMan() {
+       this.point = new Point(13 * width,23 * height);
+       this.image = new ImageIcon("src/Images/pacman.jpg") ;
     }
 
     @Override
     public Point getPoint() {
-        return null;
+        return point;
     }
 
     @Override
@@ -27,8 +31,7 @@ public class PacMan extends GeneralElement implements Speed {
 
     @Override
     public Image getImage() {
-        ImageIcon image1 = new ImageIcon("src/Images/pacman.jpg");
-        return image1.getImage();
+        return image.getImage();
     }
 
     @Override

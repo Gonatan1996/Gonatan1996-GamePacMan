@@ -1,10 +1,20 @@
 package Objects;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Block extends GeneralElement {
+    ArrayList<Block> blocks = new ArrayList<>();
+
+    public Block() {
+    }
+
+    public void addBlock(Block block){
+        blocks.add(block);
+    }
+
     public Block(int x,int y) {
-        setPoint(x,y);
+       setPoint(x,y);
     }
 
     @Override
