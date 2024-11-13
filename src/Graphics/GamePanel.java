@@ -20,6 +20,7 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        System.out.println("Paint");
         createScreen(numOfElement(),g,pacMan,ghostPink,ghostYellow,ghostGreen,ghostRed);
     }
 
@@ -111,7 +112,11 @@ public class GamePanel extends JPanel implements Runnable{
             for (int j = 0; j < board[i].length; j++) {
                 x = j * width_height;
                 y = i * width_height;
-                if (board[i][j] == 1) {
+                if (board[i][j] == 0){
+                    g.setColor(Color.black);
+                    g.fillOval(x + 7, y + 7, 13, 13);
+                }
+                else if (board[i][j] == 1) {
                     block.addBlock(new Block(x,y));
                     g.setColor(Color.cyan);
                     g.fillRect(x, y, 25, 25);

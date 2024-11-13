@@ -50,9 +50,9 @@ public class Coins extends GeneralElement implements Eatable{
     public static int[][] upDateCoins(PacMan pacMan,int[][] arr){
         int x = pacMan.getPoint().x/ pacMan.width,
             y = pacMan.getPoint().y/ pacMan.height;
-//        System.out.println(x);
-//        System.out.println(y);
-//        System.out.println(arr[y][x]);
+        System.out.println(x);
+        System.out.println(y);
+        System.out.println(arr[y][x]);
      if (arr[y][x] == 2){
          arr[y][x] = 0;
          pacMan.score += 10;
