@@ -41,27 +41,48 @@ public class GamePanel extends JPanel implements Runnable {
         setFocusable(true);
     }
 
+    // פונקציות לבדיקת אפשרות תנועה בכיוונים מסוימים
+    private boolean canMoveUp(int tempX, int y) {
+        return !(generalElements[(y-speed)/width_height][tempX] instanceof Block);
+    }
+
+    private boolean canMoveDown(int tempX, int tempY) {
+        return !(generalElements[tempY + 1][tempX] instanceof Block);
+    }
+
+    private boolean canMoveLeft(int x, int tempY) {
+        return !(generalElements[tempY][(x-speed)/width_height] instanceof Block);
+    }
+
+    private boolean canMoveRight(int tempX, int tempY) {
+        return !(generalElements[tempY][tempX + 1] instanceof Block);
+    }
+
+
     public void updatePacMan(PacMan pacMan) {
         int x = pacMan.getPoint().x,
                 y = pacMan.getPoint().y,
                 tempX = x / width_height,
                 tempY = y / width_height;
+        String currentDirection = pacMan.getCurrentDirection();
+        String preferredDirection = pacMan.getPreferredDirection();
+
 
         if (keyHandler.up) {
             if (tempX * width_height == x) {
-                if (!(generalElements[(y - speed) / width_height][tempX] instanceof Block)) {
+                if (canMoveUp(tempX,y)) {
                     upDateMoveUp(pacMan);
                 }
             }
         }if (keyHandler.down) {
             if (tempX * width_height == x) {
-                if (!(generalElements[(y + width_height) / width_height][tempX] instanceof Block)) {
+                if (canMoveDown(tempX,tempY)) {
                     upDateMoveDown(pacMan);
                 }
             }
         }if (keyHandler.left) {
             if (tempY * width_height == y) {
-                if (!(generalElements[tempY][(x - speed) / width_height] instanceof Block)) {
+                if (canMoveLeft(x,tempY)) {
                     if ((x) == 0) {
                         pacMan.getPoint().x = 700;
                         pacMan.image = new ImageIcon("src/Images/pacman.jpg");
@@ -75,7 +96,7 @@ public class GamePanel extends JPanel implements Runnable {
                 if ((x + width_height) / width_height == 28) {
                     pacMan.getPoint().x = -24;
                     pacMan.image = new ImageIcon("src/Images/pacManBack.jpg");
-                } else if (!(generalElements[tempY][(x + width_height) / width_height] instanceof Block)) {
+                } else if (canMoveRight(tempX,tempY)) {
                     upDateMoveRight(pacMan);
                 }
             }
@@ -263,6 +284,7 @@ public class GamePanel extends JPanel implements Runnable {
             upDateGhost(ghostPink);
             upDateGhost(ghostGreen);
             Coins.upDateCoins(pacMan,coins,generalElements);
+            BigCoins.upDateBigCoins(pacMan,bigCoins,generalElements);
             repaint();
 
             try {

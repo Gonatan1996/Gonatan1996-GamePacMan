@@ -8,7 +8,24 @@ public class PacMan extends GeneralElement implements Speed {
     public int counter = 0;
     int score;
     Thread thread;
+    String currentDirection ;
+    String preferredDirection ;
 
+    public String getCurrentDirection() {
+        return currentDirection;
+    }
+
+    public void setCurrentDirection(String currentDirection) {
+        this.currentDirection = currentDirection;
+    }
+
+    public String getPreferredDirection() {
+        return preferredDirection;
+    }
+
+    public void setPreferredDirection(String preferredDirection) {
+        this.preferredDirection = preferredDirection;
+    }
 
     public PacMan() {
        this.point = new Point(13 * width,21 * height);
