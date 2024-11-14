@@ -1,12 +1,20 @@
 package Objects;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Coins extends GeneralElement implements Eatable{
+    ArrayList<Coins> coins = new ArrayList<>();
 
+    public Coins() {
+    }
 
-    public Coins(int x,int y) {
+    public Coins addCoins(Coins newCoins){
+        coins.add(newCoins);
+        return newCoins;
+    }
+    public Coins(int x, int y) {
         setPoint(x,y);
     }
 
@@ -27,7 +35,8 @@ public class Coins extends GeneralElement implements Eatable{
 
     @Override
     public Image getImage() {
-        return null;
+        ImageIcon imageIcon = new ImageIcon("src/Images/Coins.png");
+        return imageIcon.getImage();
     }
 
     @Override
@@ -46,17 +55,17 @@ public class Coins extends GeneralElement implements Eatable{
     }
 
 
+    public static void upDateCoins(PacMan pacMan,Coins coins,GeneralElement[][] generalElements){
+        int x = pacMan.getPoint().x,
+            y = pacMan.getPoint().y;
 
-    public static int[][] upDateCoins(PacMan pacMan,int[][] arr){
-        int x = pacMan.getPoint().x/ pacMan.width,
-            y = pacMan.getPoint().y/ pacMan.height;
-        System.out.println(x);
-        System.out.println(y);
-        System.out.println(arr[y][x]);
-     if (arr[y][x] == 2){
-         arr[y][x] = 0;
-         pacMan.score += 10;
-     }
-     return arr;
+        for (int i = 0; i < coins.coins.size(); i++) {
+            Coins coins1 = coins.coins.get(i);
+            if (x == coins1.getPoint().x && y == coins1.getPoint().y){
+                coins.coins.remove(i);
+                generalElements[y / coins.height][x / coins.width] = new Empty();
+                pacMan.score += 10;
+            }
+        }
     }
 }

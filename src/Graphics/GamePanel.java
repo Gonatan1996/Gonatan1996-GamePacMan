@@ -4,159 +4,215 @@ import Objects.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
-public class GamePanel extends JPanel implements Runnable{
-    int x,y;
+public class GamePanel extends JPanel implements Runnable {
+    Random random = new Random();
+    int x, y;
     final int speed = 5;
     final int width_height = 25;
     static int[][] numOfElement = numOfElement();
+    GeneralElement[][] generalElements = new GeneralElement[numOfElement.length][numOfElement[0].length];
 
-    KeyHandler ketHandler = new KeyHandler();
-    Thread gameTread ;
+
+    KeyHandler keyHandler = new KeyHandler();
+    Thread gameTread;
 
     Block block = new Block();
     PacMan pacMan = new PacMan();
-    Ghost ghostPink = null,ghostYellow = null,ghostGreen = null,ghostRed = null;
+    Coins coins = new Coins();
+    BigCoins bigCoins = new BigCoins();
+    Ghost ghostYellow = new Ghost(12*width_height,13*width_height,"yellow"),
+            ghostPink = new Ghost(13*width_height,13*width_height,"pink"),
+            ghostRed = new Ghost(14*width_height,13*width_height,"red"),
+            ghostGreen = new Ghost(15*width_height,13*width_height,"green");
+
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         System.out.println("Paint");
-        createScreen(numOfElement(),g,pacMan,ghostPink,ghostYellow,ghostGreen,ghostRed);
+        createScreen(g);
     }
 
     public GamePanel() {
-        this.addKeyListener(ketHandler);
+        this.addKeyListener(keyHandler);
+        this.generalElements = createArrayElement();
         setFocusable(true);
     }
 
     public void updatePacMan(PacMan pacMan) {
-           int x = pacMan.getPoint().x,
-               y = pacMan.getPoint().y,
-               tempX = x / width_height,
-               tempY = y / width_height;
+        int x = pacMan.getPoint().x,
+                y = pacMan.getPoint().y,
+                tempX = x / width_height,
+                tempY = y / width_height;
 
-
-       if (ketHandler.up){
-           if (tempX * width_height == x){
-               if (numOfElement[(y - speed) / width_height][tempX] != 1){
-                   upDateMoveUp(pacMan);
-                 //  Coins.upDateCoins(pacMan,numOfElement,(y - speed) / width_height,tempX);
-               }
-           } else if (numOfElement[(y - speed) / width_height][tempX] != 1 &&
-                   numOfElement[(y - speed) / width_height][tempX + 1] != 1) {
-               upDateMoveUp(pacMan);
-           }
-       }
-
-       else if (ketHandler.down) {
-           if (tempX * width_height == x) {
-               if (numOfElement[(y + width_height ) / width_height][tempX] != 1){
-                   upDateMoveDown(pacMan);
-                  // Coins.upDateCoins(pacMan,numOfElement,tempX,(y + width_height ) / width_height);
-               }
-           } else if (numOfElement[(y + width_height) / width_height][tempX] != 1 &&
-                   numOfElement[(y + width_height ) / width_height][tempX + 1] != 1) {
-               upDateMoveDown(pacMan);
-           }
-       }
-
-       else if (ketHandler.left) {
-           if (tempY * width_height == y){
-               if (numOfElement[tempY][(x - speed)/ width_height] != 1) {
-                   if ((x - speed)/ width_height == 0){
-                       pacMan.getPoint().x = 700;
-                       pacMan.image = new ImageIcon("src/Images/pacman.jpg");
-                   }else {
-                    upDateMoveLeft(pacMan);
-                 //   Coins.upDateCoins(pacMan,numOfElement,tempX,tempY);
-                 }
-               }
-           } else if (numOfElement[tempY][(x - speed) / width_height] != 1 &&
-                   numOfElement[tempY + 1][(x - speed)/ width_height] != 1) {
-               upDateMoveLeft(pacMan);
-           }
-       }
-
-       else if (ketHandler.right) {
-           if (tempY * width_height == y){
-               if ((x + width_height) / width_height == 28){
-                   pacMan.getPoint().x = -24;
-                   pacMan.image = new ImageIcon("src/Images/pacManBack.jpg");
-               }
-               else if (numOfElement[tempY][(x + width_height) / width_height] != 1){
-                   upDateMoveRight(pacMan);
-                  // Coins.upDateCoins(pacMan,numOfElement,(x + width_height) / width_height,tempY);
-               }
-           } else if (numOfElement[tempY][(x + width_height) / width_height] != 1 &&
-                   numOfElement[tempY + 1][(x + width_height) / width_height] != 1) {
-               upDateMoveRight(pacMan);
-           }
-
-       }
-    }
-
-    private void upDateMoveRight(PacMan pacMan) {
-        pacMan.getPoint().x += speed;
-        pacMan.image = new ImageIcon("src/Images/pacManBack.jpg");
-    }
-
-    private void upDateMoveLeft(PacMan pacMan) {
-        pacMan.getPoint().x -= speed;
-        pacMan.image = new ImageIcon("src/Images/pacman.jpg");
-    }
-
-    public void createScreen(int [][] board, Graphics g, PacMan pacMan,
-                             Ghost ghostPink, Ghost ghostYellow, Ghost ghostGreen, Ghost ghostRed) {
-
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                x = j * width_height;
-                y = i * width_height;
-                if (board[i][j] == 0){
-                    g.setColor(Color.black);
-                    g.fillOval(x + 7, y + 7, 13, 13);
+        if (keyHandler.up) {
+            if (tempX * width_height == x) {
+                if (!(generalElements[(y - speed) / width_height][tempX] instanceof Block)) {
+                    upDateMoveUp(pacMan);
                 }
-                else if (board[i][j] == 1) {
-                    block.addBlock(new Block(x,y));
-                    g.setColor(Color.cyan);
-                    g.fillRect(x, y, 25, 25);
-                } else if (board[i][j] == 2) {
-                    g.setColor(Color.orange);
-                    g.fillOval(x + 7, y + 7, 13, 13);
-                } else if (board[i][j] == 3) {
-                    g.setColor(Color.red);
-                    g.fillOval(x + 5, y + 3, 20, 20);
-                    BigCoins bigCoins = new BigCoins(x, y);
-               }
-                 else if (board[i][j] == 5) {
-                    if (ghostPink == null) ghostPink = new Ghost(x, y);
-                    g.drawImage(ghostPink.getImagePink(), x, y, width_height, width_height, this);
-                } else if (board[i][j] == 6) {
-                    if (ghostYellow == null) ghostYellow = new Ghost(x, y);
-                    g.drawImage(ghostYellow.getImageYellow(), x, y, width_height, width_height, this);
-                } else if (board[i][j] == 7) {
-                    if (ghostGreen == null) ghostGreen = new Ghost(x, y);
-                    g.drawImage(ghostGreen.getImageGreen(), x, y, width_height, width_height, this);
-                } else if (board[i][j] == 8) {
-                    if (ghostRed == null) ghostRed = new Ghost(x, y);
-                    g.drawImage(ghostRed.getImageRed(), x, y, width_height, width_height, this);
+            }
+        }if (keyHandler.down) {
+            if (tempX * width_height == x) {
+                if (!(generalElements[(y + width_height) / width_height][tempX] instanceof Block)) {
+                    upDateMoveDown(pacMan);
                 }
-
+            }
+        }if (keyHandler.left) {
+            if (tempY * width_height == y) {
+                if (!(generalElements[tempY][(x - speed) / width_height] instanceof Block)) {
+                    if ((x) == 0) {
+                        pacMan.getPoint().x = 700;
+                        pacMan.image = new ImageIcon("src/Images/pacman.jpg");
+                    } else {
+                        upDateMoveLeft(pacMan);
+                    }
+                }
+            }
+        }if (keyHandler.right) {
+            if (tempY * width_height == y) {
+                if ((x + width_height) / width_height == 28) {
+                    pacMan.getPoint().x = -24;
+                    pacMan.image = new ImageIcon("src/Images/pacManBack.jpg");
+                } else if (!(generalElements[tempY][(x + width_height) / width_height] instanceof Block)) {
+                    upDateMoveRight(pacMan);
+                }
             }
         }
-        if (pacMan == null) pacMan = new PacMan();
-        g.drawImage(pacMan.getImage(),pacMan.getPoint().x,pacMan.getPoint().y,width_height,width_height,this);
-
-    }
-    public void upDateMoveUp(PacMan pacMan){
-        pacMan.getPoint().y -= speed;
-        pacMan.image = new ImageIcon("src/Images/pacmanUp.jpg");
-    }
-    public void upDateMoveDown(PacMan pacMan){
-        pacMan.getPoint().y += speed;
-        pacMan.image = new ImageIcon("src/Images/pacmandown.jpg");
     }
 
+    public void upDateGhost(Ghost ghost){
+        int random1 = random.nextInt(1,5);
+        ghost.randomMove(random1);
+        int x = ghost.getPoint().x,
+                y = ghost.getPoint().y,
+                tempX = x / width_height,
+                tempY = y / width_height;
+        if (ghost.up){
+            if (tempX * width_height == x) {
+                if (!(generalElements[(y - speed) / width_height][tempX] instanceof Block)) {
+                    upDateMoveUp(ghost);
+                }
+            }
+        } else if (ghost.down) {
+            if (tempX * width_height == x) {
+                if (!(generalElements[(y + width_height) / width_height][tempX] instanceof Block)) {
+                    upDateMoveDown(ghost);
+                }
+            }
+        } else if (ghost.left) {
+            if (tempY * width_height == y) {
+                if (!(generalElements[tempY][(x - speed) / width_height] instanceof Block)) {
+                    if ((x) == 0) {
+                        ghost.getPoint().x = 700;
+                    } else {
+                        upDateMoveLeft(ghost);
+                    }
+                }
+            }
+        } else if (ghost.right) {
+            if (tempY * width_height == y) {
+                if ((x + width_height) / width_height == 28) {
+                    ghost.getPoint().x = -24;
+                } else if (!(generalElements[tempY][(x + width_height) / width_height] instanceof Block)) {
+                    upDateMoveRight(ghost);
+                }
+            }
+        }
+
+
+    }
+
+
+    public void createScreen(Graphics g) {
+        for (int i = 0; i < generalElements.length; i++) {
+            for (int j = 0; j < generalElements[i].length; j++) {
+                x = j * width_height;
+                y = i * width_height;
+                if (generalElements[i][j] != null) {
+                    g.drawImage(generalElements[i][j].getImage(), x, y, width_height, width_height, this);
+                }
+            }
+        }
+        g.drawImage(ghostRed.getImage(), ghostRed.getPoint().x,ghostRed.getPoint().y,width_height, width_height, this);
+        g.drawImage(ghostYellow.getImage(), ghostYellow.getPoint().x,ghostYellow.getPoint().y,width_height, width_height, this);
+        g.drawImage(ghostPink.getImage(), ghostPink.getPoint().x,ghostPink.getPoint().y,width_height, width_height, this);
+        g.drawImage(ghostGreen.getImage(), ghostGreen.getPoint().x,ghostGreen.getPoint().y,width_height, width_height, this);
+        g.drawImage(pacMan.getImage(), pacMan.getPoint().x, pacMan.getPoint().y, width_height, width_height, this);
+
+    }
+
+    public void upDateMoveUp(GeneralElement element) {
+        element.getPoint().y -= speed;
+//        if (element instanceof Ghost){
+//            Ghost ghost = (Ghost) element;
+//        }
+        if (element instanceof PacMan) {
+            if (pacMan.counter % 5 == 0){
+                pacMan.setImage(new ImageIcon("src/Images/pacmanUp1.jpg"));
+            }else {
+                pacMan.setImage(new ImageIcon("src/Images/pacmanUp2.jpg"));
+            }
+        }
+    }
+
+    public void upDateMoveDown(GeneralElement element) {
+        element.getPoint().y += speed;
+        if (element instanceof PacMan) {
+            if (pacMan.counter % 7 == 0){
+                pacMan.setImage(new ImageIcon("src/Images/pacmanDown1.jpg"));
+            }else {
+                pacMan.setImage(new ImageIcon("src/Images/pacmanDown2.jpg"));
+            }
+        }
+    }
+
+    public void upDateMoveRight(GeneralElement element) {
+        element.getPoint().x += speed;
+        if (element instanceof PacMan) {
+            if (pacMan.counter % 7 == 0) {
+                pacMan.setImage(new ImageIcon("src/Images/pacmanRight1.jpg"));
+            } else {
+                pacMan.setImage(new ImageIcon("src/Images/pacmanRight2.jpg"));
+            }
+        }
+    }
+
+    public void upDateMoveLeft(GeneralElement element) {
+        element.getPoint().x -= speed;
+        if (element instanceof PacMan) {
+            if (pacMan.counter % 7 == 0){
+                pacMan.setImage(new ImageIcon("src/Images/pacmanLeft1.jpg"));
+            }else {
+                pacMan.setImage(new ImageIcon("src/Images/pacmanLeft2.jpg"));
+            }
+        }
+    }
+
+
+
+    public  GeneralElement[][] createArrayElement(){
+        for (int i = 0; i < numOfElement.length; i++) {
+            for (int j = 0; j < numOfElement[i].length; j++) {
+                x = j * width_height;
+                y = i * width_height;
+                if (numOfElement[i][j] == 0){
+                    generalElements[i][j] = new Empty();
+                }
+                if (numOfElement[i][j] == 1){
+                    generalElements[i][j] = block.addBlock(new Block(x,y));
+                }
+                else if (numOfElement[i][j] == 2){
+                    generalElements[i][j] = coins.addCoins(new Coins(x,y));
+                }
+                else if (numOfElement[i][j] == 3){
+                    generalElements[i][j] = bigCoins.addBigCoins(new BigCoins(x,y));
+                }
+            }
+        }
+        return generalElements;
+    }
 
     public static int[][] numOfElement(){
         // Empty = 0,Block = 1,Coins = 2,BigCoins = 3,
@@ -175,14 +231,12 @@ public class GamePanel extends JPanel implements Runnable{
                 {1,1,1,1,1,1,2,1,1,1,1,1,0,1,1,0,1,1,1,1,1,2,1,1,1,1,1,1},
                 {0,0,0,0,0,1,2,1,1,1,1,1,0,1,1,0,1,1,1,1,1,2,1,0,0,0,0,0},
                 {0,0,0,0,0,1,2,1,1,0,0,0,0,0,0,0,0,0,0,1,1,2,1,0,0,0,0,0},
+                {1,1,1,1,1,1,2,1,1,0,1,1,1,1,0,1,1,1,0,1,1,2,1,1,1,1,1,1},
+                {0,0,0,0,0,0,2,0,0,0,1,1,0,0,0,0,1,1,0,0,0,2,0,0,0,0,0,0},
+                {1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1},
                 {0,0,0,0,0,1,2,1,1,0,0,0,0,0,0,0,0,0,0,1,1,2,1,0,0,0,0,0},
-                {1,1,1,1,1,1,2,1,1,0,0,1,1,0,0,1,1,0,0,1,1,2,1,1,1,1,1,1},
-                {0,0,0,0,0,0,2,0,0,0,0,1,5,6,7,8,1,0,0,0,0,2,0,0,0,0,0,0},
-                {1,1,1,1,1,1,2,1,1,0,0,1,1,1,1,1,1,0,0,1,1,2,1,1,1,1,1,1},
-                {0,0,0,0,0,1,2,1,1,0,0,0,0,0,0,0,0,0,0,1,1,2,1,0,0,0,0,0},
-                {0,0,0,0,0,1,2,1,1,0,0,0,0,0,0,0,0,0,0,1,1,2,1,0,0,0,0,0},
-                {0,0,0,0,0,1,2,1,1,0,0,1,1,1,1,1,1,0,0,1,1,2,1,0,0,0,0,0},
-                {1,1,1,1,1,1,2,1,1,0,0,1,1,1,1,1,1,0,0,1,1,2,1,1,1,1,1,1},
+                {0,0,0,0,0,1,2,1,1,0,1,1,1,1,1,1,1,1,0,1,1,2,1,0,0,0,0,0},
+                {1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1},
                 {1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,1},
                 {1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1},
                 {1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1},
@@ -204,11 +258,15 @@ public class GamePanel extends JPanel implements Runnable{
     public void run() {
         while (true){
             updatePacMan(pacMan);
-            Coins.upDateCoins(pacMan,numOfElement);
+            upDateGhost(ghostYellow);
+            upDateGhost(ghostRed);
+            upDateGhost(ghostPink);
+            upDateGhost(ghostGreen);
+            Coins.upDateCoins(pacMan,coins,generalElements);
             repaint();
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(60);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

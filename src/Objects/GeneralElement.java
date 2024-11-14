@@ -9,4 +9,5 @@ public abstract class  GeneralElement implements Element{
     protected int width = 25,height = 25;
     public ImageIcon image;
 
+
 }
