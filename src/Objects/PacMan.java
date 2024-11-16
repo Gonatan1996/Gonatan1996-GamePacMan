@@ -6,7 +6,7 @@ import java.awt.*;
 public class PacMan extends GeneralElement implements Speed {
     private int life = 3;
     public int counter = 0;
-    int score;
+    public int score;
     Thread thread;
     String currentDirection ;
     String preferredDirection ;
@@ -30,6 +30,7 @@ public class PacMan extends GeneralElement implements Speed {
     public PacMan() {
        this.point = new Point(13 * width,21 * height);
        this.image = new ImageIcon("src/Images/pacmanLeft1.jpg") ;
+       this.currentDirection = "";
     }
 
     @Override

@@ -8,6 +8,19 @@ public abstract class  GeneralElement implements Element{
     protected boolean isEaten;
     protected int width = 25,height = 25;
     public ImageIcon image;
+    public void setPreferredDirection(String preferredDirection) {
+    }
+
+    public String getPreferredDirection() {
+        return "";
+    }
+
+    public void setCurrentDirection(String currentDirection) {
+    }
+
+    public String getCurrentDirection() {
+        return "";
+    }
 
 
 }

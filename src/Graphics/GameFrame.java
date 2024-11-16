@@ -10,6 +10,8 @@ public class GameFrame extends JFrame {
         this.setLayout(new BorderLayout());
         JPanel topSpace = new JPanel();
         topSpace.setBackground(Color.BLACK);
+//        int score = gamePanel.pacMan.score;
+//        JLabel jLabel = new JLabel("" + score);
         JPanel bottomSpace = new JPanel();
         bottomSpace.setBackground(Color.BLACK);
         topSpace.setPreferredSize(new Dimension(0, 50));

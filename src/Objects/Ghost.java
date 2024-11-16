@@ -2,45 +2,44 @@ package Objects;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.Random;
+import java.util.TimerTask;
 
-public class Ghost extends GeneralElement implements Eatable, Speed{
+public class Ghost extends GeneralElement implements Eatable, Speed {
+    Random random = new Random();
     private double Speed;
-    public boolean up, down, left, right;
     public boolean red,yellow,green,pink;
+    public boolean up, down, left, right;
+    String currentDirection = "UP";
+    String preferredDirection ;
 
     public Ghost(int x,int y,String booleanColor) {
         setPoint(x,y);
         currentColor(booleanColor);
     }
-    public void randomMove(int random){
-        switch (random){
-            case 1 -> up = true;
-            case 2 -> down = true;
-            case 3 -> left = true;
-            case 4 -> right = true;
-        }
-        flipToFalse();
-    }
-    public void flipToFalse(){
-        if (up){
-            down = false;
-            left = false;
-            right = false;
-        }
-        else if (down){
-            up = false;
-            left = false;
-            right = false;
-        }
-        else if (left){
-            up = false;
-            down = false;
-            right = false;
-        }
-        else if (right){
-            up = false;
-            down = false;
-            left = false;
+    public String randomMove() {
+        int random1 = random.nextInt(1,5);
+        switch (random1) {
+            case 1 -> {
+                up = true;
+                return "UP";
+            }
+            case 2 -> {
+                down = true;
+                return "DOWN";
+            }
+            case 3 -> {
+                right = true;
+                return "RIGHT";
+            }
+            case 4 -> {
+                left = true;
+                return "LEFT";
+            }
+            default -> {
+                return "";
+            }
         }
     }
 
@@ -100,4 +99,19 @@ public class Ghost extends GeneralElement implements Eatable, Speed{
         }
     }
 
+    public void setPreferredDirection(String preferredDirection) {
+        this.preferredDirection = preferredDirection;
+    }
+
+    public String getPreferredDirection() {
+        return this.preferredDirection;
+    }
+
+    public void setCurrentDirection(String currentDirection) {
+        this.currentDirection = currentDirection;
+    }
+
+    public String getCurrentDirection() {
+        return this.currentDirection;
+    }
 }

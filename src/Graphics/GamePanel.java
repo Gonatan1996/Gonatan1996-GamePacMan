@@ -7,7 +7,6 @@ import java.awt.*;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements Runnable {
-    Random random = new Random();
     int x, y;
     final int speed = 5;
     final int width_height = 25;
@@ -31,7 +30,6 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.println("Paint");
         createScreen(g);
     }
 
@@ -41,110 +39,103 @@ public class GamePanel extends JPanel implements Runnable {
         setFocusable(true);
     }
 
-    // פונקציות לבדיקת אפשרות תנועה בכיוונים מסוימים
+
     private boolean canMoveUp(int tempX, int y) {
-        return !(generalElements[(y-speed)/width_height][tempX] instanceof Block);
+        return tempX * width_height == pacMan.getPoint().x && !(generalElements[(y-speed)/width_height][tempX] instanceof Block);
     }
 
     private boolean canMoveDown(int tempX, int tempY) {
-        return !(generalElements[tempY + 1][tempX] instanceof Block);
+        return tempX * width_height == pacMan.getPoint().x && !(generalElements[tempY + 1][tempX] instanceof Block);
     }
 
     private boolean canMoveLeft(int x, int tempY) {
-        return !(generalElements[tempY][(x-speed)/width_height] instanceof Block);
+        return tempY * width_height == pacMan.getPoint().y && !(generalElements[tempY][(x - speed)/width_height] instanceof Block);
     }
 
     private boolean canMoveRight(int tempX, int tempY) {
-        return !(generalElements[tempY][tempX + 1] instanceof Block);
+        return tempY * width_height == pacMan.getPoint().y && !(generalElements[tempY][tempX + 1] instanceof Block);
     }
 
-
     public void updatePacMan(PacMan pacMan) {
+        if (keyHandler.up) pacMan.setPreferredDirection("UP");
+        if (keyHandler.down) pacMan.setPreferredDirection("DOWN");
+        if (keyHandler.right){
+            flipDirectionRight(pacMan);
+            pacMan.setPreferredDirection("RIGHT");
+        }
+        if (keyHandler.left){
+            flipDirectionLeft(pacMan);
+            pacMan.setPreferredDirection("LEFT");
+        }
+        String preferredDirection = pacMan.getPreferredDirection();
+
         int x = pacMan.getPoint().x,
                 y = pacMan.getPoint().y,
                 tempX = x / width_height,
                 tempY = y / width_height;
-        String currentDirection = pacMan.getCurrentDirection();
-        String preferredDirection = pacMan.getPreferredDirection();
 
 
-        if (keyHandler.up) {
-            if (tempX * width_height == x) {
-                if (canMoveUp(tempX,y)) {
-                    upDateMoveUp(pacMan);
-                }
-            }
-        }if (keyHandler.down) {
-            if (tempX * width_height == x) {
-                if (canMoveDown(tempX,tempY)) {
-                    upDateMoveDown(pacMan);
-                }
-            }
-        }if (keyHandler.left) {
-            if (tempY * width_height == y) {
-                if (canMoveLeft(x,tempY)) {
-                    if ((x) == 0) {
-                        pacMan.getPoint().x = 700;
-                        pacMan.image = new ImageIcon("src/Images/pacman.jpg");
-                    } else {
-                        upDateMoveLeft(pacMan);
-                    }
-                }
-            }
-        }if (keyHandler.right) {
-            if (tempY * width_height == y) {
-                if ((x + width_height) / width_height == 28) {
-                    pacMan.getPoint().x = -24;
-                    pacMan.image = new ImageIcon("src/Images/pacManBack.jpg");
-                } else if (canMoveRight(tempX,tempY)) {
-                    upDateMoveRight(pacMan);
-                }
-            }
+        if (preferredDirection != null && canTurn(preferredDirection, tempX, tempY, x, y)) {
+            pacMan.setCurrentDirection(preferredDirection);
+            pacMan.setPreferredDirection(null);
         }
+       moveElement(pacMan,tempX,tempY,x,y);
+        }
+
+    private boolean canTurn(String preferred,int tempX,int tempY,int x,int y){
+        return switch (preferred) {
+            case "UP" -> canMoveUp(tempX, y);
+            case "DOWN" -> canMoveDown(tempX, tempY);
+            case "RIGHT" -> canMoveRight(tempX, tempY);
+            case "LEFT" -> canMoveLeft(x, tempY);
+            default -> false;
+        };
     }
 
     public void upDateGhost(Ghost ghost){
-        int random1 = random.nextInt(1,5);
-        ghost.randomMove(random1);
         int x = ghost.getPoint().x,
                 y = ghost.getPoint().y,
                 tempX = x / width_height,
                 tempY = y / width_height;
-        if (ghost.up){
-            if (tempX * width_height == x) {
-                if (!(generalElements[(y - speed) / width_height][tempX] instanceof Block)) {
-                    upDateMoveUp(ghost);
-                }
+        switch (ghost.randomMove()){
+            case "UP" -> ghost.setPreferredDirection("UP");
+            case "DOWN" -> ghost.setPreferredDirection("DOWN");
+            case "RIGHT" -> {
+                flipDirectionRight(ghost);
+                ghost.setPreferredDirection("RIGHT");
             }
-        } else if (ghost.down) {
-            if (tempX * width_height == x) {
-                if (!(generalElements[(y + width_height) / width_height][tempX] instanceof Block)) {
-                    upDateMoveDown(ghost);
-                }
-            }
-        } else if (ghost.left) {
-            if (tempY * width_height == y) {
-                if (!(generalElements[tempY][(x - speed) / width_height] instanceof Block)) {
-                    if ((x) == 0) {
-                        ghost.getPoint().x = 700;
-                    } else {
-                        upDateMoveLeft(ghost);
-                    }
-                }
-            }
-        } else if (ghost.right) {
-            if (tempY * width_height == y) {
-                if ((x + width_height) / width_height == 28) {
-                    ghost.getPoint().x = -24;
-                } else if (!(generalElements[tempY][(x + width_height) / width_height] instanceof Block)) {
-                    upDateMoveRight(ghost);
-                }
+            case "LEFT" -> {
+                flipDirectionLeft(ghost);
+                ghost.setPreferredDirection("LEFT");
             }
         }
+        String preferredDirection = ghost.getPreferredDirection();
 
+        if (preferredDirection != null && canTurn(preferredDirection, tempX, tempY, x, y)) {
+            ghost.setCurrentDirection(preferredDirection);
+            ghost.setPreferredDirection(null);
+        }
+        moveElement(ghost,tempX,tempY,x,y);
 
     }
 
+    public void moveElement(GeneralElement generalElement,int tempX,int tempY,int x,int y){
+
+        switch (generalElement.getCurrentDirection()) {
+            case "UP" -> {
+                if (canTurn("UP", tempX, tempY, x, y)) upDateMoveUp(generalElement);
+            }
+            case "DOWN" -> {
+                if (canTurn("DOWN", tempX, tempY, x, y)) upDateMoveDown(generalElement);
+            }
+            case "RIGHT" -> {
+                if (canTurn("RIGHT", tempX, tempY, x, y)) upDateMoveRight(generalElement);
+            }
+            case "LEFT" -> {
+                if (canTurn("LEFT", tempX, tempY, x, y)) upDateMoveLeft(generalElement);
+            }
+        }
+    }
 
     public void createScreen(Graphics g) {
         for (int i = 0; i < generalElements.length; i++) {
@@ -166,9 +157,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void upDateMoveUp(GeneralElement element) {
         element.getPoint().y -= speed;
-//        if (element instanceof Ghost){
-//            Ghost ghost = (Ghost) element;
-//        }
+
         if (element instanceof PacMan) {
             if (pacMan.counter % 5 == 0){
                 pacMan.setImage(new ImageIcon("src/Images/pacmanUp1.jpg"));
@@ -210,8 +199,6 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
-
-
 
     public  GeneralElement[][] createArrayElement(){
         for (int i = 0; i < numOfElement.length; i++) {
@@ -279,10 +266,10 @@ public class GamePanel extends JPanel implements Runnable {
     public void run() {
         while (true){
             updatePacMan(pacMan);
-            upDateGhost(ghostYellow);
-            upDateGhost(ghostRed);
-            upDateGhost(ghostPink);
-            upDateGhost(ghostGreen);
+                upDateGhost(ghostRed);
+                upDateGhost(ghostPink);
+                upDateGhost(ghostGreen);
+                upDateGhost(ghostYellow);
             Coins.upDateCoins(pacMan,coins,generalElements);
             BigCoins.upDateBigCoins(pacMan,bigCoins,generalElements);
             repaint();
@@ -294,10 +281,20 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
+
     public void startGame(){
         gameTread = new Thread(this);
         gameTread.start();
     }
 
-
+    public void flipDirectionRight(GeneralElement generalElement) {
+        if ((generalElement.getPoint().x + width_height == 700)){
+            generalElement.getPoint().x = 0;
+        }
+    }
+    public void flipDirectionLeft(GeneralElement generalElement){
+        if ((generalElement.getPoint().x) == 0) {
+            generalElement.getPoint().x = 700;
+        }
+}
 }
