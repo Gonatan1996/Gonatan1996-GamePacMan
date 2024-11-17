@@ -18,7 +18,7 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     public String randomMove() {
         int random11 = random.nextInt(0, 40);
         if (random11 == 0) {
-            int random1 = random.nextInt(1, 5);
+            int random1 = random.nextInt(4);
             switch (random1) {
                 case 1 -> {
                     up = true;
@@ -80,11 +80,11 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     @Override
     public Image getImage() {
         ImageIcon imageIcon = new ImageIcon();
-        if(red)imageIcon = new ImageIcon("src/Images/GhostRed.jpg");
-        if (green)imageIcon = new ImageIcon("src/Images/ghostGreen.jpg");
-        if (pink)imageIcon = new ImageIcon("src/Images/ghostPink.jpg");
-        if (yellow)imageIcon = new ImageIcon("src/Images/ghostYello.jpg");
-        if (isEaten)imageIcon = new ImageIcon("src/Images/ghostEaten.jpg");
+        if(red && ! isEaten)imageIcon = new ImageIcon("src/Images/GhostRed.jpg");
+        if (green && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostGreen.jpg");
+        if (pink && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostPink.jpg");
+        if (yellow && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostYello.jpg");
+        if (isEaten)imageIcon = new ImageIcon("src/Images/ghostIten.jpg");
         return imageIcon.getImage();
     }
 
@@ -103,6 +103,28 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
 
     public String getDirection() {
         return this.direction;
+    }
+
+    public void GhostInDanger(PacMan pacMan){
+    if (pacMan.getPoint().x == this.getPoint().x && pacMan.getPoint().y == this.getPoint().y) {
+        if (yellow) {
+            this.point.x = 12 * 20;
+            this.point.y = 13 * 20;
+        }
+        if (pink) {
+            this.point.x = 13 * 20;
+            this.point.y = 13 * 20;
+        }
+        if (red) {
+            this.point.x = 14 * 20;
+            this.point.y = 13 * 20;
+        }
+        if (green) {
+            this.point.x = 15 * 20;
+            this.point.y = 13 * 20;
+        }
+        pacMan.score += 200;
+    }
     }
 
 }

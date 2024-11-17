@@ -45,14 +45,7 @@ import java.awt.event.*;
 
         @Override
         public void keyReleased(KeyEvent e) {
-//
-//            int code = e.getKeyCode();
-//            switch (code){
-//                case KeyEvent.VK_UP -> up = false;
-//                case KeyEvent.VK_DOWN -> down = false;
-//                case KeyEvent.VK_LEFT -> left = false;
-//                case KeyEvent.VK_RIGHT -> right = false;
-//            }
+
         }
 
         public void flipToFalse(String tru){

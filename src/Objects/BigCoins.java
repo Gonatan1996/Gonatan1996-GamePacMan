@@ -38,7 +38,7 @@ public class BigCoins extends Coins implements Eatable{
         ImageIcon imageIcon = new ImageIcon("src/Images/BigCoins.jpg");
         return imageIcon.getImage();
     }
-    public static void upDateBigCoins(PacMan pacMan,BigCoins bigCoins,GeneralElement[][] generalElements){
+    public static boolean upDateBigCoins(PacMan pacMan,BigCoins bigCoins,GeneralElement[][] generalElements) {
         int x = pacMan.getPoint().x,
                 y = pacMan.getPoint().y;
 
@@ -47,9 +47,11 @@ public class BigCoins extends Coins implements Eatable{
             if (x == bigcoins1.getPoint().x && y == bigcoins1.getPoint().y){
                 bigCoins.bigCoins.remove(i);
                 generalElements[y / bigCoins.height][x / bigCoins.width] = new Empty();
-                pacMan.score += 200;
+                pacMan.score += 50;
+                return true;
             }
         }
+        return false;
     }
 
 }

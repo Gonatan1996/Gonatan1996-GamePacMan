@@ -20,9 +20,10 @@ public class GameFrame extends JFrame {
         this.add(gamePanel, BorderLayout.CENTER);    // פאנל המשחק במרכז
         this.add(bottomSpace, BorderLayout.SOUTH);   // פס ריק תחתון
         gamePanel.setBackground(Color.BLACK);
-        this.setSize(715, 865);
+        this.setSize(575, 700);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(Color.BLACK);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
         gamePanel.startGame();
     }

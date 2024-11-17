@@ -18,7 +18,8 @@ public class BottomSpace extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         for (int i = 0; i < pacMan.life; i++) {
-            g.drawImage(pacMan.getImage(), i * 30,0,25,25,this);
+            ImageIcon imageIcon = new ImageIcon("src/Images/pacmanLeft1.jpg");
+            g.drawImage(imageIcon.getImage(), i * 30,0,25,25,this);
         }
 
     }

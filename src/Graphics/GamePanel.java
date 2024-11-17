@@ -7,11 +7,11 @@ import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
     int x, y;
-    final int speed = 5;
-    final int width_height = 25;
+    final int speed = 4;
+    final int width_height = 20;
     static int[][] numOfElement = numOfElement();
     GeneralElement[][] generalElements = new GeneralElement[numOfElement.length][numOfElement[0].length];
-
+    boolean stopGame = false;
 
     KeyHandler keyHandler = new KeyHandler();
     Thread gameTread;
@@ -30,12 +30,16 @@ public class GamePanel extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         createScreen(g);
+        if (stopGame && pacMan.life > -1){
+            stopGame = false;
+            pacMan.startAgain();
+        }
     }
 
     public GamePanel() {
         this.addKeyListener(keyHandler);
-        this.generalElements = createArrayElement();
         setFocusable(true);
+        this.generalElements = createArrayElement();
     }
 
     private boolean canMoveUp(int tempX, int y) {
@@ -241,24 +245,33 @@ public class GamePanel extends JPanel implements Runnable {
 
         return board;
     }
-
-
     @Override
     public void run() {
-        while (true){
+        while (!stopGame){
                 updatePacMan(pacMan);
                 upDateGhost(ghostRed);
                 upDateGhost(ghostPink);
                 upDateGhost(ghostGreen);
                 upDateGhost(ghostYellow);
-                pacMan.lossLife(ghostPink);
-                pacMan.lossLife(ghostRed);
-                pacMan.lossLife(ghostGreen);
-                pacMan.lossLife(ghostYellow);
+                if(pacMan.lossLife(ghostPink) ||
+                    (pacMan.lossLife(ghostRed)) ||
+                    (pacMan.lossLife(ghostGreen)) ||
+                    (pacMan.lossLife(ghostYellow))){
+                    stopGame = true;
+                }
             Coins.upDateCoins(pacMan,coins,generalElements);
-            BigCoins.upDateBigCoins(pacMan,bigCoins,generalElements);
-            repaint();
+            if (BigCoins.upDateBigCoins(pacMan,bigCoins,generalElements)) {
+                pacMan.pacManEatGhost(ghostGreen);
+                pacMan.pacManEatGhost(ghostPink);
+                pacMan.pacManEatGhost(ghostRed);
+                pacMan.pacManEatGhost(ghostYellow);
+                ghostYellow.GhostInDanger(pacMan);
+                ghostGreen.GhostInDanger(pacMan);
+                ghostRed.GhostInDanger(pacMan);
+                ghostPink.GhostInDanger(pacMan);
 
+            }
+            repaint();
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -277,9 +290,12 @@ public class GamePanel extends JPanel implements Runnable {
             generalElement.getPoint().x = 0;
         }
     }
+
     public void flipDirectionLeft(GeneralElement generalElement){
         if ((generalElement.getPoint().x) == 0) {
             generalElement.getPoint().x = 700;
         }
 }
+
+
 }

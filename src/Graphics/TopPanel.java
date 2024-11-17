@@ -20,7 +20,7 @@ public class TopPanel extends JPanel implements Runnable{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         textScore = new JTextField( "Score : " + pacMan.score);
-        textScore.setSize(150,25);
+        textScore.setSize(150,50);
         textScore.setFont(new Font("",Font.BOLD,24));
         textScore.setEditable(true);
         this.add(textScore);
@@ -37,7 +37,7 @@ public class TopPanel extends JPanel implements Runnable{
         while (true) {
             repaint();
             try {
-                Thread.sleep(300);
+                Thread.sleep(150);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
