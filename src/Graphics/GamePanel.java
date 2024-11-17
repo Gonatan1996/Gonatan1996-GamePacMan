@@ -4,7 +4,6 @@ import Objects.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 
 public class GamePanel extends JPanel implements Runnable {
     int x, y;
@@ -38,7 +37,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.generalElements = createArrayElement();
         setFocusable(true);
     }
-
 
     private boolean canMoveUp(int tempX, int y) {
         return tempX * width_height == pacMan.getPoint().x && !(generalElements[(y-speed)/width_height][tempX] instanceof Block);
@@ -76,7 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 
         if (preferredDirection != null && canTurn(preferredDirection, tempX, tempY, x, y)) {
-            pacMan.setCurrentDirection(preferredDirection);
+            pacMan.setDirection(preferredDirection);
             pacMan.setPreferredDirection(null);
         }
        moveElement(pacMan,tempX,tempY,x,y);
@@ -97,31 +95,14 @@ public class GamePanel extends JPanel implements Runnable {
                 y = ghost.getPoint().y,
                 tempX = x / width_height,
                 tempY = y / width_height;
-        switch (ghost.randomMove()){
-            case "UP" -> ghost.setPreferredDirection("UP");
-            case "DOWN" -> ghost.setPreferredDirection("DOWN");
-            case "RIGHT" -> {
-                flipDirectionRight(ghost);
-                ghost.setPreferredDirection("RIGHT");
-            }
-            case "LEFT" -> {
-                flipDirectionLeft(ghost);
-                ghost.setPreferredDirection("LEFT");
-            }
-        }
-        String preferredDirection = ghost.getPreferredDirection();
-
-        if (preferredDirection != null && canTurn(preferredDirection, tempX, tempY, x, y)) {
-            ghost.setCurrentDirection(preferredDirection);
-            ghost.setPreferredDirection(null);
-        }
+        ghost.setDirection(ghost.randomMove());
         moveElement(ghost,tempX,tempY,x,y);
 
     }
 
     public void moveElement(GeneralElement generalElement,int tempX,int tempY,int x,int y){
 
-        switch (generalElement.getCurrentDirection()) {
+        switch (generalElement.getDirection()) {
             case "UP" -> {
                 if (canTurn("UP", tempX, tempY, x, y)) upDateMoveUp(generalElement);
             }
@@ -265,17 +246,21 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
         while (true){
-            updatePacMan(pacMan);
+                updatePacMan(pacMan);
                 upDateGhost(ghostRed);
                 upDateGhost(ghostPink);
                 upDateGhost(ghostGreen);
                 upDateGhost(ghostYellow);
+                pacMan.lossLife(ghostPink);
+                pacMan.lossLife(ghostRed);
+                pacMan.lossLife(ghostGreen);
+                pacMan.lossLife(ghostYellow);
             Coins.upDateCoins(pacMan,coins,generalElements);
             BigCoins.upDateBigCoins(pacMan,bigCoins,generalElements);
             repaint();
 
             try {
-                Thread.sleep(60);
+                Thread.sleep(20);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

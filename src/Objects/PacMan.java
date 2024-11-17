@@ -4,19 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PacMan extends GeneralElement implements Speed {
-    private int life = 3;
+    public int life = 2;
     public int counter = 0;
-    public int score;
-    Thread thread;
+    public int score = 0;
     String currentDirection ;
     String preferredDirection ;
 
-    public String getCurrentDirection() {
+    public String getDirection() {
         return currentDirection;
     }
 
-    public void setCurrentDirection(String currentDirection) {
-        this.currentDirection = currentDirection;
+    public void setDirection(String direction) {
+        this.currentDirection = direction;
     }
 
     public String getPreferredDirection() {
@@ -72,4 +71,11 @@ public class PacMan extends GeneralElement implements Speed {
     public double getSpeed() {
         return 0;
     }
+
+    public void lossLife(Ghost ghost){
+        if (this.point.x == ghost.getPoint().x && this.point.y == ghost.getPoint().y){
+            life--;
+        }
+    }
+
 }

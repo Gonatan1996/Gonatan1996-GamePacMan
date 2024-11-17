@@ -15,10 +15,10 @@ public abstract class  GeneralElement implements Element{
         return "";
     }
 
-    public void setCurrentDirection(String currentDirection) {
+    public void setDirection(String direction) {
     }
 
-    public String getCurrentDirection() {
+    public String getDirection() {
         return "";
     }
 
