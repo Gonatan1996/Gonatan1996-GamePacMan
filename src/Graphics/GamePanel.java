@@ -11,6 +11,8 @@ public class GamePanel extends JPanel implements Runnable {
     int x, y;
     final int speed = 4;
     final int width_height = 20;
+    boolean startGame = true,endGame;
+    JTextField textStart;
     static int[][] numOfElement = numOfElement();
     GeneralElement[][] generalElements = new GeneralElement[numOfElement.length][numOfElement[0].length];
 
@@ -31,11 +33,15 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        createScreen(g);
-        if (pacMan.stopGame && pacMan.life > -1){
-            pacMan.stopGame = false;
-            pacMan.startAgain();
-        }
+//        if (startGame){
+//            screenStartGame();
+//        }else {
+            createScreenGame(g);
+            if (pacMan.stopGame && pacMan.life > -1) {
+                pacMan.stopGame = false;
+                pacMan.startAgain();
+            }
+ //       }
     }
 
     public GamePanel() {
@@ -152,7 +158,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void createScreen(Graphics g) {
+    public void createScreenGame(Graphics g) {
         for (int i = 0; i < generalElements.length; i++) {
             for (int j = 0; j < generalElements[i].length; j++) {
                 x = j * width_height;
@@ -323,5 +329,18 @@ public class GamePanel extends JPanel implements Runnable {
         }
 }
 
+    public void screenStartGame(){
+        textStart = new JTextField("Start Game now",1);
+        textStart.setSize(565,50);
+        textStart.setFont(new Font("",Font.BOLD, 30));
+        this.add(textStart);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                startGame = false;
+            }
+        },3000);
+    }
 
 }
