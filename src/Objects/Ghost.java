@@ -2,15 +2,13 @@ package Objects;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class Ghost extends GeneralElement implements Eatable, Speed {
     Random random = new Random();
     private double Speed;
     public boolean red,yellow,green,pink;
-    public boolean up, down, left, right;
+    public boolean up, down, left, right,canMove,startPoint;
     String direction = "UP";
 
     public Ghost(int x,int y,String booleanColor) {
@@ -22,32 +20,40 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
         }
     }
     public String randomMove() {
-        final int[] random1 = new int[1];
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                random1[0] = random.nextInt(5);
+        startPoint(this);
+        if (startPoint) {
+            if (canMove) {
+                if (up) return "UP";
+                if (down) return "DOWN";
+                if (left) return "LEFT";
+                if (right) return "RIGHT";
             }
-        }, 5);
-        switch (random1[0]) {
-            case 1 -> {
-                up = true;
-                return "UP";
-            }
-            case 2 -> {
-                down = true;
-                return "DOWN";
-            }
-            case 3 -> {
-                right = true;
-                return "RIGHT";
-            }
-            case 4 -> {
-                left = true;
-                return "LEFT";
-            }
+            int random1 = random.nextInt(5);
 
+            switch (random1) {
+                case 1 -> {
+                    up = true;
+                    canMove = true;
+                    return "UP";
+                }
+                case 2 -> {
+                    down = true;
+                    canMove = true;
+                    return "DOWN";
+                }
+                case 3 -> {
+                    System.out.println("right");
+                    right = true;
+                    canMove = true;
+                    return "RIGHT";
+                }
+                case 4 -> {
+                    left = true;
+                    canMove = true;
+                    return "LEFT";
+                }
+
+            }
         }
         return "";
     }
@@ -116,26 +122,53 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
         return this.direction;
     }
 
-    public void GhostInDanger(PacMan pacMan){
-    if (pacMan.getPoint().x == this.getPoint().x && pacMan.getPoint().y == this.getPoint().y) {
-        if (yellow) {
-            this.point.x = 12 * 20;
-            this.point.y = 13 * 20;
+    public void GhostInDanger(PacMan pacMan) {
+        if (isEaten) {
+            if (pacMan.getPoint().x == this.getPoint().x && pacMan.getPoint().y == this.getPoint().y) {
+                if (yellow) {
+                    this.point.x = 12 * 20;
+                    this.point.y = 13 * 20;
+                }
+                if (pink) {
+                    this.point.x = 13 * 20;
+                    this.point.y = 13 * 20;
+                }
+                if (red) {
+                    this.point.x = 14 * 20;
+                    this.point.y = 13 * 20;
+                }
+                if (green) {
+                    this.point.x = 15 * 20;
+                    this.point.y = 13 * 20;
+                }
+                pacMan.score += 200;
+            }
         }
-        if (pink) {
-            this.point.x = 13 * 20;
-            this.point.y = 13 * 20;
-        }
-        if (red) {
-            this.point.x = 14 * 20;
-            this.point.y = 13 * 20;
-        }
-        if (green) {
-            this.point.x = 15 * 20;
-            this.point.y = 13 * 20;
-        }
-        pacMan.score += 200;
     }
+
+    public void startPoint(Ghost ghost){
+        if (ghost.point.x == 280 && ghost.point.y == 260){
+            System.out.println("red " + red);
+            System.out.println("yellow " + yellow);
+            System.out.println("green " + green);
+            System.out.println("pink " + pink);
+            startPoint = true;
+            canMove = true;
+            up = true;
+        }
+        if (ghost.point.x > 220 && ghost.point.x < 280
+        && ghost.point.y == 260){
+            startPoint = true;
+            canMove = true;
+            right = true;
+        }
+        if (ghost.point.x > 280 && ghost.point.x <= 300
+                && ghost.point.y == 260){
+            startPoint = true;
+            canMove = true;
+            left = true;
+        }
+
     }
 
 }

@@ -4,6 +4,8 @@ import Objects.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements Runnable {
     int x, y;
@@ -11,7 +13,7 @@ public class GamePanel extends JPanel implements Runnable {
     final int width_height = 20;
     static int[][] numOfElement = numOfElement();
     GeneralElement[][] generalElements = new GeneralElement[numOfElement.length][numOfElement[0].length];
-    boolean stopGame = false;
+
 
     KeyHandler keyHandler = new KeyHandler();
     Thread gameTread;
@@ -20,18 +22,18 @@ public class GamePanel extends JPanel implements Runnable {
     PacMan pacMan = new PacMan();
     Coins coins = new Coins();
     BigCoins bigCoins = new BigCoins();
-    Ghost ghostYellow = new Ghost(12*width_height,11*width_height,"yellow"),
-            ghostPink = new Ghost(13*width_height,11*width_height,"pink"),
-            ghostRed = new Ghost(14*width_height,11*width_height,"red"),
-            ghostGreen = new Ghost(15*width_height,11*width_height,"green");
+    Ghost ghostYellow = new Ghost(12*width_height,13*width_height,"yellow"),
+            ghostPink = new Ghost(13*width_height,13*width_height,"pink"),
+            ghostRed = new Ghost(14*width_height,13*width_height,"red"),
+            ghostGreen = new Ghost(15*width_height,13*width_height,"green");
 
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         createScreen(g);
-        if (stopGame && pacMan.life > -1){
-            stopGame = false;
+        if (pacMan.stopGame && pacMan.life > -1){
+            pacMan.stopGame = false;
             pacMan.startAgain();
         }
     }
@@ -108,20 +110,44 @@ public class GamePanel extends JPanel implements Runnable {
 
         switch (generalElement.getDirection()) {
             case "UP" -> {
-                if (canTurn(generalElement,"UP", tempX, tempY, x, y))
+                if (canTurn(generalElement,"UP", tempX, tempY, x, y)){
                     upDateMoveUp(generalElement);
+                }else {
+                    if (generalElement instanceof Ghost) {
+                        ((Ghost) generalElement).canMove = false;
+                        ((Ghost) generalElement).up = false;
+                    }
+                }
             }
             case "DOWN" -> {
-                if (canTurn(generalElement,"DOWN", tempX, tempY, x, y))
+                if (canTurn(generalElement,"DOWN", tempX, tempY, x, y)) {
                     upDateMoveDown(generalElement);
+                }else {
+                    if (generalElement instanceof Ghost) {
+                        ((Ghost) generalElement).canMove = false;
+                        ((Ghost) generalElement).down = false;
+                    }
+                }
             }
             case "RIGHT" -> {
-                if (canTurn(generalElement,"RIGHT", tempX, tempY, x, y))
+                if (canTurn(generalElement,"RIGHT", tempX, tempY, x, y)){
                     upDateMoveRight(generalElement);
+                }else {
+                    if (generalElement instanceof Ghost) {
+                        ((Ghost) generalElement).canMove = false;
+                        ((Ghost) generalElement).right = false;
+                    }
+                }
             }
             case "LEFT" -> {
-                if (canTurn(generalElement,"LEFT", tempX, tempY, x, y))
+                if (canTurn(generalElement,"LEFT", tempX, tempY, x, y)){
                     upDateMoveLeft(generalElement);
+                }else {
+                    if (generalElement instanceof Ghost) {
+                        ((Ghost) generalElement).canMove = false;
+                        ((Ghost) generalElement).left = false;
+                    }
+                }
             }
         }
     }
@@ -212,9 +238,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public static int[][] numOfElement(){
-        // Empty = 0,Block = 1,Coins = 2,BigCoins = 3,
-        // PacMan = 4,GhostPink = 5,GhostYellow = 6,
-        // GhostGreen = 7,GhostRed = 8;
+        // Empty = 0,Block = 1,Coins = 2,BigCoins = 3;
+
         int[][] board = {
                 {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
                 {1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,1},
@@ -251,17 +276,19 @@ public class GamePanel extends JPanel implements Runnable {
     }
     @Override
     public void run() {
-        while (!stopGame){
-                updatePacMan(pacMan);
-                upDateGhost(ghostRed);
-                upDateGhost(ghostPink);
-                upDateGhost(ghostGreen);
-                upDateGhost(ghostYellow);
+        while (!pacMan.stopGame){
+
+                    updatePacMan(pacMan);
+                    upDateGhost(ghostRed);
+                    upDateGhost(ghostPink);
+                    upDateGhost(ghostGreen);
+                    upDateGhost(ghostYellow);
+
                 if(pacMan.lossLife(ghostPink) ||
                     (pacMan.lossLife(ghostRed)) ||
                     (pacMan.lossLife(ghostGreen)) ||
                     (pacMan.lossLife(ghostYellow))){
-                    stopGame = true;
+                    pacMan.stopGame = true;
                 }
             Coins.upDateCoins(pacMan,coins,generalElements);
             if (BigCoins.upDateBigCoins(pacMan,bigCoins,generalElements)) {
@@ -269,11 +296,6 @@ public class GamePanel extends JPanel implements Runnable {
                 pacMan.pacManEatGhost(ghostPink);
                 pacMan.pacManEatGhost(ghostRed);
                 pacMan.pacManEatGhost(ghostYellow);
-                ghostYellow.GhostInDanger(pacMan);
-                ghostGreen.GhostInDanger(pacMan);
-                ghostRed.GhostInDanger(pacMan);
-                ghostPink.GhostInDanger(pacMan);
-
             }
             repaint();
             try {

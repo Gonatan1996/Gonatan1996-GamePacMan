@@ -13,6 +13,7 @@ public class PacMan extends GeneralElement implements Speed{
     public int eatTimer = 0;
     String currentDirection ;
     String preferredDirection ;
+    public boolean stopGame = false;
 
 
     public String getDirection() {
@@ -78,6 +79,8 @@ public class PacMan extends GeneralElement implements Speed{
         if (this.point.x == ghost.getPoint().x && this.point.y == ghost.getPoint().y && eatTimer == 0){
             life--;
             return true;
+        }else{
+            ghost.GhostInDanger(this);
         }
         return false;
     }
@@ -89,15 +92,12 @@ public class PacMan extends GeneralElement implements Speed{
     public void pacManEatGhost(Ghost ghost){
         ghost.isEaten = true;
         eatTimer = 1;
-        System.out.println(eatTimer);
-
         Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     eatTimer = 0;
                     ghost.isEaten = false;
-                    System.out.println(eatTimer);
                 }
                 },8000);
         }
