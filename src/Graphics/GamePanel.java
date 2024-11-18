@@ -20,10 +20,10 @@ public class GamePanel extends JPanel implements Runnable {
     PacMan pacMan = new PacMan();
     Coins coins = new Coins();
     BigCoins bigCoins = new BigCoins();
-    Ghost ghostYellow = new Ghost(12*width_height,13*width_height,"yellow"),
-            ghostPink = new Ghost(13*width_height,13*width_height,"pink"),
-            ghostRed = new Ghost(14*width_height,13*width_height,"red"),
-            ghostGreen = new Ghost(15*width_height,13*width_height,"green");
+    Ghost ghostYellow = new Ghost(12*width_height,11*width_height,"yellow"),
+            ghostPink = new Ghost(13*width_height,11*width_height,"pink"),
+            ghostRed = new Ghost(14*width_height,11*width_height,"red"),
+            ghostGreen = new Ghost(15*width_height,11*width_height,"green");
 
 
     @Override
@@ -42,20 +42,20 @@ public class GamePanel extends JPanel implements Runnable {
         this.generalElements = createArrayElement();
     }
 
-    private boolean canMoveUp(int tempX, int y) {
-        return tempX * width_height == pacMan.getPoint().x && !(generalElements[(y-speed)/width_height][tempX] instanceof Block);
+    private boolean canMoveUp(GeneralElement generalElement,int tempX, int y) {
+        return tempX * width_height == generalElement.getPoint().x && !(generalElements[(y-speed)/width_height][tempX] instanceof Block);
     }
 
-    private boolean canMoveDown(int tempX, int tempY) {
-        return tempX * width_height == pacMan.getPoint().x && !(generalElements[tempY + 1][tempX] instanceof Block);
+    private boolean canMoveDown(GeneralElement generalElement,int tempX, int tempY) {
+        return tempX * width_height == generalElement.getPoint().x && !(generalElements[tempY + 1][tempX] instanceof Block);
     }
 
-    private boolean canMoveLeft(int x, int tempY) {
-        return tempY * width_height == pacMan.getPoint().y && !(generalElements[tempY][(x - speed)/width_height] instanceof Block);
+    private boolean canMoveLeft(GeneralElement generalElement,int x, int tempY) {
+        return tempY * width_height == generalElement.getPoint().y && !(generalElements[tempY][(x - speed)/width_height] instanceof Block);
     }
 
-    private boolean canMoveRight(int tempX, int tempY) {
-        return tempY * width_height == pacMan.getPoint().y && !(generalElements[tempY][tempX + 1] instanceof Block);
+    private boolean canMoveRight(GeneralElement generalElement,int tempX, int tempY) {
+        return tempY * width_height == generalElement.getPoint().y && !(generalElements[tempY][tempX + 1] instanceof Block);
     }
 
     public void updatePacMan(PacMan pacMan) {
@@ -77,19 +77,19 @@ public class GamePanel extends JPanel implements Runnable {
                 tempY = y / width_height;
 
 
-        if (preferredDirection != null && canTurn(preferredDirection, tempX, tempY, x, y)) {
+        if (preferredDirection != null && canTurn(pacMan,preferredDirection, tempX, tempY, x, y)) {
             pacMan.setDirection(preferredDirection);
             pacMan.setPreferredDirection(null);
         }
        moveElement(pacMan,tempX,tempY,x,y);
         }
 
-    private boolean canTurn(String preferred,int tempX,int tempY,int x,int y){
+    private boolean canTurn(GeneralElement generalElement,String preferred,int tempX,int tempY,int x,int y){
         return switch (preferred) {
-            case "UP" -> canMoveUp(tempX, y);
-            case "DOWN" -> canMoveDown(tempX, tempY);
-            case "RIGHT" -> canMoveRight(tempX, tempY);
-            case "LEFT" -> canMoveLeft(x, tempY);
+            case "UP" -> canMoveUp(generalElement,tempX, y);
+            case "DOWN" -> canMoveDown(generalElement,tempX, tempY);
+            case "RIGHT" -> canMoveRight(generalElement,tempX, tempY);
+            case "LEFT" -> canMoveLeft(generalElement,x, tempY);
             default -> false;
         };
     }
@@ -108,16 +108,20 @@ public class GamePanel extends JPanel implements Runnable {
 
         switch (generalElement.getDirection()) {
             case "UP" -> {
-                if (canTurn("UP", tempX, tempY, x, y)) upDateMoveUp(generalElement);
+                if (canTurn(generalElement,"UP", tempX, tempY, x, y))
+                    upDateMoveUp(generalElement);
             }
             case "DOWN" -> {
-                if (canTurn("DOWN", tempX, tempY, x, y)) upDateMoveDown(generalElement);
+                if (canTurn(generalElement,"DOWN", tempX, tempY, x, y))
+                    upDateMoveDown(generalElement);
             }
             case "RIGHT" -> {
-                if (canTurn("RIGHT", tempX, tempY, x, y)) upDateMoveRight(generalElement);
+                if (canTurn(generalElement,"RIGHT", tempX, tempY, x, y))
+                    upDateMoveRight(generalElement);
             }
             case "LEFT" -> {
-                if (canTurn("LEFT", tempX, tempY, x, y)) upDateMoveLeft(generalElement);
+                if (canTurn(generalElement,"LEFT", tempX, tempY, x, y))
+                    upDateMoveLeft(generalElement);
             }
         }
     }

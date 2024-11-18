@@ -3,6 +3,8 @@ package Objects;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Ghost extends GeneralElement implements Eatable, Speed {
     Random random = new Random();
@@ -14,30 +16,39 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     public Ghost(int x,int y,String booleanColor) {
         setPoint(x,y);
         currentColor(booleanColor);
+
+        switch (random.nextInt(5)){
+
+        }
     }
     public String randomMove() {
-        int random11 = random.nextInt(0, 40);
-        if (random11 == 0) {
-            int random1 = random.nextInt(4);
-            switch (random1) {
-                case 1 -> {
-                    up = true;
-                    return "UP";
-                }
-                case 2 -> {
-                    down = true;
-                    return "DOWN";
-                }
-                case 3 -> {
-                    right = true;
-                    return "RIGHT";
-                }
-                case 4 -> {
-                    left = true;
-                    return "LEFT";
-                }
+        final int[] random1 = new int[1];
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                random1[0] = random.nextInt(5);
             }
-       }
+        }, 5);
+        switch (random1[0]) {
+            case 1 -> {
+                up = true;
+                return "UP";
+            }
+            case 2 -> {
+                down = true;
+                return "DOWN";
+            }
+            case 3 -> {
+                right = true;
+                return "RIGHT";
+            }
+            case 4 -> {
+                left = true;
+                return "LEFT";
+            }
+
+        }
         return "";
     }
 
