@@ -56,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public GamePanel() {
+        this.setBackground(Color.BLACK);
         this.addKeyListener(keyHandler);
         setFocusable(true);
         this.generalElements = createArrayElement();
@@ -111,6 +112,12 @@ public class GamePanel extends JPanel implements Runnable {
             case "LEFT" -> canMoveLeft(generalElement,x, tempY);
             default -> false;
         };
+    }
+    public void upDateGhosts(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow){
+        upDateGhost(ghostPink);
+        upDateGhost(ghostRed);
+        upDateGhost(ghostGreen);
+        upDateGhost(ghostYellow);
     }
 
     public void upDateGhost(Ghost ghost){
@@ -185,11 +192,11 @@ public class GamePanel extends JPanel implements Runnable {
         g.drawImage(ghostPink.getImage(), ghostPink.getPoint().x,ghostPink.getPoint().y,width_height, width_height, this);
         g.drawImage(ghostGreen.getImage(), ghostGreen.getPoint().x,ghostGreen.getPoint().y,width_height, width_height, this);
         g.drawImage(pacMan.getImage(), pacMan.getPoint().x, pacMan.getPoint().y, width_height, width_height, this);
-      if (pacMan.score >= 100 && pacMan.score < 250)  g.drawImage(cherry.getImage(), cherry.getPoint().x,cherry.getPoint().y,width_height,width_height,this);
-      if (pacMan.score >= 400 && pacMan.score < 650)  g.drawImage(strawberry.getImage(), strawberry.getPoint().x,strawberry.getPoint().y,width_height,width_height,this);
-      if (pacMan.score >= 1000 && pacMan.score < 1300)g.drawImage(orange.getImage(), orange.getPoint().x,orange.getPoint().y,width_height,width_height,this);
-      if (pacMan.score >= 2000 && pacMan.score < 2200)g.drawImage(apple.getImage(), apple.getPoint().x,apple.getPoint().y,width_height,width_height,this);
-      if (pacMan.score >= 3000 && pacMan.score < 3200)g.drawImage(melon.getImage(), melon.getPoint().x,melon.getPoint().y,width_height,width_height,this);
+      if (pacMan.score >= 100 && pacMan.score < 250 && !cherry.getIsEaten())  g.drawImage(cherry.getImage(), cherry.getPoint().x,cherry.getPoint().y,width_height,width_height,this);
+      if (pacMan.score >= 400 && pacMan.score < 650 && !strawberry.getIsEaten())  g.drawImage(strawberry.getImage(), strawberry.getPoint().x,strawberry.getPoint().y,width_height,width_height,this);
+      if (pacMan.score >= 1000 && pacMan.score < 1300 && !orange.getIsEaten())g.drawImage(orange.getImage(), orange.getPoint().x,orange.getPoint().y,width_height,width_height,this);
+      if (pacMan.score >= 2000 && pacMan.score < 2200 && !apple.getIsEaten())g.drawImage(apple.getImage(), apple.getPoint().x,apple.getPoint().y,width_height,width_height,this);
+      if (pacMan.score >= 3000 && pacMan.score < 3200 && !melon.getIsEaten())g.drawImage(melon.getImage(), melon.getPoint().x,melon.getPoint().y,width_height,width_height,this);
 
     }
 
@@ -299,34 +306,30 @@ public class GamePanel extends JPanel implements Runnable {
     }
     @Override
     public void run() {
-        while (!pacMan.stopGame || endGame){
+        while (!pacMan.stopGame || endGame) {
             if (!keyHandler.GameBreak) {
                 updatePacMan(pacMan);
-                upDateGhost(ghostRed);
-                upDateGhost(ghostPink);
-                upDateGhost(ghostGreen);
-                upDateGhost(ghostYellow);
+                upDateGhosts(ghostPink, ghostGreen, ghostRed, ghostYellow);
+                melon.upDateScoreOfFruit(pacMan);
+                cherry.upDateScoreOfFruit(pacMan);
+                strawberry.upDateScoreOfFruit(pacMan);
+                orange.upDateScoreOfFruit(pacMan);
+                apple.upDateScoreOfFruit(pacMan);
 
-                if (pacMan.lossLife(ghostPink) ||
-                        (pacMan.lossLife(ghostRed)) ||
-                        (pacMan.lossLife(ghostGreen)) ||
-                        (pacMan.lossLife(ghostYellow))) {
+                if (pacMan.lossLife(ghostPink, ghostRed, ghostGreen, ghostYellow)) {
                     pacMan.stopGame = true;
                 }
                 Coins.upDateCoins(pacMan, coins, generalElements);
                 if (BigCoins.upDateBigCoins(pacMan, bigCoins, generalElements)) {
-                    pacMan.pacManEatGhost(ghostGreen);
-                    pacMan.pacManEatGhost(ghostPink);
-                    pacMan.pacManEatGhost(ghostRed);
-                    pacMan.pacManEatGhost(ghostYellow);
+                    pacMan.pacManEatGhosts(ghostPink, ghostRed, ghostGreen, ghostYellow);
                 }
             }
-                repaint();
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            repaint();
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
         }
     }
@@ -337,14 +340,14 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void flipDirectionRight(GeneralElement generalElement) {
-        if ((generalElement.getPoint().x + width_height == 555)){
+        if ((generalElement.getPoint().x + width_height == 556)){
             generalElement.getPoint().x = 0;
         }
     }
 
     public void flipDirectionLeft(GeneralElement generalElement){
         if ((generalElement.getPoint().x) == 0) {
-            generalElement.getPoint().x = 555;
+            generalElement.getPoint().x = 560;
         }
 }
 

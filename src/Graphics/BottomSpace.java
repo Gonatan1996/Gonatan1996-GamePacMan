@@ -12,6 +12,9 @@ public class BottomSpace extends JPanel implements Runnable {
 
     public BottomSpace(PacMan pacMan) {
         this.pacMan = pacMan;
+        this.setBackground(Color.BLACK);
+        this.setPreferredSize(new Dimension(0, 50));
+
     }
 
     @Override

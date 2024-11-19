@@ -74,6 +74,9 @@ public class PacMan extends GeneralElement implements Speed{
     public double getSpeed() {
         return 0;
     }
+    public boolean lossLife(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow){
+        return lossLife(ghostPink) || lossLife(ghostGreen) || lossLife(ghostRed) || lossLife(ghostYellow);
+    }
 
     public boolean lossLife(Ghost ghost) {
         if (this.point.x == ghost.getPoint().x && this.point.y == ghost.getPoint().y && eatTimer == 0){
@@ -87,6 +90,13 @@ public class PacMan extends GeneralElement implements Speed{
 
     public void startAgain(){
         setPoint(13 * width,21 * height);
+    }
+
+    public void pacManEatGhosts(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow){
+        pacManEatGhost(ghostPink);
+        pacManEatGhost(ghostGreen);
+        pacManEatGhost(ghostRed);
+        pacManEatGhost(ghostYellow);
     }
 
     public void pacManEatGhost(Ghost ghost){

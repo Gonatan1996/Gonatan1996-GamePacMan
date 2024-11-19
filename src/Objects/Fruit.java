@@ -24,7 +24,7 @@ public class Fruit extends GeneralElement implements Eatable {
 
     @Override
     public boolean getIsEaten() {
-        return true;
+        return isEaten;
     }
 
     @Override
@@ -64,5 +64,13 @@ public class Fruit extends GeneralElement implements Eatable {
             case "melon" -> melon = true;
             case "strawberry" -> strawberry = true;
         }
+    }
+    public void upDateScoreOfFruit(PacMan pacMan){
+        int x = pacMan.getPoint().x,
+                y = pacMan.getPoint().y;
+        if (x == this.getPoint().x && y == this.getPoint().y){
+        pacMan.score += this.getValue();
+        this.isEaten = true;
+    }
     }
 }

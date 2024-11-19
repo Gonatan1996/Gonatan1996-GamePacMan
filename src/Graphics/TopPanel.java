@@ -12,7 +12,11 @@ public class TopPanel extends JPanel implements Runnable{
 
 
     public TopPanel(PacMan pacMan) {
+        this.setBackground(Color.white);
+        this.setPreferredSize(new Dimension(0, 50));
         this.pacMan = pacMan;
+        this.setVisible(true);
+
     }
 
 
