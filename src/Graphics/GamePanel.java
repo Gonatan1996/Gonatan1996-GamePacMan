@@ -12,7 +12,8 @@ public class GamePanel extends JPanel implements Runnable {
     final int speed = 4;
     final int width_height = 20;
     boolean startGame = true,endGame;
-    JTextField textStart;
+    JLabel textStart = new JLabel();
+    Timer timer = new Timer();
     static int[][] numOfElement = numOfElement();
     GeneralElement[][] generalElements = new GeneralElement[numOfElement.length][numOfElement[0].length];
 
@@ -33,15 +34,21 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-//        if (startGame){
-//            screenStartGame();
-//        }else {
+       if (startGame) {
+               screenStartGame();
+       }else if (endGame) {
+           screenEndGame();
+       }else {
             createScreenGame(g);
-            if (pacMan.stopGame && pacMan.life > -1) {
-                pacMan.stopGame = false;
-                pacMan.startAgain();
+            if (pacMan.stopGame){
+                if ( pacMan.life >= 0) {
+                    pacMan.stopGame = false;
+                    pacMan.startAgain();
+                }else {
+                    endGame = true;
+                }
             }
- //       }
+        }
     }
 
     public GamePanel() {
@@ -159,6 +166,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void createScreenGame(Graphics g) {
+        this.remove(textStart);
         for (int i = 0; i < generalElements.length; i++) {
             for (int j = 0; j < generalElements[i].length; j++) {
                 x = j * width_height;
@@ -282,8 +290,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
     @Override
     public void run() {
-        while (!pacMan.stopGame){
-
+        while (!pacMan.stopGame || endGame){
                     updatePacMan(pacMan);
                     upDateGhost(ghostRed);
                     upDateGhost(ghostPink);
@@ -318,29 +325,47 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void flipDirectionRight(GeneralElement generalElement) {
-        if ((generalElement.getPoint().x + width_height == 700)){
+        if ((generalElement.getPoint().x + width_height == 555)){
             generalElement.getPoint().x = 0;
         }
     }
 
     public void flipDirectionLeft(GeneralElement generalElement){
         if ((generalElement.getPoint().x) == 0) {
-            generalElement.getPoint().x = 700;
+            generalElement.getPoint().x = 555;
         }
 }
 
     public void screenStartGame(){
-        textStart = new JTextField("Start Game now",1);
-        textStart.setSize(565,50);
-        textStart.setFont(new Font("",Font.BOLD, 30));
+        textStart.setText("The Game Start ");
+        textStart.setForeground(Color.GREEN);
+        textStart.setSize(565,400);
+        textStart.setFont(new Font("Arial",Font.BOLD, 50));
         this.add(textStart);
-        Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 startGame = false;
             }
         },3000);
+
+        }
+
+    public void screenEndGame(){
+        System.out.println("end");
+        textStart.setText("The Game End ");
+        textStart.setForeground(Color.GREEN);
+        textStart.setSize(565,400);
+        textStart.setFont(new Font("Arial",Font.BOLD, 50));
+        this.add(textStart);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                endGame = false;
+            }
+        },3000);
+
+    }
     }
 
-}
+

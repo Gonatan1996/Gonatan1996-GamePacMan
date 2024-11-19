@@ -10,7 +10,7 @@ public class GameFrame extends JFrame {
         this.setLayout(new BorderLayout());
         TopPanel topSpace = new TopPanel(gamePanel.pacMan);
         topSpace.upDateScoreStart();
-        topSpace.setBackground(Color.black);
+        topSpace.setBackground(Color.white);
         BottomSpace bottomSpace = new BottomSpace(gamePanel.pacMan);
         bottomSpace.startUpDateLife();
         bottomSpace.setBackground(Color.BLACK);

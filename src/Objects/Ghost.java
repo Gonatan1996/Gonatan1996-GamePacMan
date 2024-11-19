@@ -42,7 +42,6 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
                     return "DOWN";
                 }
                 case 3 -> {
-                    System.out.println("right");
                     right = true;
                     canMove = true;
                     return "RIGHT";
@@ -148,10 +147,6 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
 
     public void startPoint(Ghost ghost){
         if (ghost.point.x == 280 && ghost.point.y == 260){
-            System.out.println("red " + red);
-            System.out.println("yellow " + yellow);
-            System.out.println("green " + green);
-            System.out.println("pink " + pink);
             startPoint = true;
             canMove = true;
             up = true;
