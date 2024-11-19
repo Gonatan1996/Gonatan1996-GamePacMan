@@ -29,7 +29,11 @@ public class GamePanel extends JPanel implements Runnable {
             ghostPink = new Ghost(13*width_height,13*width_height,"pink"),
             ghostRed = new Ghost(14*width_height,13*width_height,"red"),
             ghostGreen = new Ghost(15*width_height,13*width_height,"green");
-
+    Fruit melon = new Fruit("melon",1*width_height,2*width_height),
+            cherry = new Fruit("cherry" ,9*width_height,22*width_height),
+        strawberry = new Fruit("strawberry",26*width_height,2*width_height),
+            orange = new Fruit("orange",2*width_height,27*width_height),
+            apple = new Fruit("apple",18*width_height,15*width_height);
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -181,6 +185,11 @@ public class GamePanel extends JPanel implements Runnable {
         g.drawImage(ghostPink.getImage(), ghostPink.getPoint().x,ghostPink.getPoint().y,width_height, width_height, this);
         g.drawImage(ghostGreen.getImage(), ghostGreen.getPoint().x,ghostGreen.getPoint().y,width_height, width_height, this);
         g.drawImage(pacMan.getImage(), pacMan.getPoint().x, pacMan.getPoint().y, width_height, width_height, this);
+      if (pacMan.score >= 100 && pacMan.score < 250)  g.drawImage(cherry.getImage(), cherry.getPoint().x,cherry.getPoint().y,width_height,width_height,this);
+      if (pacMan.score >= 400 && pacMan.score < 650)  g.drawImage(strawberry.getImage(), strawberry.getPoint().x,strawberry.getPoint().y,width_height,width_height,this);
+      if (pacMan.score >= 1000 && pacMan.score < 1300)g.drawImage(orange.getImage(), orange.getPoint().x,orange.getPoint().y,width_height,width_height,this);
+      if (pacMan.score >= 2000 && pacMan.score < 2200)g.drawImage(apple.getImage(), apple.getPoint().x,apple.getPoint().y,width_height,width_height,this);
+      if (pacMan.score >= 3000 && pacMan.score < 3200)g.drawImage(melon.getImage(), melon.getPoint().x,melon.getPoint().y,width_height,width_height,this);
 
     }
 
@@ -291,31 +300,34 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
         while (!pacMan.stopGame || endGame){
-                    updatePacMan(pacMan);
-                    upDateGhost(ghostRed);
-                    upDateGhost(ghostPink);
-                    upDateGhost(ghostGreen);
-                    upDateGhost(ghostYellow);
+            if (!keyHandler.GameBreak) {
+                updatePacMan(pacMan);
+                upDateGhost(ghostRed);
+                upDateGhost(ghostPink);
+                upDateGhost(ghostGreen);
+                upDateGhost(ghostYellow);
 
-                if(pacMan.lossLife(ghostPink) ||
-                    (pacMan.lossLife(ghostRed)) ||
-                    (pacMan.lossLife(ghostGreen)) ||
-                    (pacMan.lossLife(ghostYellow))){
+                if (pacMan.lossLife(ghostPink) ||
+                        (pacMan.lossLife(ghostRed)) ||
+                        (pacMan.lossLife(ghostGreen)) ||
+                        (pacMan.lossLife(ghostYellow))) {
                     pacMan.stopGame = true;
                 }
-            Coins.upDateCoins(pacMan,coins,generalElements);
-            if (BigCoins.upDateBigCoins(pacMan,bigCoins,generalElements)) {
-                pacMan.pacManEatGhost(ghostGreen);
-                pacMan.pacManEatGhost(ghostPink);
-                pacMan.pacManEatGhost(ghostRed);
-                pacMan.pacManEatGhost(ghostYellow);
+                Coins.upDateCoins(pacMan, coins, generalElements);
+                if (BigCoins.upDateBigCoins(pacMan, bigCoins, generalElements)) {
+                    pacMan.pacManEatGhost(ghostGreen);
+                    pacMan.pacManEatGhost(ghostPink);
+                    pacMan.pacManEatGhost(ghostRed);
+                    pacMan.pacManEatGhost(ghostYellow);
+                }
             }
-            repaint();
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+                repaint();
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
         }
     }
 

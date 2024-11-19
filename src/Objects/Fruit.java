@@ -4,15 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Fruit extends GeneralElement implements Eatable {
-    boolean cherry,apple,orange,melon,strawberry;
+    public boolean cherry,apple,orange,melon,strawberry;
     ImageIcon imageIcon = new ImageIcon();
 
-
-
+    public Fruit(String booleanFruit,int x,int y) {
+        currentFruit(booleanFruit);
+        setPoint(x,y);
+    }
 
     @Override
     public Point getPoint() {
-        return null;
+        return this.point;
     }
 
     @Override
@@ -28,10 +30,10 @@ public class Fruit extends GeneralElement implements Eatable {
     @Override
     public Image getImage() {
         if (cherry) imageIcon = new ImageIcon("src/Images/cherry.jpg");
-        if (apple) imageIcon = new ImageIcon("src/Images/apple.webp");
-        if (melon) imageIcon = new ImageIcon("src/Images/melon.webp");
+        if (apple) imageIcon = new ImageIcon("src/Images/apple.jpg");
+        if (melon) imageIcon = new ImageIcon("src/Images/melon.jpg");
         if (orange) imageIcon = new ImageIcon("src/Images/orange.jpg");
-        if (strawberry) imageIcon = new ImageIcon("src/Images/strawberry.webp");
+        if (strawberry) imageIcon = new ImageIcon("src/Images/strawberry.jpg");
         return imageIcon.getImage();
     }
 
@@ -53,5 +55,14 @@ public class Fruit extends GeneralElement implements Eatable {
         if (apple)return 700;
         if (melon)return 1000;
         return -1;
+    }
+    public void currentFruit(String booleanFruit){
+        switch (booleanFruit){
+            case "cherry" ->cherry = true;
+            case "apple" -> apple = true;
+            case "orange" -> orange = true;
+            case "melon" -> melon = true;
+            case "strawberry" -> strawberry = true;
+        }
     }
 }

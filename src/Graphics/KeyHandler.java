@@ -10,7 +10,7 @@ import java.awt.event.*;
 
 
     KeyHandler implements KeyListener {
-        boolean up, down, left, right;
+        boolean up, down, left, right,GameBreak;
 
 
 
@@ -24,6 +24,10 @@ import java.awt.event.*;
         public void keyPressed(KeyEvent e) {
             int code = e.getKeyCode();
             switch (code){
+                case KeyEvent.VK_ENTER -> {
+                    if (!GameBreak) GameBreak = true;
+                    else GameBreak = false;
+                }
                 case KeyEvent.VK_UP -> {
                     up = true;
                     flipToFalse("Up");
