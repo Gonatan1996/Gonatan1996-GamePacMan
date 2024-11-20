@@ -16,7 +16,6 @@ public class TopPanel extends JPanel implements Runnable{
         this.setPreferredSize(new Dimension(0, 50));
         this.pacMan = pacMan;
         this.setVisible(true);
-
     }
 
 

@@ -1,8 +1,5 @@
 package Graphics;
 
-import Objects.PacMan;
-
-import javax.swing.*;
 import java.awt.event.*;
 
     public class
@@ -10,7 +7,7 @@ import java.awt.event.*;
 
 
     KeyHandler implements KeyListener {
-        boolean up, down, left, right,GameBreak;
+        boolean up, down, left, right,GameBreak = true;
 
 
 
@@ -29,18 +26,22 @@ import java.awt.event.*;
                     else GameBreak = false;
                 }
                 case KeyEvent.VK_UP -> {
+                    GameBreak = false;
                     up = true;
                     flipToFalse("Up");
                 }
                 case KeyEvent.VK_DOWN -> {
+                    GameBreak = false;
                     down = true;
                     flipToFalse("Down");
                 }
                 case KeyEvent.VK_LEFT -> {
+                    GameBreak = false;
                     left = true;
                     flipToFalse("Left");
                 }
                 case KeyEvent.VK_RIGHT -> {
+                    GameBreak = false;
                     right = true;
                     flipToFalse("Right");
                 }

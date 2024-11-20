@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Coins extends GeneralElement implements Eatable{
-    ArrayList<Coins> coins = new ArrayList<>();
+    public ArrayList<Coins> coins = new ArrayList<>();
 
     public Coins() {
     }

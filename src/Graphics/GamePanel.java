@@ -1,6 +1,7 @@
 package Graphics;
 
 import Objects.*;
+import UpDate.Update;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,13 +10,12 @@ import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements Runnable {
     int x, y;
-    final int speed = 4;
     final int width_height = 20;
     boolean startGame = true,endGame;
     JLabel textStart = new JLabel();
     Timer timer = new Timer();
     static int[][] numOfElement = numOfElement();
-    GeneralElement[][] generalElements = new GeneralElement[numOfElement.length][numOfElement[0].length];
+    public static GeneralElement[][] generalElements = new GeneralElement[numOfElement.length][numOfElement[0].length];
 
 
     KeyHandler keyHandler = new KeyHandler();
@@ -25,31 +25,25 @@ public class GamePanel extends JPanel implements Runnable {
     PacMan pacMan = new PacMan();
     Coins coins = new Coins();
     BigCoins bigCoins = new BigCoins();
-    Ghost ghostYellow = new Ghost(12*width_height,13*width_height,"yellow"),
-            ghostPink = new Ghost(13*width_height,13*width_height,"pink"),
-            ghostRed = new Ghost(14*width_height,13*width_height,"red"),
-            ghostGreen = new Ghost(15*width_height,13*width_height,"green");
-    Fruit melon = new Fruit("melon",1*width_height,2*width_height),
-            cherry = new Fruit("cherry" ,9*width_height,22*width_height),
-        strawberry = new Fruit("strawberry",26*width_height,2*width_height),
-            orange = new Fruit("orange",2*width_height,27*width_height),
-            apple = new Fruit("apple",18*width_height,15*width_height);
+    Ghost ghost = new Ghost();
+    Fruit fruit = new Fruit();
+    Update update = new Update(pacMan,ghost);
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
        if (startGame) {
-               screenStartGame();
-       }else if (endGame) {
+           screenStartGame();
+       }if (endGame) {
            screenEndGame();
        }else {
             createScreenGame(g);
-            if (pacMan.stopGame){
-                if ( pacMan.life >= 0) {
+            if (pacMan.stopGame) {
+                if (pacMan.life >= 0 && !coins.coins.isEmpty()) {
                     pacMan.stopGame = false;
                     pacMan.startAgain();
                 }else {
-                    endGame = true;
+                   endGame = true;
                 }
             }
         }
@@ -62,31 +56,15 @@ public class GamePanel extends JPanel implements Runnable {
         this.generalElements = createArrayElement();
     }
 
-    private boolean canMoveUp(GeneralElement generalElement,int tempX, int y) {
-        return tempX * width_height == generalElement.getPoint().x && !(generalElements[(y-speed)/width_height][tempX] instanceof Block);
-    }
-
-    private boolean canMoveDown(GeneralElement generalElement,int tempX, int tempY) {
-        return tempX * width_height == generalElement.getPoint().x && !(generalElements[tempY + 1][tempX] instanceof Block);
-    }
-
-    private boolean canMoveLeft(GeneralElement generalElement,int x, int tempY) {
-        return tempY * width_height == generalElement.getPoint().y && !(generalElements[tempY][(x - speed)/width_height] instanceof Block);
-    }
-
-    private boolean canMoveRight(GeneralElement generalElement,int tempX, int tempY) {
-        return tempY * width_height == generalElement.getPoint().y && !(generalElements[tempY][tempX + 1] instanceof Block);
-    }
-
     public void updatePacMan(PacMan pacMan) {
         if (keyHandler.up) pacMan.setPreferredDirection("UP");
         if (keyHandler.down) pacMan.setPreferredDirection("DOWN");
         if (keyHandler.right){
-            flipDirectionRight(pacMan);
+            update.flipDirectionRight(pacMan);
             pacMan.setPreferredDirection("RIGHT");
         }
         if (keyHandler.left){
-            flipDirectionLeft(pacMan);
+            update.flipDirectionLeft(pacMan);
             pacMan.setPreferredDirection("LEFT");
         }
         String preferredDirection = pacMan.getPreferredDirection();
@@ -97,22 +75,13 @@ public class GamePanel extends JPanel implements Runnable {
                 tempY = y / width_height;
 
 
-        if (preferredDirection != null && canTurn(pacMan,preferredDirection, tempX, tempY, x, y)) {
+        if (preferredDirection != null && update.canTurn(pacMan,preferredDirection, tempX, tempY, x, y)) {
             pacMan.setDirection(preferredDirection);
             pacMan.setPreferredDirection(null);
         }
-       moveElement(pacMan,tempX,tempY,x,y);
+        update.moveElement(pacMan,tempX,tempY,x,y);
         }
 
-    private boolean canTurn(GeneralElement generalElement,String preferred,int tempX,int tempY,int x,int y){
-        return switch (preferred) {
-            case "UP" -> canMoveUp(generalElement,tempX, y);
-            case "DOWN" -> canMoveDown(generalElement,tempX, tempY);
-            case "RIGHT" -> canMoveRight(generalElement,tempX, tempY);
-            case "LEFT" -> canMoveLeft(generalElement,x, tempY);
-            default -> false;
-        };
-    }
     public void upDateGhosts(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow){
         upDateGhost(ghostPink);
         upDateGhost(ghostRed);
@@ -126,124 +95,10 @@ public class GamePanel extends JPanel implements Runnable {
                 tempX = x / width_height,
                 tempY = y / width_height;
         ghost.setDirection(ghost.randomMove());
-        moveElement(ghost,tempX,tempY,x,y);
+        update.moveElement(ghost,tempX,tempY,x,y);
 
     }
 
-    public void moveElement(GeneralElement generalElement,int tempX,int tempY,int x,int y){
-
-        switch (generalElement.getDirection()) {
-            case "UP" -> {
-                if (canTurn(generalElement,"UP", tempX, tempY, x, y)){
-                    upDateMoveUp(generalElement);
-                }else {
-                    if (generalElement instanceof Ghost) {
-                        ((Ghost) generalElement).canMove = false;
-                        ((Ghost) generalElement).up = false;
-                    }
-                }
-            }
-            case "DOWN" -> {
-                if (canTurn(generalElement,"DOWN", tempX, tempY, x, y)) {
-                    upDateMoveDown(generalElement);
-                }else {
-                    if (generalElement instanceof Ghost) {
-                        ((Ghost) generalElement).canMove = false;
-                        ((Ghost) generalElement).down = false;
-                    }
-                }
-            }
-            case "RIGHT" -> {
-                if (canTurn(generalElement,"RIGHT", tempX, tempY, x, y)){
-                    upDateMoveRight(generalElement);
-                }else {
-                    if (generalElement instanceof Ghost) {
-                        ((Ghost) generalElement).canMove = false;
-                        ((Ghost) generalElement).right = false;
-                    }
-                }
-            }
-            case "LEFT" -> {
-                if (canTurn(generalElement,"LEFT", tempX, tempY, x, y)){
-                    upDateMoveLeft(generalElement);
-                }else {
-                    if (generalElement instanceof Ghost) {
-                        ((Ghost) generalElement).canMove = false;
-                        ((Ghost) generalElement).left = false;
-                    }
-                }
-            }
-        }
-    }
-
-    public void createScreenGame(Graphics g) {
-        this.remove(textStart);
-        for (int i = 0; i < generalElements.length; i++) {
-            for (int j = 0; j < generalElements[i].length; j++) {
-                x = j * width_height;
-                y = i * width_height;
-                if (generalElements[i][j] != null) {
-                    g.drawImage(generalElements[i][j].getImage(), x, y, width_height, width_height, this);
-                }
-            }
-        }
-        g.drawImage(ghostRed.getImage(), ghostRed.getPoint().x,ghostRed.getPoint().y,width_height, width_height, this);
-        g.drawImage(ghostYellow.getImage(), ghostYellow.getPoint().x,ghostYellow.getPoint().y,width_height, width_height, this);
-        g.drawImage(ghostPink.getImage(), ghostPink.getPoint().x,ghostPink.getPoint().y,width_height, width_height, this);
-        g.drawImage(ghostGreen.getImage(), ghostGreen.getPoint().x,ghostGreen.getPoint().y,width_height, width_height, this);
-        g.drawImage(pacMan.getImage(), pacMan.getPoint().x, pacMan.getPoint().y, width_height, width_height, this);
-      if (pacMan.score >= 100 && pacMan.score < 250 && !cherry.getIsEaten())  g.drawImage(cherry.getImage(), cherry.getPoint().x,cherry.getPoint().y,width_height,width_height,this);
-      if (pacMan.score >= 400 && pacMan.score < 650 && !strawberry.getIsEaten())  g.drawImage(strawberry.getImage(), strawberry.getPoint().x,strawberry.getPoint().y,width_height,width_height,this);
-      if (pacMan.score >= 1000 && pacMan.score < 1300 && !orange.getIsEaten())g.drawImage(orange.getImage(), orange.getPoint().x,orange.getPoint().y,width_height,width_height,this);
-      if (pacMan.score >= 2000 && pacMan.score < 2200 && !apple.getIsEaten())g.drawImage(apple.getImage(), apple.getPoint().x,apple.getPoint().y,width_height,width_height,this);
-      if (pacMan.score >= 3000 && pacMan.score < 3200 && !melon.getIsEaten())g.drawImage(melon.getImage(), melon.getPoint().x,melon.getPoint().y,width_height,width_height,this);
-
-    }
-
-    public void upDateMoveUp(GeneralElement element) {
-        element.getPoint().y -= speed;
-
-        if (element instanceof PacMan) {
-            if (pacMan.counter % 5 == 0){
-                pacMan.setImage(new ImageIcon("src/Images/pacmanUp1.jpg"));
-            }else {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanUp2.jpg"));
-            }
-        }
-    }
-
-    public void upDateMoveDown(GeneralElement element) {
-        element.getPoint().y += speed;
-        if (element instanceof PacMan) {
-            if (pacMan.counter % 7 == 0){
-                pacMan.setImage(new ImageIcon("src/Images/pacmanDown1.jpg"));
-            }else {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanDown2.jpg"));
-            }
-        }
-    }
-
-    public void upDateMoveRight(GeneralElement element) {
-        element.getPoint().x += speed;
-        if (element instanceof PacMan) {
-            if (pacMan.counter % 7 == 0) {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanRight1.jpg"));
-            } else {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanRight2.jpg"));
-            }
-        }
-    }
-
-    public void upDateMoveLeft(GeneralElement element) {
-        element.getPoint().x -= speed;
-        if (element instanceof PacMan) {
-            if (pacMan.counter % 7 == 0){
-                pacMan.setImage(new ImageIcon("src/Images/pacmanLeft1.jpg"));
-            }else {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanLeft2.jpg"));
-            }
-        }
-    }
 
     public  GeneralElement[][] createArrayElement(){
         for (int i = 0; i < numOfElement.length; i++) {
@@ -309,19 +164,19 @@ public class GamePanel extends JPanel implements Runnable {
         while (!pacMan.stopGame || endGame) {
             if (!keyHandler.GameBreak) {
                 updatePacMan(pacMan);
-                upDateGhosts(ghostPink, ghostGreen, ghostRed, ghostYellow);
-                melon.upDateScoreOfFruit(pacMan);
-                cherry.upDateScoreOfFruit(pacMan);
-                strawberry.upDateScoreOfFruit(pacMan);
-                orange.upDateScoreOfFruit(pacMan);
-                apple.upDateScoreOfFruit(pacMan);
+                upDateGhosts(ghost.pink, ghost.green, ghost.red, ghost.yellow);
+                fruit.melon.upDateScoreOfFruit(pacMan);
+                fruit.cherry.upDateScoreOfFruit(pacMan);
+                fruit.strawberry.upDateScoreOfFruit(pacMan);
+                fruit.orange.upDateScoreOfFruit(pacMan);
+                fruit.apple.upDateScoreOfFruit(pacMan);
 
-                if (pacMan.lossLife(ghostPink, ghostRed, ghostGreen, ghostYellow)) {
+                if (pacMan.lossLife(ghost.pink, ghost.green, ghost.red, ghost.yellow)) {
                     pacMan.stopGame = true;
                 }
                 Coins.upDateCoins(pacMan, coins, generalElements);
                 if (BigCoins.upDateBigCoins(pacMan, bigCoins, generalElements)) {
-                    pacMan.pacManEatGhosts(ghostPink, ghostRed, ghostGreen, ghostYellow);
+                    pacMan.pacManEatGhosts(ghost.pink, ghost.green, ghost.red, ghost.yellow);
                 }
             }
             repaint();
@@ -338,19 +193,17 @@ public class GamePanel extends JPanel implements Runnable {
         gameTread = new Thread(this);
         gameTread.start();
     }
-
-    public void flipDirectionRight(GeneralElement generalElement) {
-        if ((generalElement.getPoint().x + width_height == 556)){
-            generalElement.getPoint().x = 0;
-        }
-    }
-
-    public void flipDirectionLeft(GeneralElement generalElement){
-        if ((generalElement.getPoint().x) == 0) {
-            generalElement.getPoint().x = 560;
-        }
-}
-
+//    public void flipDirectionRight(GeneralElement generalElement) {
+//        if ((generalElement.getPoint().x + width_height == 556)){
+//            generalElement.getPoint().x = 0;
+//        }
+//    }
+//
+//    public void flipDirectionLeft(GeneralElement generalElement){
+//        if ((generalElement.getPoint().x) == 0) {
+//            generalElement.getPoint().x = 560;
+//        }
+//}
     public void screenStartGame(){
         textStart.setText("The Game Start ");
         textStart.setForeground(Color.GREEN);
@@ -366,9 +219,33 @@ public class GamePanel extends JPanel implements Runnable {
 
         }
 
+    public void createScreenGame(Graphics g) {
+        this.remove(textStart);
+        for (int i = 0; i < generalElements.length; i++) {
+            for (int j = 0; j < generalElements[i].length; j++) {
+                x = j * width_height;
+                y = i * width_height;
+                if (generalElements[i][j] != null) {
+                    g.drawImage(generalElements[i][j].getImage(), x, y, width_height, width_height, this);
+                }
+            }
+        }
+        g.drawImage(ghost.red.getImage(), ghost.red.getPoint().x,ghost.red.getPoint().y,ghost.width, ghost.height, this);
+        g.drawImage(ghost.yellow.getImage(), ghost.yellow.getPoint().x,ghost.yellow.getPoint().y,ghost.width, ghost.height, this);
+        g.drawImage(ghost.pink.getImage(), ghost.pink.getPoint().x,ghost.pink.getPoint().y,ghost.width, ghost.height, this);
+        g.drawImage(ghost.green.getImage(), ghost.green.getPoint().x,ghost.green.getPoint().y,ghost.width, ghost.height, this);
+        g.drawImage(pacMan.getImage(), pacMan.getPoint().x, pacMan.getPoint().y, pacMan.width, pacMan.height, this);
+        if (pacMan.score >= 100 && pacMan.score < 250 && !fruit.cherry.getIsEaten())  g.drawImage(fruit.cherry.getImage(), fruit.cherry.getPoint().x,fruit.cherry.getPoint().y,fruit.width,fruit.height,this);
+        if (pacMan.score >= 400 && pacMan.score < 650 && !fruit.strawberry.getIsEaten())  g.drawImage(fruit.strawberry.getImage(), fruit.strawberry.getPoint().x,fruit.strawberry.getPoint().y,fruit.width,fruit.height,this);
+        if (pacMan.score >= 1000 && pacMan.score < 1300 && !fruit.orange.getIsEaten())g.drawImage(fruit.orange.getImage(), fruit.orange.getPoint().x,fruit.orange.getPoint().y,fruit.width,fruit.height,this);
+        if (pacMan.score >= 2000 && pacMan.score < 2200 && !fruit.apple.getIsEaten())g.drawImage(fruit.apple.getImage(), fruit.apple.getPoint().x,fruit.apple.getPoint().y,fruit.width,fruit.height,this);
+        if (pacMan.score >= 3000 && pacMan.score < 3200 && !fruit.melon.getIsEaten())g.drawImage(fruit.melon.getImage(), fruit.melon.getPoint().x,fruit.melon.getPoint().y,fruit.width,fruit.height,this);
+
+    }
+
     public void screenEndGame(){
-        System.out.println("end");
-        textStart.setText("The Game End ");
+        if (pacMan.life >= 0)textStart.setText("you Winner");
+        else textStart.setText("The Game End,try again ");
         textStart.setForeground(Color.GREEN);
         textStart.setSize(565,400);
         textStart.setFont(new Font("Arial",Font.BOLD, 50));

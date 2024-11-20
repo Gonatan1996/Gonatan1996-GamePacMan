@@ -5,12 +5,12 @@ import Objects.PacMan;
 import javax.swing.*;
 import java.awt.*;
 
-public class BottomSpace extends JPanel implements Runnable {
+public class BottomPanel extends JPanel implements Runnable {
     PacMan pacMan;
     Thread thread;
 
 
-    public BottomSpace(PacMan pacMan) {
+    public BottomPanel(PacMan pacMan) {
         this.pacMan = pacMan;
         this.setBackground(Color.BLACK);
         this.setPreferredSize(new Dimension(0, 50));

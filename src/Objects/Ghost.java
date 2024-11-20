@@ -5,13 +5,22 @@ import java.awt.*;
 import java.util.*;
 
 public class Ghost extends GeneralElement implements Eatable, Speed {
+    public Ghost pink,green,yellow,red;
     Random random = new Random();
     private double Speed;
-    public boolean red,yellow,green,pink;
+    public static String Red = "red",Yellow = "yellow",Green = "green",Pink = "pink";
+    public boolean B_red, B_yellow,B_green, B_pink;
     public boolean up, down, left, right,canMove,startPoint;
     String direction = "UP";
 
-    public Ghost(int x,int y,String booleanColor) {
+    public Ghost() {
+        pink =  new Ghost(13*width,13*height,Ghost.Pink);
+        green = new Ghost(15*width,13*height,Ghost.Green);
+        yellow = new Ghost(12* width,13*height,Ghost.Yellow);
+        red = new Ghost(14*width,13*height,Ghost.Red);
+    }
+
+    public Ghost(int x, int y, String booleanColor) {
         setPoint(x,y);
         currentColor(booleanColor);
 
@@ -96,20 +105,20 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     @Override
     public Image getImage() {
         ImageIcon imageIcon = new ImageIcon();
-        if(red && ! isEaten)imageIcon = new ImageIcon("src/Images/GhostRed.jpg");
-        if (green && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostGreen.jpg");
-        if (pink && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostPink.jpg");
-        if (yellow && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostYello.jpg");
+        if(B_red && ! isEaten)imageIcon = new ImageIcon("src/Images/GhostRed.jpg");
+        if (B_green && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostGreen.jpg");
+        if (B_pink && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostPink.jpg");
+        if (B_yellow && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostYello.jpg");
         if (isEaten)imageIcon = new ImageIcon("src/Images/ghostIten.jpg");
         return imageIcon.getImage();
     }
 
     public void currentColor(String booleanColor){
         switch (booleanColor){
-            case "red" -> red = true;
-            case "green" -> green = true;
-            case "pink" -> pink = true;
-            case "yellow" -> yellow = true;
+            case "red" -> B_red = true;
+            case "green" -> B_green = true;
+            case "pink" -> B_pink = true;
+            case "yellow" -> B_yellow = true;
         }
     }
 
@@ -124,19 +133,19 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     public void GhostInDanger(PacMan pacMan) {
         if (isEaten) {
             if (pacMan.getPoint().x == this.getPoint().x && pacMan.getPoint().y == this.getPoint().y) {
-                if (yellow) {
+                if (B_yellow) {
                     this.point.x = 12 * 20;
                     this.point.y = 13 * 20;
                 }
-                if (pink) {
+                if (B_pink) {
                     this.point.x = 13 * 20;
                     this.point.y = 13 * 20;
                 }
-                if (red) {
+                if (B_red) {
                     this.point.x = 14 * 20;
                     this.point.y = 13 * 20;
                 }
-                if (green) {
+                if (B_green) {
                     this.point.x = 15 * 20;
                     this.point.y = 13 * 20;
                 }
