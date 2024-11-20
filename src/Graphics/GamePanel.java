@@ -35,7 +35,8 @@ public class GamePanel extends JPanel implements Runnable {
        if (startGame) {
            screenStartGame();
        }if (endGame) {
-           screenEndGame();
+           if (pacMan.life >= 0)screenEndGameWin();
+           else screenEndGameLoss();
        }else {
             createScreenGame(g);
             if (pacMan.stopGame) {
@@ -193,17 +194,7 @@ public class GamePanel extends JPanel implements Runnable {
         gameTread = new Thread(this);
         gameTread.start();
     }
-//    public void flipDirectionRight(GeneralElement generalElement) {
-//        if ((generalElement.getPoint().x + width_height == 556)){
-//            generalElement.getPoint().x = 0;
-//        }
-//    }
-//
-//    public void flipDirectionLeft(GeneralElement generalElement){
-//        if ((generalElement.getPoint().x) == 0) {
-//            generalElement.getPoint().x = 560;
-//        }
-//}
+
     public void screenStartGame(){
         textStart.setText("The Game Start ");
         textStart.setForeground(Color.GREEN);
@@ -243,19 +234,32 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
-    public void screenEndGame(){
-        if (pacMan.life >= 0)textStart.setText("you Winner");
-        else textStart.setText("The Game End,try again ");
+    public void screenEndGameWin(){
+            textStart.setText("you Winner");
+            textStart.setForeground(Color.GREEN);
+            textStart.setSize(565,400);
+            textStart.setFont(new Font("Arial",Font.BOLD, 50));
+        this.add(textStart);
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                endGame = false;
+//            }
+//        },3000);
+
+
+    }    public void screenEndGameLoss(){
+        textStart.setText("try again");
         textStart.setForeground(Color.GREEN);
         textStart.setSize(565,400);
         textStart.setFont(new Font("Arial",Font.BOLD, 50));
         this.add(textStart);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                endGame = false;
-            }
-        },3000);
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                endGame = false;
+//            }
+//        },3000);
 
     }
     }

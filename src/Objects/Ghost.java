@@ -7,7 +7,7 @@ import java.util.*;
 public class Ghost extends GeneralElement implements Eatable, Speed {
     public Ghost pink,green,yellow,red;
     Random random = new Random();
-    private double Speed;
+    private int Speed = 4;
     public static String Red = "red",Yellow = "yellow",Green = "green",Pink = "pink";
     public boolean B_red, B_yellow,B_green, B_pink;
     public boolean up, down, left, right,canMove,startPoint;
