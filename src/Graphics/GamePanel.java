@@ -5,14 +5,17 @@ import UpDate.Update;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements Runnable {
-    int x, y;
+    int x, y,countScreenStart = 3;
     final int width_height = 20;
     boolean startGame = true,endGame;
     JLabel textStart = new JLabel();
+    JButton jButton;
     Timer timer = new Timer();
     static int[][] numOfElement = numOfElement();
     public static GeneralElement[][] generalElements = new GeneralElement[numOfElement.length][numOfElement[0].length];
@@ -34,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
        if (startGame) {
            screenStartGame();
-       }if (endGame) {
+       }else if (endGame) {
            if (pacMan.life >= 0)screenEndGameWin();
            else screenEndGameLoss();
        }else {
@@ -54,7 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setBackground(Color.BLACK);
         this.addKeyListener(keyHandler);
         setFocusable(true);
-        this.generalElements = createArrayElement();
+        generalElements = createArrayElement();
     }
 
     public void updatePacMan(PacMan pacMan) {
@@ -95,7 +98,7 @@ public class GamePanel extends JPanel implements Runnable {
                 y = ghost.getPoint().y,
                 tempX = x / width_height,
                 tempY = y / width_height;
-        ghost.setDirection(ghost.randomMove());
+        ghost.setDirection(ghost.randomMove(coins));
         update.moveElement(ghost,tempX,tempY,x,y);
 
     }
@@ -120,6 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
         }
+        //System.out.println(coins.coins.size());
         return generalElements;
     }
 
@@ -196,11 +200,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void screenStartGame(){
-        textStart.setText("The Game Start ");
-        textStart.setForeground(Color.GREEN);
-        textStart.setSize(565,400);
-        textStart.setFont(new Font("Arial",Font.BOLD, 50));
-        this.add(textStart);
+        addPanelText("Game Start",Color.CYAN);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -235,33 +235,44 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void screenEndGameWin(){
-            textStart.setText("you Winner");
-            textStart.setForeground(Color.GREEN);
-            textStart.setSize(565,400);
-            textStart.setFont(new Font("Arial",Font.BOLD, 50));
-        this.add(textStart);
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                endGame = false;
-//            }
-//        },3000);
+        addPanelText("You Winner",Color.white);
+        addButtonPlayAgain("play again");
+    }
 
+    public void screenEndGameLoss(){
+        addPanelText("  try again",Color.white);
+        addButtonPlayAgain("try again");
+    }
 
-    }    public void screenEndGameLoss(){
-        textStart.setText("try again");
-        textStart.setForeground(Color.GREEN);
-        textStart.setSize(565,400);
+    public void addButtonPlayAgain(String text){
+        this.setLayout(null);
+        jButton = new JButton(text);
+        jButton.setBounds(230,270,100,30);
+        jButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameFrame gameFrame = new GameFrame();
+            }
+        });
+        jButton.setBorderPainted(false);
+        this.add(jButton);
+    }
+
+    public void addPanelText(String text,Color color){
+        textStart.setText(text);
+        textStart.setForeground(color);
+        textStart.setBounds(150,50,300,325);
         textStart.setFont(new Font("Arial",Font.BOLD, 50));
         this.add(textStart);
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                endGame = false;
-//            }
-//        },3000);
-
     }
+
+    public synchronized void updateCount() throws InterruptedException {
+        if (countScreenStart > 0){
+            Thread.sleep(700);
+            countScreenStart--;
+        }
+    }
+
     }
 
 

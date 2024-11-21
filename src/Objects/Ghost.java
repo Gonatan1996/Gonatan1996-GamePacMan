@@ -28,8 +28,8 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
 
         }
     }
-    public String randomMove() {
-        startPoint(this);
+    public String randomMove(Coins coins) {
+        startPoint(this,coins);
         if (startPoint) {
             if (canMove) {
                 if (up) return "UP";
@@ -154,20 +154,26 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
         }
     }
 
-    public void startPoint(Ghost ghost){
+    public void startPoint(Ghost ghost, Coins coins){
         if (ghost.point.x == 280 && ghost.point.y == 260){
             startPoint = true;
             canMove = true;
             up = true;
         }
         if (ghost.point.x > 220 && ghost.point.x < 280
-        && ghost.point.y == 260){
-            startPoint = true;
-            canMove = true;
-            right = true;
+        && ghost.point.y == 260 && coins.coins.size() < 100){
+            if (B_yellow && coins.coins.size() < 60){
+                startPoint = true;
+                canMove = true;
+                right = true;
+            }else if (B_pink){
+                startPoint = true;
+                canMove = true;
+                right = true;
+            }
         }
         if (ghost.point.x > 280 && ghost.point.x <= 300
-                && ghost.point.y == 260){
+                && ghost.point.y == 260 && coins.coins.size() < 176){
             startPoint = true;
             canMove = true;
             left = true;

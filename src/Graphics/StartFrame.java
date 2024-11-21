@@ -18,6 +18,7 @@ JButton buttonStart = new JButton("Start Game");
         });
         buttonStart.setPreferredSize(new Dimension(200,80));
         buttonStart.setBackground(Color.GREEN);
+        buttonStart.setBorderPainted(false);
         this.setLayout(new GridBagLayout());
         this.add(buttonStart);
         this.setBackground(Color.BLACK);
