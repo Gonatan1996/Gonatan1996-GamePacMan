@@ -2,24 +2,29 @@ package Objects;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Fruit extends GeneralElement implements Eatable {
+    static Random random = new Random();
     public Fruit cherry,apple,orange,melon,strawberry;
     public static String Melon = "melon",Apple = "apple",Cherry = "cherry",Orange = "orange",Strawberry = "strawberry";
     public boolean B_cherry, B_apple, B_orange, B_melon, B_strawberry;
+    public boolean show;
+    public static ArrayList<Point> randomPoint = new ArrayList<>();
     ImageIcon imageIcon = new ImageIcon();
 
     public Fruit() {
-        cherry = new Fruit(Fruit.Cherry,9*width,22*height);
-        apple = new Fruit(Fruit.Apple,18*width,15*height);
-        orange = new Fruit(Fruit.Orange,2*width,27*height);
-        melon = new Fruit(Fruit.Melon,width,2*height);
-        strawberry = new Fruit(Fruit.Strawberry,26*width,2*height);
+        cherry = new Fruit(Fruit.Cherry,randomPoint());
+        apple = new Fruit(Fruit.Apple,randomPoint());
+        orange = new Fruit(Fruit.Orange,randomPoint());
+        melon = new Fruit(Fruit.Melon,randomPoint());
+        strawberry = new Fruit(Fruit.Strawberry,randomPoint());
     }
 
-    public Fruit(String booleanFruit, int x, int y) {
+    public Fruit(String booleanFruit,Point point) {
         currentFruit(booleanFruit);
-        setPoint(x,y);
+        this.point = point;
     }
 
     @Override
@@ -78,9 +83,17 @@ public class Fruit extends GeneralElement implements Eatable {
     public void upDateScoreOfFruit(PacMan pacMan){
         int x = pacMan.getPoint().x,
                 y = pacMan.getPoint().y;
-        if (x == this.getPoint().x && y == this.getPoint().y){
+        if (x == this.getPoint().x && y == this.getPoint().y && show){
+        show = false;
         pacMan.score += this.getValue();
         this.isEaten = true;
     }
+    }
+
+    public static Point randomPoint(){
+        int rand = random.nextInt(Fruit.randomPoint.size());
+        int x = Fruit.randomPoint.get(rand).x;
+        int y = Fruit.randomPoint.get(rand).y;
+        return new Point(x,y);
     }
 }

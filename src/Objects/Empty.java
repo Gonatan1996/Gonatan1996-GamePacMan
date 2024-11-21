@@ -2,12 +2,20 @@ package Objects;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Empty extends GeneralElement{
+
+    public Empty() {
+    }
+
+    public Empty(int x, int y) {
+        this.point = new Point(x,y);
+    }
+
+
     @Override
     public Point getPoint() {
-        return null;
+        return point;
     }
 
     @Override

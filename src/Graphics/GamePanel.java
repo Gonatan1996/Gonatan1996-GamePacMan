@@ -11,7 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements Runnable {
-    int x, y,countScreenStart = 3;
+    int x, y;
     final int width_height = 20;
     boolean startGame = true,endGame;
     JLabel textStart = new JLabel();
@@ -29,7 +29,7 @@ public class GamePanel extends JPanel implements Runnable {
     Coins coins = new Coins();
     BigCoins bigCoins = new BigCoins();
     Ghost ghost = new Ghost();
-    Fruit fruit = new Fruit();
+    Fruit fruit;
     Update update = new Update(pacMan,ghost);
 
     @Override
@@ -107,23 +107,24 @@ public class GamePanel extends JPanel implements Runnable {
     public  GeneralElement[][] createArrayElement(){
         for (int i = 0; i < numOfElement.length; i++) {
             for (int j = 0; j < numOfElement[i].length; j++) {
-                x = j * width_height;
-                y = i * width_height;
+               int x = j * width_height;
+               int y = i * width_height;
                 if (numOfElement[i][j] == 0){
-                    generalElements[i][j] = new Empty();
+                    generalElements[i][j] = new Empty(x,y);
                 }
                 if (numOfElement[i][j] == 1){
                     generalElements[i][j] = block.addBlock(new Block(x,y));
                 }
                 else if (numOfElement[i][j] == 2){
                     generalElements[i][j] = coins.addCoins(new Coins(x,y));
+                    Fruit.randomPoint.add(new Point(x,y));
                 }
                 else if (numOfElement[i][j] == 3){
                     generalElements[i][j] = bigCoins.addBigCoins(new BigCoins(x,y));
+                    Fruit.randomPoint.add(new Point(x,y));
                 }
             }
         }
-        //System.out.println(coins.coins.size());
         return generalElements;
     }
 
@@ -206,7 +207,7 @@ public class GamePanel extends JPanel implements Runnable {
             public void run() {
                 startGame = false;
             }
-        },3000);
+        },1000);
 
         }
 
@@ -221,16 +222,9 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
         }
-        g.drawImage(ghost.red.getImage(), ghost.red.getPoint().x,ghost.red.getPoint().y,ghost.width, ghost.height, this);
-        g.drawImage(ghost.yellow.getImage(), ghost.yellow.getPoint().x,ghost.yellow.getPoint().y,ghost.width, ghost.height, this);
-        g.drawImage(ghost.pink.getImage(), ghost.pink.getPoint().x,ghost.pink.getPoint().y,ghost.width, ghost.height, this);
-        g.drawImage(ghost.green.getImage(), ghost.green.getPoint().x,ghost.green.getPoint().y,ghost.width, ghost.height, this);
-        g.drawImage(pacMan.getImage(), pacMan.getPoint().x, pacMan.getPoint().y, pacMan.width, pacMan.height, this);
-        if (pacMan.score >= 100 && pacMan.score < 250 && !fruit.cherry.getIsEaten())  g.drawImage(fruit.cherry.getImage(), fruit.cherry.getPoint().x,fruit.cherry.getPoint().y,fruit.width,fruit.height,this);
-        if (pacMan.score >= 400 && pacMan.score < 650 && !fruit.strawberry.getIsEaten())  g.drawImage(fruit.strawberry.getImage(), fruit.strawberry.getPoint().x,fruit.strawberry.getPoint().y,fruit.width,fruit.height,this);
-        if (pacMan.score >= 1000 && pacMan.score < 1300 && !fruit.orange.getIsEaten())g.drawImage(fruit.orange.getImage(), fruit.orange.getPoint().x,fruit.orange.getPoint().y,fruit.width,fruit.height,this);
-        if (pacMan.score >= 2000 && pacMan.score < 2200 && !fruit.apple.getIsEaten())g.drawImage(fruit.apple.getImage(), fruit.apple.getPoint().x,fruit.apple.getPoint().y,fruit.width,fruit.height,this);
-        if (pacMan.score >= 3000 && pacMan.score < 3200 && !fruit.melon.getIsEaten())g.drawImage(fruit.melon.getImage(), fruit.melon.getPoint().x,fruit.melon.getPoint().y,fruit.width,fruit.height,this);
+        drawImageGhost(g);
+        drawImagePacman(g);
+        drawImageFruit(g);
 
     }
 
@@ -266,12 +260,41 @@ public class GamePanel extends JPanel implements Runnable {
         this.add(textStart);
     }
 
-    public synchronized void updateCount() throws InterruptedException {
-        if (countScreenStart > 0){
-            Thread.sleep(700);
-            countScreenStart--;
-        }
+    public void drawImageGhost(Graphics g){
+        g.drawImage(ghost.red.getImage(), ghost.red.getPoint().x,ghost.red.getPoint().y,ghost.width, ghost.height, this);
+        g.drawImage(ghost.yellow.getImage(), ghost.yellow.getPoint().x,ghost.yellow.getPoint().y,ghost.width, ghost.height, this);
+        g.drawImage(ghost.pink.getImage(), ghost.pink.getPoint().x,ghost.pink.getPoint().y,ghost.width, ghost.height, this);
+        g.drawImage(ghost.green.getImage(), ghost.green.getPoint().x,ghost.green.getPoint().y,ghost.width, ghost.height, this);
     }
+
+    public void drawImagePacman(Graphics g){
+        g.drawImage(pacMan.getImage(), pacMan.getPoint().x, pacMan.getPoint().y, pacMan.width, pacMan.height, this);
+    }
+
+    public void drawImageFruit(Graphics g){
+        if (fruit == null)fruit = new Fruit();
+        if (pacMan.score >= 100 && pacMan.score < 250 && !fruit.cherry.getIsEaten()){
+            fruit.cherry.show = true;
+            g.drawImage(fruit.cherry.getImage(),fruit.cherry.getPoint().x,fruit.cherry.getPoint().y ,fruit.width,fruit.height,this);
+        }else fruit.cherry.show = false;
+        if (pacMan.score >= 400 && pacMan.score < 650 && !fruit.strawberry.getIsEaten()){
+            fruit.strawberry.show = true;
+            g.drawImage(fruit.strawberry.getImage(),fruit.strawberry.getPoint().x,fruit.strawberry.getPoint().y,fruit.width,fruit.height,this);
+        }else fruit.strawberry.show = false;
+        if (pacMan.score >= 1000 && pacMan.score < 1300 && !fruit.orange.getIsEaten()){
+            fruit.orange.show = true;
+            g.drawImage(fruit.orange.getImage(),fruit.orange.getPoint().x,fruit.orange.getPoint().y,fruit.width,fruit.height,this);
+        }else fruit.orange.show = false;
+        if (pacMan.score >= 2000 && pacMan.score < 2200 && !fruit.apple.getIsEaten()){
+            fruit.apple.show = true;
+            g.drawImage(fruit.apple.getImage(),fruit.apple.getPoint().x,fruit.apple.getPoint().y,fruit.width,fruit.height,this);
+        }else fruit.apple.show = false;
+        if (pacMan.score >= 3000 && pacMan.score < 3200 && !fruit.melon.getIsEaten()){
+            fruit.melon.show = true;
+            g.drawImage(fruit.melon.getImage(),fruit.melon.getPoint().x,fruit.melon.getPoint().y,fruit.width,fruit.height,this);
+        }else fruit.melon.show = false;
+    }
+
 
     }
 
