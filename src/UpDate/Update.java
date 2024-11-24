@@ -11,7 +11,7 @@ import javax.swing.*;
 public class Update {
     PacMan pacMan;
     Ghost ghost;
-    public int speed = 5;
+    public int speed = 4;
 
     public Update(PacMan pacMan, Ghost ghost) {
         this.pacMan = pacMan;

@@ -1,17 +1,21 @@
 package Graphics;
 
+import Objects.Fruit;
 import Objects.PacMan;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class BottomPanel extends JPanel implements Runnable {
+    GamePanel gamePanel;
     PacMan pacMan;
+    Fruit fruit;
     Thread thread;
 
 
-    public BottomPanel(PacMan pacMan) {
-        this.pacMan = pacMan;
+    public BottomPanel(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
+        this.pacMan = gamePanel.pacMan;
         this.setBackground(Color.BLACK);
         this.setPreferredSize(new Dimension(0, 50));
 
@@ -24,6 +28,13 @@ public class BottomPanel extends JPanel implements Runnable {
             ImageIcon imageIcon = new ImageIcon("src/Images/pacmanLeft1.jpg");
             g.drawImage(imageIcon.getImage(), i * 30,0,25,25,this);
         }
+        if (fruit == null)fruit = gamePanel.drawImageFruit(g);
+        else
+            if (fruit.melon.show) g.drawImage(fruit.melon.getImage(), 535, 0, 25, 25, this);
+            if (fruit.cherry.show) g.drawImage(fruit.cherry.getImage(), 535, 0, 25, 25, this);
+            if (fruit.strawberry.show) g.drawImage(fruit.strawberry.getImage(), 535, 0, 25, 25, this);
+            if (fruit.orange.show) g.drawImage(fruit.orange.getImage(), 535, 0, 25, 25, this);
+            if (fruit.apple.show) g.drawImage(fruit.apple.getImage(), 535, 0, 25, 25, this);
 
     }
 

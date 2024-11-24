@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class  GeneralElement implements Element{
-    protected Point point;
+    public Point point;
     protected boolean isEaten;
     public int width = 20,height = 20;
     public Image image;

@@ -74,8 +74,16 @@ public class PacMan extends GeneralElement implements Speed{
     public double getSpeed() {
         return 0;
     }
+
     public boolean lossLife(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow){
-        return lossLife(ghostPink) || lossLife(ghostGreen) || lossLife(ghostRed) || lossLife(ghostYellow);
+        if (lossLife(ghostPink) || lossLife(ghostGreen) || lossLife(ghostRed) || lossLife(ghostYellow)){
+            ghostPink.upDatePoint();
+            ghostYellow.upDatePoint();
+            ghostRed.upDatePoint();
+            ghostGreen.upDatePoint();
+            return true;
+        }
+        return false;
     }
 
     public boolean lossLife(Ghost ghost) {

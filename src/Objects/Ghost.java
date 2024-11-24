@@ -23,10 +23,6 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     public Ghost(int x, int y, String booleanColor) {
         setPoint(x,y);
         currentColor(booleanColor);
-
-        switch (random.nextInt(5)){
-
-        }
     }
     public String randomMove(Coins coins) {
         startPoint(this,coins);
@@ -133,24 +129,28 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     public void GhostInDanger(PacMan pacMan) {
         if (isEaten) {
             if (pacMan.getPoint().x == this.getPoint().x && pacMan.getPoint().y == this.getPoint().y) {
-                if (B_yellow) {
-                    this.point.x = 12 * 20;
-                    this.point.y = 13 * 20;
-                }
-                if (B_pink) {
-                    this.point.x = 13 * 20;
-                    this.point.y = 13 * 20;
-                }
-                if (B_red) {
-                    this.point.x = 14 * 20;
-                    this.point.y = 13 * 20;
-                }
-                if (B_green) {
-                    this.point.x = 15 * 20;
-                    this.point.y = 13 * 20;
-                }
+                upDatePoint();
                 pacMan.score += 200;
             }
+        }
+    }
+
+    public void upDatePoint(){
+        if (B_yellow) {
+            this.point.x = 12 * 20;
+            this.point.y = 13 * 20;
+        }
+        if (B_pink) {
+            this.point.x = 13 * 20;
+            this.point.y = 13 * 20;
+        }
+        if (B_red) {
+            this.point.x = 14 * 20;
+            this.point.y = 13 * 20;
+        }
+        if (B_green) {
+            this.point.x = 15 * 20;
+            this.point.y = 13 * 20;
         }
     }
 

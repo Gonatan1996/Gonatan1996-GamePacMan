@@ -10,11 +10,13 @@ import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 public class GamePanel extends JPanel implements Runnable {
     int x, y;
     final int width_height = 20;
-    boolean startGame = true,endGame;
+    boolean startGame = true,endGame,level2 = true,level3 = true;
     JLabel textStart = new JLabel();
+    JLabel textLabel2 = new JLabel();
     JButton jButton;
     Timer timer = new Timer();
     static int[][] numOfElement = numOfElement();
@@ -38,7 +40,14 @@ public class GamePanel extends JPanel implements Runnable {
        if (startGame) {
            screenStartGame();
        }else if (endGame) {
-           if (pacMan.life >= 0)screenEndGameWin();
+           if (pacMan.life >= 0){
+               if (level2){
+                       screenLevel2();
+               }else if (level3){
+                       screenLevel3();
+               }
+               else screenEndGameWin();
+           }
            else screenEndGameLoss();
        }else {
             createScreenGame(g);
@@ -202,10 +211,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void screenStartGame(){
         addPanelText("Game Start",Color.CYAN);
+        addPanelTextLabel2("level 1 ",Color.white);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 startGame = false;
+                GamePanel.this.remove(textLabel2);
             }
         },1000);
 
@@ -225,6 +236,41 @@ public class GamePanel extends JPanel implements Runnable {
         drawImageGhost(g);
         drawImagePacman(g);
         drawImageFruit(g);
+
+    }
+    public void screenLevel2() {
+        addPanelTextLabel2("level 2",Color.white);
+        Timer timer1 = new Timer();
+        timer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                endGame = false;
+                level2 = false;
+                GamePanel.this.remove(textLabel2);
+                updatePointLevel();
+                revalidate();
+                repaint();
+            }
+        },2000);
+        pacMan.score = 0;
+        update.speed = 5;
+        generalElements = createArrayElement();
+    }
+    public void screenLevel3() {
+        addPanelTextLabel2("level 3",Color.white);
+        Timer timer1 = new Timer();
+        timer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                endGame = false;
+                GamePanel.this.remove(textLabel2);
+                updatePointLevel();
+                revalidate();
+                repaint();
+            }
+        },2000);
+        pacMan.score = 0;
+        update.speed = 10;
 
     }
 
@@ -259,6 +305,13 @@ public class GamePanel extends JPanel implements Runnable {
         textStart.setFont(new Font("Arial",Font.BOLD, 50));
         this.add(textStart);
     }
+    public void addPanelTextLabel2(String text,Color color){
+        textLabel2.setText(text);
+        textLabel2.setForeground(color);
+        textLabel2.setBounds(200,100,300,325);
+        textLabel2.setFont(new Font("Arial",Font.BOLD, 50));
+        this.add(textLabel2);
+    }
 
     public void drawImageGhost(Graphics g){
         g.drawImage(ghost.red.getImage(), ghost.red.getPoint().x,ghost.red.getPoint().y,ghost.width, ghost.height, this);
@@ -271,7 +324,7 @@ public class GamePanel extends JPanel implements Runnable {
         g.drawImage(pacMan.getImage(), pacMan.getPoint().x, pacMan.getPoint().y, pacMan.width, pacMan.height, this);
     }
 
-    public void drawImageFruit(Graphics g){
+    public Fruit drawImageFruit(Graphics g){
         if (fruit == null)fruit = new Fruit();
         if (pacMan.score >= 100 && pacMan.score < 250 && !fruit.cherry.getIsEaten()){
             fruit.cherry.show = true;
@@ -293,8 +346,15 @@ public class GamePanel extends JPanel implements Runnable {
             fruit.melon.show = true;
             g.drawImage(fruit.melon.getImage(),fruit.melon.getPoint().x,fruit.melon.getPoint().y,fruit.width,fruit.height,this);
         }else fruit.melon.show = false;
+        return fruit;
     }
-
+    public void updatePointLevel(){
+        pacMan.point = new Point(13 * width_height,21 * width_height);
+        ghost.pink.point = new Point(13*width_height,13*width_height);
+        ghost.green.point  = new Point(15*width_height,13*width_height);
+        ghost.yellow.point  = new Point(12* width_height,13*width_height);
+        ghost.red.point = new Point(14*width_height,13*width_height);
+    }
 
     }
 

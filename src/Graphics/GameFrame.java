@@ -7,10 +7,8 @@ public class GameFrame extends JFrame{
     JPanel main = new JPanel();
     GamePanel gamePanel = new GamePanel();
     TopPanel gameTopPanel = new TopPanel(gamePanel.pacMan);
-    BottomPanel gameBottomPanel = new BottomPanel(gamePanel.pacMan);
+    BottomPanel gameBottomPanel = new BottomPanel(gamePanel);
     StartFrame startFrame = new StartFrame(this);
-    EndGameWin endGameWin = new EndGameWin(gamePanel.pacMan);
-    EndGameLoss endGameLoss = new EndGameLoss(gamePanel.pacMan);
     JPanel currentPanel;
 
 
@@ -34,7 +32,7 @@ public class GameFrame extends JFrame{
 
     private void setInstructions(){
         this.setLayout(new BorderLayout());
-        this.setSize(575, 700);
+        this.setSize(575, 720);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(Color.BLACK);
         this.setLocationRelativeTo(null);
@@ -42,7 +40,6 @@ public class GameFrame extends JFrame{
     }
 
     public void setCurrentPanel(JPanel newPanel){
-
         if (currentPanel != null){
             this.remove(currentPanel);
             this.add(newPanel);
