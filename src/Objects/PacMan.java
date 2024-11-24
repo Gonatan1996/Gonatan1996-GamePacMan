@@ -1,5 +1,7 @@
 package Objects;
 
+import Sounds.Sound;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Timer;
@@ -75,7 +77,7 @@ public class PacMan extends GeneralElement implements Speed{
         return 0;
     }
 
-    public boolean lossLife(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow){
+    public boolean lossLife(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow) throws InterruptedException {
         if (lossLife(ghostPink) || lossLife(ghostGreen) || lossLife(ghostRed) || lossLife(ghostYellow)){
             ghostPink.upDatePoint();
             ghostYellow.upDatePoint();
@@ -86,9 +88,11 @@ public class PacMan extends GeneralElement implements Speed{
         return false;
     }
 
-    public boolean lossLife(Ghost ghost) {
+    public boolean lossLife(Ghost ghost) throws InterruptedException {
         if (this.point.x == ghost.getPoint().x && this.point.y == ghost.getPoint().y && eatTimer == 0){
+            Sound sound = new Sound("src/Sounds/died.wav");
             life--;
+            Thread.sleep(2000);
             return true;
         }else{
             ghost.GhostInDanger(this);

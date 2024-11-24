@@ -1,6 +1,7 @@
 package Graphics;
 
 import Objects.*;
+import Sounds.Sound;
 import UpDate.Update;
 
 import javax.swing.*;
@@ -22,6 +23,7 @@ public class GamePanel extends JPanel implements Runnable {
     static int[][] numOfElement = numOfElement();
     public static GeneralElement[][] generalElements = new GeneralElement[numOfElement.length][numOfElement[0].length];
 
+    boolean soundGame = true;
 
     KeyHandler keyHandler = new KeyHandler();
     Thread gameTread;
@@ -186,8 +188,12 @@ public class GamePanel extends JPanel implements Runnable {
                 fruit.orange.upDateScoreOfFruit(pacMan);
                 fruit.apple.upDateScoreOfFruit(pacMan);
 
-                if (pacMan.lossLife(ghost.pink, ghost.green, ghost.red, ghost.yellow)) {
-                    pacMan.stopGame = true;
+                try {
+                    if (pacMan.lossLife(ghost.pink, ghost.green, ghost.red, ghost.yellow)) {
+                        pacMan.stopGame = true;
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
                 Coins.upDateCoins(pacMan, coins, generalElements);
                 if (BigCoins.upDateBigCoins(pacMan, bigCoins, generalElements)) {
@@ -223,6 +229,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
     public void createScreenGame(Graphics g) {
+        if (soundGame){
+            Sound sound = new Sound("src/Sounds/start2.wav");
+            soundGame = false;
+        }
         this.remove(textStart);
         for (int i = 0; i < generalElements.length; i++) {
             for (int j = 0; j < generalElements[i].length; j++) {
@@ -239,6 +249,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
     public void screenLevel2() {
+        Sound sound = new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 2",Color.white);
         Timer timer1 = new Timer();
         timer1.schedule(new TimerTask() {
@@ -247,21 +258,26 @@ public class GamePanel extends JPanel implements Runnable {
                 endGame = false;
                 level2 = false;
                 GamePanel.this.remove(textLabel2);
-                updatePointLevel();
                 revalidate();
                 repaint();
             }
         },2000);
+        updatePointLevel();
         pacMan.score = 0;
         update.speed = 5;
         generalElements = createArrayElement();
     }
     public void screenLevel3() {
+        Sound sound = new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 3",Color.white);
         Timer timer1 = new Timer();
         timer1.schedule(new TimerTask() {
             @Override
             public void run() {
+                level3 = false;
+                pacMan.score = 0;
+                update.speed = 10;
+                generalElements = createArrayElement();
                 endGame = false;
                 GamePanel.this.remove(textLabel2);
                 updatePointLevel();
@@ -269,8 +285,7 @@ public class GamePanel extends JPanel implements Runnable {
                 repaint();
             }
         },2000);
-        pacMan.score = 0;
-        update.speed = 10;
+
 
     }
 
