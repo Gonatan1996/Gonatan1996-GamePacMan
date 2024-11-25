@@ -8,11 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 public class GamePanel extends JPanel implements Runnable {
+
+
     int x, y;
     final int width_height = 20;
     boolean startGame = true,endGame,level2 = true,level3 = true;
@@ -23,7 +26,7 @@ public class GamePanel extends JPanel implements Runnable {
     static int[][] numOfElement = numOfElement();
     public static GeneralElement[][] generalElements = new GeneralElement[numOfElement.length][numOfElement[0].length];
 
-    boolean soundGame = true;
+    boolean soundGameForSound = true,soundGameForMove = true,panelText = true;;
 
     KeyHandler keyHandler = new KeyHandler();
     Thread gameTread;
@@ -41,16 +44,18 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
        if (startGame) {
            screenStartGame();
-       }else if (endGame) {
+       }else if (endGame || pacMan.stopGame) {
            if (pacMan.life >= 0){
                if (level2){
                        screenLevel2();
                }else if (level3){
                        screenLevel3();
                }
-               else screenEndGameWin();
+                else screenEndGameWin();
+
            }
-           else screenEndGameLoss();
+           else  screenEndGameLoss();
+
        }else {
             createScreenGame(g);
             if (pacMan.stopGame) {
@@ -178,16 +183,11 @@ public class GamePanel extends JPanel implements Runnable {
     }
     @Override
     public void run() {
-        while (!pacMan.stopGame || endGame) {
-            if (!keyHandler.GameBreak) {
+        while (!pacMan.stopGame || endGame || true) {
+            if (!keyHandler.GameBreak && !soundGameForMove) {
                 updatePacMan(pacMan);
                 upDateGhosts(ghost.pink, ghost.green, ghost.red, ghost.yellow);
-                fruit.melon.upDateScoreOfFruit(pacMan);
-                fruit.cherry.upDateScoreOfFruit(pacMan);
-                fruit.strawberry.upDateScoreOfFruit(pacMan);
-                fruit.orange.upDateScoreOfFruit(pacMan);
-                fruit.apple.upDateScoreOfFruit(pacMan);
-
+                fruit.upDateScoreOfFruits(pacMan);
                 try {
                     if (pacMan.lossLife(ghost.pink, ghost.green, ghost.red, ghost.yellow)) {
                         pacMan.stopGame = true;
@@ -195,7 +195,7 @@ public class GamePanel extends JPanel implements Runnable {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                Coins.upDateCoins(pacMan, coins, generalElements);
+                Coins.upDateCoins(pacMan,coins, generalElements);
                 if (BigCoins.upDateBigCoins(pacMan, bigCoins, generalElements)) {
                     pacMan.pacManEatGhosts(ghost.pink, ghost.green, ghost.red, ghost.yellow);
                 }
@@ -229,12 +229,22 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
     public void createScreenGame(Graphics g) {
-        if (soundGame){
-            Sound sound = new Sound("src/Sounds/start2.wav");
-            soundGame = false;
+        System.out.println(1);
+        if (soundGameForSound && soundGameForMove){
+            Sound sound = new Sound("src/Sounds/start_game.wav");
+            this.remove(textStart);
+            Timer timer1 = new Timer();
+            timer1.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                  soundGameForMove = false;
+                }
+            },5000);
+            soundGameForSound = false;
         }
-        this.remove(textStart);
+
         for (int i = 0; i < generalElements.length; i++) {
+            System.out.println(i);
             for (int j = 0; j < generalElements[i].length; j++) {
                 x = j * width_height;
                 y = i * width_height;
@@ -248,25 +258,40 @@ public class GamePanel extends JPanel implements Runnable {
         drawImageFruit(g);
 
     }
+
     public void screenLevel2() {
         Sound sound = new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 2",Color.white);
         Timer timer1 = new Timer();
-        timer1.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                endGame = false;
-                level2 = false;
-                GamePanel.this.remove(textLabel2);
-                revalidate();
-                repaint();
-            }
-        },2000);
-        updatePointLevel();
-        pacMan.score = 0;
-        update.speed = 5;
-        generalElements = createArrayElement();
+        if (level2){
+            timer1.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    endGame = false;
+                    pacMan.stopGame = false;
+                    panelText = true;
+                    level2 = false;
+                    GamePanel.this.remove(textLabel2);
+                    revalidate();
+                    repaint();
+                    GamePanel.this.requestFocus();
+                }
+            },2000);
+        }
+        if (panelText) {
+            int life = pacMan.life;
+            pacMan.life = life + 1;
+            pacMan.score = 0;
+            update.speed = 5;
+            bigCoins.bigCoins = new ArrayList<>();
+            coins.coins = new ArrayList<>();
+            generalElements = createArrayElement();
+            updatePointLevel();
+            panelText = false;
+        }
+
     }
+
     public void screenLevel3() {
         Sound sound = new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 3",Color.white);
@@ -275,16 +300,26 @@ public class GamePanel extends JPanel implements Runnable {
             @Override
             public void run() {
                 level3 = false;
-                pacMan.score = 0;
-                update.speed = 10;
-                generalElements = createArrayElement();
+                pacMan.stopGame = false;
                 endGame = false;
                 GamePanel.this.remove(textLabel2);
-                updatePointLevel();
                 revalidate();
                 repaint();
+                GamePanel.this.requestFocus();
             }
         },2000);
+        if (panelText) {
+            int life = pacMan.life;
+            pacMan.life = life + 1;
+            pacMan.score = 0;
+            update.speed = 10;
+            bigCoins.bigCoins = new ArrayList<>();
+            coins.coins = new ArrayList<>();
+            generalElements = createArrayElement();
+            updatePointLevel();
+            panelText = false;
+        }
+
 
 
     }
@@ -319,6 +354,8 @@ public class GamePanel extends JPanel implements Runnable {
         textStart.setBounds(150,50,300,325);
         textStart.setFont(new Font("Arial",Font.BOLD, 50));
         this.add(textStart);
+        revalidate();
+        repaint();
     }
     public void addPanelTextLabel2(String text,Color color){
         textLabel2.setText(text);
@@ -326,6 +363,8 @@ public class GamePanel extends JPanel implements Runnable {
         textLabel2.setBounds(200,100,300,325);
         textLabel2.setFont(new Font("Arial",Font.BOLD, 50));
         this.add(textLabel2);
+        revalidate();
+        repaint();
     }
 
     public void drawImageGhost(Graphics g){

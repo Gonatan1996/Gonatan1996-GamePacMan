@@ -1,5 +1,7 @@
 package Graphics;
 
+
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,8 +22,6 @@ public class GameFrame extends JFrame{
         gameBottomPanel.startUpDateLife();
         gamePanel.startGame();
     }
-
-
 
     public void screenGame(){
         main.setLayout(new BorderLayout());
@@ -47,8 +47,6 @@ public class GameFrame extends JFrame{
             repaint();
         }else currentPanel = newPanel;
         gamePanel.requestFocus();
-
-
-
     }
+
 }

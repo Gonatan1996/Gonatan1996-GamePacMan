@@ -5,7 +5,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class BigCoins extends Coins implements Eatable{
-    ArrayList<BigCoins> bigCoins = new ArrayList<>();
+    int counterImage = 0;
+    public ArrayList<BigCoins> bigCoins = new ArrayList<>();
 
     public BigCoins() {
 
@@ -35,7 +36,10 @@ public class BigCoins extends Coins implements Eatable{
     }
     @Override
     public Image getImage() {
+        counterImage++;
+        if (counterImage == 100)counterImage = 0;
         ImageIcon imageIcon = new ImageIcon("src/Images/BigCoins.jpg");
+        if (counterImage % 10 == 0)imageIcon = new ImageIcon("src/Images/רקע שחור.jpg");
         return imageIcon.getImage();
     }
     public static boolean upDateBigCoins(PacMan pacMan,BigCoins bigCoins,GeneralElement[][] generalElements) {

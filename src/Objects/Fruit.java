@@ -1,5 +1,7 @@
 package Objects;
 
+import Sounds.Sound;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -84,10 +86,18 @@ public class Fruit extends GeneralElement implements Eatable {
         int x = pacMan.getPoint().x,
                 y = pacMan.getPoint().y;
         if (x == this.getPoint().x && y == this.getPoint().y && show){
+            Sound sound = new Sound("src/Sounds/eat_coin.wav");
         show = false;
         pacMan.score += this.getValue();
         this.isEaten = true;
     }
+    }
+    public void upDateScoreOfFruits(PacMan pacMan){
+        melon.upDateScoreOfFruit(pacMan);
+        cherry.upDateScoreOfFruit(pacMan);
+        strawberry.upDateScoreOfFruit(pacMan);
+        orange.upDateScoreOfFruit(pacMan);
+        apple.upDateScoreOfFruit(pacMan);
     }
 
     public static Point randomPoint(){

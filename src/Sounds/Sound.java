@@ -20,7 +20,6 @@ public class Sound implements Runnable{
             Clip clip = AudioSystem.getClip();
             clip.open(audio);
             clip.start();
-            Thread.sleep(3000);
             clip.drain();
         } catch (UnsupportedAudioFileException e) {
             throw new RuntimeException(e);
@@ -28,10 +27,7 @@ public class Sound implements Runnable{
             throw new RuntimeException(e);
         } catch (LineUnavailableException e) {
             throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
-
     }
 
     @Override

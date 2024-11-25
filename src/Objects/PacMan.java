@@ -18,6 +18,7 @@ public class PacMan extends GeneralElement implements Speed{
     public boolean stopGame;
 
 
+
     public String getDirection() {
         return currentDirection;
     }
