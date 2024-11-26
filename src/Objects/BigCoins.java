@@ -38,10 +38,11 @@ public class BigCoins extends Coins implements Eatable{
     public Image getImage() {
         counterImage++;
         if (counterImage == 100)counterImage = 0;
-        ImageIcon imageIcon = new ImageIcon("src/Images/BigCoins.jpg");
+        ImageIcon imageIcon = new ImageIcon("src/Images/BigCoins.png");
         if (counterImage % 10 == 0)imageIcon = new ImageIcon("src/Images/רקע שחור.jpg");
         return imageIcon.getImage();
     }
+
     public static boolean upDateBigCoins(PacMan pacMan,BigCoins bigCoins,GeneralElement[][] generalElements) {
         int x = pacMan.getPoint().x,
                 y = pacMan.getPoint().y;

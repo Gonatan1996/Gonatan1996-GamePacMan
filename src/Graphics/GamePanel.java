@@ -18,7 +18,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     int x, y;
     final int width_height = 20;
-    boolean startGame = true,endGame,level2 = true,level3 = true;
+    boolean startGame = true,level2 = true,level3 = true;
     JLabel textStart = new JLabel();
     JLabel textLabel2 = new JLabel();
     JButton jButton;
@@ -44,7 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
        if (startGame) {
            screenStartGame();
-       }else if (endGame || pacMan.stopGame) {
+       }else if (pacMan.endGame) {
            if (pacMan.life >= 0){
                if (level2){
                        screenLevel2();
@@ -56,14 +56,15 @@ public class GamePanel extends JPanel implements Runnable {
            }
            else  screenEndGameLoss();
 
-       }else {
+       }
+       else {
             createScreenGame(g);
             if (pacMan.stopGame) {
                 if (pacMan.life >= 0 && !coins.coins.isEmpty()) {
                     pacMan.stopGame = false;
                     pacMan.startAgain();
                 }else {
-                   endGame = true;
+                   pacMan.endGame = true;
                 }
             }
         }
@@ -183,13 +184,13 @@ public class GamePanel extends JPanel implements Runnable {
     }
     @Override
     public void run() {
-        while (!pacMan.stopGame || endGame || true) {
-            if (!keyHandler.GameBreak && !soundGameForMove) {
+        while (!pacMan.stopGame) {
+            if (!keyHandler.gameBreak && !soundGameForMove) {
                 updatePacMan(pacMan);
-                upDateGhosts(ghost.pink, ghost.green, ghost.red, ghost.yellow);
+                upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
                 fruit.upDateScoreOfFruits(pacMan);
                 try {
-                    if (pacMan.lossLife(ghost.pink, ghost.green, ghost.red, ghost.yellow)) {
+                    if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
                         pacMan.stopGame = true;
                     }
                 } catch (InterruptedException e) {
@@ -197,7 +198,7 @@ public class GamePanel extends JPanel implements Runnable {
                 }
                 Coins.upDateCoins(pacMan,coins, generalElements);
                 if (BigCoins.upDateBigCoins(pacMan, bigCoins, generalElements)) {
-                    pacMan.pacManEatGhosts(ghost.pink, ghost.green, ghost.red, ghost.yellow);
+                    pacMan.pacManEatGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
                 }
             }
             repaint();
@@ -229,9 +230,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
     public void createScreenGame(Graphics g) {
-        System.out.println(1);
         if (soundGameForSound && soundGameForMove){
-            Sound sound = new Sound("src/Sounds/start_game.wav");
+            new Sound("src/Sounds/start_game.wav");
             this.remove(textStart);
             Timer timer1 = new Timer();
             timer1.schedule(new TimerTask() {
@@ -244,7 +244,6 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         for (int i = 0; i < generalElements.length; i++) {
-            System.out.println(i);
             for (int j = 0; j < generalElements[i].length; j++) {
                 x = j * width_height;
                 y = i * width_height;
@@ -260,21 +259,24 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void screenLevel2() {
-        Sound sound = new Sound("src/Sounds/next_level.wav");
+        new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 2",Color.white);
         Timer timer1 = new Timer();
         if (level2){
             timer1.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    endGame = false;
-                    pacMan.stopGame = false;
-                    panelText = true;
-                    level2 = false;
-                    GamePanel.this.remove(textLabel2);
-                    revalidate();
-                    repaint();
-                    GamePanel.this.requestFocus();
+                    if (level2) {
+                        pacMan.endGame = false;
+                        pacMan.stopGame = false;
+                        panelText = true;
+                        level2 = false;
+                        GamePanel.this.keyHandler.gameBreak = true;
+                        GamePanel.this.remove(textLabel2);
+                        GamePanel.this.requestFocus();
+                        revalidate();
+                        repaint();
+                    }
                 }
             },2000);
         }
@@ -299,13 +301,16 @@ public class GamePanel extends JPanel implements Runnable {
         timer1.schedule(new TimerTask() {
             @Override
             public void run() {
-                level3 = false;
-                pacMan.stopGame = false;
-                endGame = false;
-                GamePanel.this.remove(textLabel2);
-                revalidate();
-                repaint();
-                GamePanel.this.requestFocus();
+                if (level3) {
+                    level3 = false;
+                    pacMan.stopGame = false;
+                    pacMan.endGame = false;
+                    GamePanel.this.keyHandler.gameBreak = true;
+                    GamePanel.this.remove(textLabel2);
+                    GamePanel.this.requestFocus();
+                    revalidate();
+                    repaint();
+                }
             }
         },2000);
         if (panelText) {
@@ -319,19 +324,20 @@ public class GamePanel extends JPanel implements Runnable {
             updatePointLevel();
             panelText = false;
         }
-
-
-
     }
 
     public void screenEndGameWin(){
         addPanelText("You Winner",Color.white);
         addButtonPlayAgain("play again");
+        revalidate();
+        repaint();
     }
 
     public void screenEndGameLoss(){
         addPanelText("  try again",Color.white);
         addButtonPlayAgain("try again");
+        revalidate();
+        repaint();
     }
 
     public void addButtonPlayAgain(String text){
@@ -357,6 +363,7 @@ public class GamePanel extends JPanel implements Runnable {
         revalidate();
         repaint();
     }
+
     public void addPanelTextLabel2(String text,Color color){
         textLabel2.setText(text);
         textLabel2.setForeground(color);
@@ -371,7 +378,7 @@ public class GamePanel extends JPanel implements Runnable {
         g.drawImage(ghost.red.getImage(), ghost.red.getPoint().x,ghost.red.getPoint().y,ghost.width, ghost.height, this);
         g.drawImage(ghost.yellow.getImage(), ghost.yellow.getPoint().x,ghost.yellow.getPoint().y,ghost.width, ghost.height, this);
         g.drawImage(ghost.pink.getImage(), ghost.pink.getPoint().x,ghost.pink.getPoint().y,ghost.width, ghost.height, this);
-        g.drawImage(ghost.green.getImage(), ghost.green.getPoint().x,ghost.green.getPoint().y,ghost.width, ghost.height, this);
+        g.drawImage(ghost.blue.getImage(), ghost.blue.getPoint().x,ghost.blue.getPoint().y,ghost.width, ghost.height, this);
     }
 
     public void drawImagePacman(Graphics g){
@@ -402,11 +409,12 @@ public class GamePanel extends JPanel implements Runnable {
         }else fruit.melon.show = false;
         return fruit;
     }
+
     public void updatePointLevel(){
         pacMan.point = new Point(13 * width_height,21 * width_height);
         ghost.pink.point = new Point(13*width_height,13*width_height);
-        ghost.green.point  = new Point(15*width_height,13*width_height);
-        ghost.yellow.point  = new Point(12* width_height,13*width_height);
+        ghost.blue.point = new Point(15*width_height,13*width_height);
+        ghost.yellow.point = new Point(12* width_height,13*width_height);
         ghost.red.point = new Point(14*width_height,13*width_height);
     }
 

@@ -15,7 +15,7 @@ public class PacMan extends GeneralElement implements Speed{
     public int eatTimer = 0;
     String currentDirection;
     String preferredDirection ;
-    public boolean stopGame;
+    public boolean stopGame,endGame;
 
 
 
@@ -37,7 +37,7 @@ public class PacMan extends GeneralElement implements Speed{
 
     public PacMan() {
        this.point = new Point(13 * width,21 * height);
-       this.image = new ImageIcon("src/Images/pacmanLeft1.jpg").getImage() ;
+       this.image = new ImageIcon("src/Images/pacmanLeft.gif").getImage() ;
        this.currentDirection = "";
     }
 
@@ -55,7 +55,6 @@ public class PacMan extends GeneralElement implements Speed{
     }
     @Override
     public Image getImage() {
-        counter++;
         return image;
     }
 

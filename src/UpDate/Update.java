@@ -11,7 +11,7 @@ import javax.swing.*;
 public class Update {
     PacMan pacMan;
     Ghost ghost;
-    public int speed = 10;
+    public int speed = 4;
 
     public Update(PacMan pacMan, Ghost ghost) {
         this.pacMan = pacMan;
@@ -20,46 +20,37 @@ public class Update {
 
     public void upDateMoveUp(GeneralElement element) {
         element.getPoint().y -= speed;
-
         if (element instanceof PacMan) {
-            if (pacMan.counter % 5 == 0){
-                pacMan.setImage(new ImageIcon("src/Images/pacmanUp1.jpg"));
-            }else {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanUp2.jpg"));
-            }
+            pacMan.setImage(new ImageIcon("src/Images/pacmanUp.gif"));
+        } else if (element instanceof Ghost) {
+            ghost.setImageUp_Down();
         }
     }
 
     public void upDateMoveDown(GeneralElement element) {
         element.getPoint().y += speed;
         if (element instanceof PacMan) {
-            if (pacMan.counter % 7 == 0){
-                pacMan.setImage(new ImageIcon("src/Images/pacmanDown1.jpg"));
-            }else {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanDown2.jpg"));
-            }
+                pacMan.setImage(new ImageIcon("src/Images/pacmanDown.gif"));
+        } else if (element instanceof Ghost) {
+            ghost.setImageUp_Down();
         }
     }
 
     public void upDateMoveRight(GeneralElement element) {
         element.getPoint().x += speed;
         if (element instanceof PacMan) {
-            if (pacMan.counter % 7 == 0) {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanRight1.jpg"));
-            } else {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanRight2.jpg"));
-            }
+                pacMan.setImage(new ImageIcon("src/Images/pacmanRight.gif"));
+        } else if (element instanceof Ghost) {
+            ghost.setImageLeft_Right();
         }
     }
 
     public void upDateMoveLeft(GeneralElement element) {
         element.getPoint().x -= speed;
         if (element instanceof PacMan) {
-            if (pacMan.counter % 7 == 0){
-                pacMan.setImage(new ImageIcon("src/Images/pacmanLeft1.jpg"));
-            }else {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanLeft2.jpg"));
-            }
+                pacMan.setImage(new ImageIcon("src/Images/pacmanLeft.gif"));
+        } else if (element instanceof Ghost) {
+            ghost.setImageLeft_Right();
         }
     }
 
@@ -126,7 +117,7 @@ public class Update {
     }
 
     public void flipDirectionRight(GeneralElement generalElement) {
-        if ((generalElement.getPoint().x + generalElement.width == 556)){
+        if ((generalElement.getPoint().x + generalElement.width > 556)){
             generalElement.getPoint().x = 0;
         }
     }

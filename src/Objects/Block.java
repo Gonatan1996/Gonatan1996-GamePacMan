@@ -35,7 +35,7 @@ public class Block extends GeneralElement {
     }
     @Override
     public Image getImage() {
-        ImageIcon imageIcon = new ImageIcon("src/Images/ריבוע כחול.jpg");
+        ImageIcon imageIcon = new ImageIcon("src/Images/block.jpg");
         return imageIcon.getImage();
     }
 

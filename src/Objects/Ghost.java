@@ -5,25 +5,27 @@ import java.awt.*;
 import java.util.*;
 
 public class Ghost extends GeneralElement implements Eatable, Speed {
-    public Ghost pink,green,yellow,red;
+    public Ghost pink,blue,yellow,red;
     Random random = new Random();
     private int Speed = 4;
     public static String Red = "red",Yellow = "yellow",Green = "green",Pink = "pink";
-    public boolean B_red, B_yellow,B_green, B_pink;
+    public boolean B_red, B_yellow, B_blue, B_pink;
     public boolean up, down, left, right,canMove,startPoint;
     String direction = "UP";
 
     public Ghost() {
         pink =  new Ghost(13*width,13*height,Ghost.Pink);
-        green = new Ghost(15*width,13*height,Ghost.Green);
+        blue = new Ghost(15*width,13*height,Ghost.Green);
         yellow = new Ghost(12* width,13*height,Ghost.Yellow);
         red = new Ghost(14*width,13*height,Ghost.Red);
+        setImageStart();
     }
 
     public Ghost(int x, int y, String booleanColor) {
         setPoint(x,y);
         currentColor(booleanColor);
     }
+
     public String randomMove(Coins coins) {
         startPoint(this,coins);
         if (startPoint) {
@@ -100,19 +102,21 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
 
     @Override
     public Image getImage() {
-        ImageIcon imageIcon = new ImageIcon();
-        if(B_red && ! isEaten)imageIcon = new ImageIcon("src/Images/GhostRed.jpg");
-        if (B_green && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostGreen.jpg");
-        if (B_pink && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostPink.jpg");
-        if (B_yellow && ! isEaten)imageIcon = new ImageIcon("src/Images/ghostYello.jpg");
-        if (isEaten)imageIcon = new ImageIcon("src/Images/ghostIten.jpg");
-        return imageIcon.getImage();
+        if (isEaten)return new ImageIcon("src/Images/ghostIten.png").getImage();
+        return image;
+    }
+
+    private void setImageStart(){
+        this.red.image = new ImageIcon("src/Images/red startPoint.gif").getImage();
+        this.blue.image = new ImageIcon("src/Images/blue startPoint.gif").getImage();
+        this.pink.image = new ImageIcon("src/Images/pink startPoint.gif").getImage();
+        this.yellow.image = new ImageIcon("src/Images/yellow startPoint.gif").getImage();
     }
 
     public void currentColor(String booleanColor){
         switch (booleanColor){
             case "red" -> B_red = true;
-            case "green" -> B_green = true;
+            case "green" -> B_blue = true;
             case "pink" -> B_pink = true;
             case "yellow" -> B_yellow = true;
         }
@@ -148,7 +152,7 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
             this.point.x = 14 * 20;
             this.point.y = 13 * 20;
         }
-        if (B_green) {
+        if (B_blue) {
             this.point.x = 15 * 20;
             this.point.y = 13 * 20;
         }
@@ -179,6 +183,20 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
             left = true;
         }
 
+    }
+
+    public void setImageLeft_Right(){
+        if (B_yellow)this.image = new ImageIcon("src/Images/yellowLeftRight.gif").getImage();
+        if (B_pink)this.image = new ImageIcon("src/Images/pinkLeftRight.gif").getImage();
+        if (B_blue)this.image = new ImageIcon("src/Images/blueLeftRight.gif").getImage();
+        if (B_red)this.image = new ImageIcon("src/Images/redLeftRight.gif").getImage();
+    }
+
+    public void setImageUp_Down(){
+        if (B_yellow)this.image = new ImageIcon("src/Images/yellow startPoint.gif").getImage();
+        if (B_pink)this.image = new ImageIcon("src/Images/pink startPoint.gif").getImage();
+        if (B_blue)this.image = new ImageIcon("src/Images/blue startPoint.gif").getImage();
+        if (B_red)this.image = new ImageIcon("src/Images/red startPoint.gif").getImage();
     }
 
 }

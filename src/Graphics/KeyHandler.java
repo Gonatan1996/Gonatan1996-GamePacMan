@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 
     KeyHandler implements KeyListener {
-        boolean up, down, left, right,GameBreak = true;
+        public boolean up, down, left, right, gameBreak = true;
 
 
 
@@ -22,26 +22,26 @@ import java.awt.event.*;
             int code = e.getKeyCode();
             switch (code){
                 case KeyEvent.VK_ENTER -> {
-                    if (!GameBreak) GameBreak = true;
-                    else GameBreak = false;
+                    if (!gameBreak) gameBreak = true;
+                    else gameBreak = false;
                 }
                 case KeyEvent.VK_UP -> {
-                    GameBreak = false;
+                    gameBreak = false;
                     up = true;
                     flipToFalse("Up");
                 }
                 case KeyEvent.VK_DOWN -> {
-                    GameBreak = false;
+                    gameBreak = false;
                     down = true;
                     flipToFalse("Down");
                 }
                 case KeyEvent.VK_LEFT -> {
-                    GameBreak = false;
+                    gameBreak = false;
                     left = true;
                     flipToFalse("Left");
                 }
                 case KeyEvent.VK_RIGHT -> {
-                    GameBreak = false;
+                    gameBreak = false;
                     right = true;
                     flipToFalse("Right");
                 }
