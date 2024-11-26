@@ -1,5 +1,7 @@
 package Objects;
 
+import UpDate.Update;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -198,5 +200,10 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
         if (B_blue)this.image = new ImageIcon("src/Images/blue startPoint.gif").getImage();
         if (B_red)this.image = new ImageIcon("src/Images/red startPoint.gif").getImage();
     }
+
+//    public void ghostRedMove(PacMan pacMan){
+//        if (pacMan.getPoint().x < this.point.x){
+//        }
+//    }
 
 }

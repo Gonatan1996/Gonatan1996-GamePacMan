@@ -10,7 +10,6 @@ import java.util.TimerTask;
 
 public class PacMan extends GeneralElement implements Speed{
     public int life = 3;
-    public int counter = 0;
     public int score = 0;
     public int eatTimer = 0;
     String currentDirection;
