@@ -104,7 +104,7 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
 
     @Override
     public Image getImage() {
-        if (isEaten)return new ImageIcon("src/Images/ghostIten.png").getImage();
+        if (isEaten)return new ImageIcon("src/Images/GhostDanger.jpg").getImage();
         return image;
     }
 
