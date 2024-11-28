@@ -46,11 +46,11 @@ public class Fruit extends GeneralElement implements Eatable {
 
     @Override
     public Image getImage() {
-        if (B_cherry) imageIcon = new ImageIcon("src/Images/cherry.jpg");
-        if (B_apple) imageIcon = new ImageIcon("src/Images/apple.jpg");
-        if (B_melon) imageIcon = new ImageIcon("src/Images/melon.jpg");
-        if (B_orange) imageIcon = new ImageIcon("src/Images/orange.jpg");
-        if (B_strawberry) imageIcon = new ImageIcon("src/Images/strawberry.jpg");
+        if (B_cherry) imageIcon = new ImageIcon("src/Images/cherry.png");
+        if (B_apple) imageIcon = new ImageIcon("src/Images/apple.png");
+        if (B_melon) imageIcon = new ImageIcon("src/Images/melon.png");
+        if (B_orange) imageIcon = new ImageIcon("src/Images/orange.png");
+        if (B_strawberry) imageIcon = new ImageIcon("src/Images/strawberry.png");
         return imageIcon.getImage();
     }
 
