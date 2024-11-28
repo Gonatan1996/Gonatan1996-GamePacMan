@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     Block block = new Block();
     PacMan pacMan = new PacMan();
-    Coins coins = new Coins();
+    public static Coins coins = new Coins();
     BigCoins bigCoins = new BigCoins();
     Ghost ghost = new Ghost();
     Fruit fruit;
@@ -104,8 +104,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
     public void upDateGhosts(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow){
+        update.ghostRedMove(ghostRed);
         upDateGhost(ghostPink);
-        upDateGhost(ghostRed);
         upDateGhost(ghostGreen);
         upDateGhost(ghostYellow);
     }
@@ -170,10 +170,10 @@ public class GamePanel extends JPanel implements Runnable {
                 {1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,1},
                 {1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1},
                 {1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1},
-                {1,3,2,2,1,1,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,1,1,2,2,3,1},
+                {1,2,2,2,1,1,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,1,1,2,2,2,1},
                 {1,1,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,2,1,1,2,1,1,1},
                 {1,1,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,2,1,1,2,1,1,1},
-                {1,2,2,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,2,2,1},
+                {1,3,2,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,2,3,1},
                 {1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1},
                 {1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1},
                 {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},

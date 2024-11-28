@@ -78,7 +78,7 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
 
     @Override
     public boolean getIsEaten() {
-        return false;
+        return isEaten;
     }
 
     @Override
@@ -136,6 +136,10 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
         if (isEaten) {
             if (pacMan.getPoint().x == this.getPoint().x && pacMan.getPoint().y == this.getPoint().y) {
                 upDatePoint();
+                if (B_red){
+                    System.out.println(151);
+                    this.startPoint = false;
+                }
                 pacMan.score += 200;
             }
         }
@@ -201,9 +205,5 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
         if (B_red)this.image = new ImageIcon("src/Images/red startPoint.gif").getImage();
     }
 
-//    public void ghostRedMove(PacMan pacMan){
-//        if (pacMan.getPoint().x < this.point.x){
-//        }
-//    }
 
 }

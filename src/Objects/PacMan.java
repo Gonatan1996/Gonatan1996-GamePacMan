@@ -89,9 +89,10 @@ public class PacMan extends GeneralElement implements Speed{
 
     public boolean lossLife(Ghost ghost) throws InterruptedException {
         if (this.point.x == ghost.getPoint().x && this.point.y == ghost.getPoint().y && eatTimer == 0){
-            Sound sound = new Sound("src/Sounds/died.wav");
+            new Sound("src/Sounds/died.wav");
             life--;
             Thread.sleep(2000);
+            if (ghost.B_red)ghost.startPoint = false;
             return true;
         }else{
             ghost.GhostInDanger(this);

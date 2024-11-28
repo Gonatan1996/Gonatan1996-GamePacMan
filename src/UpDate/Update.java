@@ -12,6 +12,10 @@ public class Update {
     PacMan pacMan;
     Ghost ghost;
     public int speed = 4;
+    private final int width = 20;
+    private final int height = 20;
+    private boolean right = true,left= true,up= true,down= true,_else;
+
 
     public Update(PacMan pacMan, Ghost ghost) {
         this.pacMan = pacMan;
@@ -123,7 +127,7 @@ public class Update {
     }
 
     public void flipDirectionLeft(GeneralElement generalElement){
-        if ((generalElement.getPoint().x) == 0) {
+        if ((generalElement.getPoint().x) < 10) {
             generalElement.getPoint().x = 560;
         }
     }
@@ -138,7 +142,278 @@ public class Update {
         };
     }
 
+    public void ghostRedMove(Ghost red) {
+
+//        if (red.getIsEaten()){
+//            ghostRedEatenMove(red);
+//            return;
+//        }
+
+        int x = red.getPoint().x,
+                y = red.getPoint().y,
+                tempX = x / width,
+                tempY = y / height;
 
 
+        if (red.point.x == 280 && red.point.y == 260) {
+            for (int i = 0; i < 10; i++) {
+                upDateMoveUp(red);
+            }
+            if (pacMan.getPoint().x > red.point.x) upDateMoveRight(red);
+            else upDateMoveLeft(red);
+            return;
+        }
 
+        if (pacMan.getPoint().x > red.point.x && !_else) {
+            if (canMoveRight(red, tempX, tempY)) {
+                down = true;
+                up = true;
+                upDateMoveRight(red);
+            } else if (pacMan.getPoint().y > red.point.y) {
+                if (canMoveDown(red, tempX, tempY) && down) {
+                    upDateMoveDown(red);
+                } else if (canMoveUp(red, tempX, y)) {
+                    down = false;
+                    upDateMoveUp(red);
+                }
+            } else if (pacMan.getPoint().y < red.point.y) {
+                if (canMoveUp(red, tempX, y) && up) upDateMoveUp(red);
+                else if (canMoveDown(red, tempX, tempY)) {
+                    up = false;
+                    upDateMoveDown(red);
+                }
+            } else if (canMoveUp(red, tempX, y) && up) upDateMoveUp(red);
+            else if (canMoveDown(red, tempX, tempY)) {
+                up = false;
+                upDateMoveDown(red);
+            }
+        } else if (pacMan.getPoint().x < red.point.x && !_else) {
+            if (canMoveLeft(red, x, tempY)) {
+                down = true;
+                up = true;
+                upDateMoveLeft(red);
+            } else if (pacMan.getPoint().y > red.point.y) {
+                if (canMoveDown(red, tempX, tempY) && down) upDateMoveDown(red);
+                else if (canMoveUp(red, tempX, y)) {
+                    down = false;
+                    upDateMoveUp(red);
+                }
+            } else if (pacMan.getPoint().y < red.point.y) {
+                if (canMoveUp(red, tempX, y) && up) upDateMoveUp(red);
+                else if (canMoveDown(red, tempX, tempY)) {
+                    up = false;
+                    upDateMoveDown(red);
+                }
+            } else if (canMoveUp(red, tempX, y) && up) upDateMoveUp(red);
+            else if (canMoveDown(red, tempX, tempY)) {
+                up = false;
+                upDateMoveDown(red);
+            }
+
+        } else {
+            _else = true;
+            if (pacMan.getPoint().y > red.point.y) {
+                if (canMoveDown(red, tempX, tempY)) {
+                    _else = false;
+                    right = true;
+                    left = true;
+                    upDateMoveDown(red);
+                } else if (canMoveRight(red, tempX, tempY) && right) upDateMoveRight(red);
+                else if (canMoveLeft(red, x, tempY)) {
+                    right = false;
+                    upDateMoveLeft(red);
+                }
+            } else if (pacMan.getPoint().y < red.point.y) {
+                if (canMoveUp(red, tempX, y)) {
+                    _else = false;
+                    upDateMoveUp(red);
+                } else if (canMoveRight(red, tempX, tempY) && right) upDateMoveRight(red);
+                else if (canMoveLeft(red, x, tempY)) {
+                    right = false;
+                    upDateMoveLeft(red);
+                }
+            }
+
+
+//        if (pacMan.getPoint().x > red.point.x && !_else) {
+//            if (canMoveRight(red, tempX, tempY) && right){
+//                down = true;
+//                up = true;
+//                upDateMoveRight(red);
+//            }
+//
+//            else if (pacMan.getPoint().y > red.point.y) {
+//                right = true;
+//                if (canMoveDown(red, tempX, tempY) && down){
+//                    right = false;
+//                    upDateMoveDown(red);
+//                }
+//                else if (canMoveUp(red, tempX, y)){
+//                    down = false;
+//                    upDateMoveUp(red);
+//                }
+//            }
+//
+//            else if (pacMan.getPoint().y < red.point.y) {
+//                right = true;
+//                if (canMoveUp(red, tempX, y) && up){
+//                    right = false;
+//                    upDateMoveUp(red);
+//                }
+//                else if (canMoveDown(red, tempX, tempY)){
+//                    up = false;
+//                    upDateMoveDown(red);
+//                }
+//            }
+//            else if (canMoveUp(red, tempX, y) && up)upDateMoveUp(red);
+//            else if (canMoveDown(red, tempX, tempY)){
+//                up = false;
+//                upDateMoveDown(red);
+//            }
+//        }
+//
+//        else if (pacMan.getPoint().x < red.point.x && !_else) {
+//            if (canMoveLeft(red, x, tempY)){
+//                down = true;up = true;
+//                upDateMoveLeft(red);
+//            }
+//
+//            else if (pacMan.getPoint().y > red.point.y) {
+//                if (canMoveDown(red, tempX, tempY) && down) upDateMoveDown(red);
+//                else if (canMoveUp(red, tempX, y)){
+//                    down = false;
+//                    upDateMoveUp(red);
+//                }
+//            } else if (pacMan.getPoint().y < red.point.y) {
+//                if (canMoveUp(red, tempX, y) && up) upDateMoveUp(red);
+//                else if (canMoveDown(red, tempX, tempY)){
+//                    up = false;
+//                    upDateMoveDown(red);
+//                }
+//            }
+//            else if (canMoveUp(red, tempX, y) && up) upDateMoveUp(red);
+//            else if (canMoveDown(red, tempX, tempY)){
+//                up = false;
+//                upDateMoveDown(red);
+//            }
+//
+//        } else {
+//            _else = true;
+//            if (pacMan.getPoint().y > red.point.y) {
+//                if (canMoveDown(red, tempX, tempY)){
+//                    _else = false;
+//                    right = true;left = true;
+//                    upDateMoveDown(red);
+//                }
+//                else if (canMoveRight(red, tempX, tempY) && right) upDateMoveRight(red);
+//                else if (canMoveLeft(red, x, tempY)){
+//                    right = false;
+//                    upDateMoveLeft(red);
+//                }
+//            } else if (pacMan.getPoint().y < red.point.y) {
+//                if (canMoveUp(red, tempX, y)){
+//                    _else = false;
+//                    upDateMoveUp(red);
+//                }
+//                else if (canMoveRight(red, tempX, tempY) && right) upDateMoveRight(red);
+//                else if (canMoveLeft(red, x, tempY)){
+//                    right = false;
+//                    upDateMoveLeft(red);
+//                }
+//            }
+//
+//        }
+        }
+
+    }public void ghostRedEatenMove(Ghost red){
+        int rootX = 280,rootY = 260,x = red.getPoint().x,
+                y = red.getPoint().y,
+                tempX = x / width,
+                tempY = y / height;
+
+
+        if (rootX > red.point.x && !_else) {
+            if (canMoveRight(red, tempX, tempY)){
+                down = true;
+                up = true;
+                upDateMoveRight(red);
+            }
+
+            else if (rootY > red.point.y) {
+                if (canMoveDown(red, tempX, tempY) && down){
+                    upDateMoveDown(red);
+                }
+                else if (canMoveUp(red, tempX, y)){
+                    down = false;
+                    upDateMoveUp(red);
+                }
+            }
+
+            else if (rootY < red.point.y) {
+                if (canMoveUp(red, tempX, y) && up) upDateMoveUp(red);
+                else if (canMoveDown(red, tempX, tempY)){
+                    up = false;
+                    upDateMoveDown(red);
+                }
+            }
+            else if (canMoveUp(red, tempX, y) && up)upDateMoveUp(red);
+            else if (canMoveDown(red, tempX, tempY)){
+                up = false;
+                upDateMoveDown(red);
+            }
+        }
+
+        else if (rootX < red.point.x && !_else) {
+            if (canMoveLeft(red, x, tempY)){
+                down = true;up = true;
+                upDateMoveLeft(red);
+            }
+
+            else if (rootY > red.point.y) {
+                if (canMoveDown(red, tempX, tempY) && down) upDateMoveDown(red);
+                else if (canMoveUp(red, tempX, y)){
+                    down = false;
+                    upDateMoveUp(red);
+                }
+            } else if (rootY < red.point.y) {
+                if (canMoveUp(red, tempX, y) && up) upDateMoveUp(red);
+                else if (canMoveDown(red, tempX, tempY)){
+                    up = false;
+                    upDateMoveDown(red);
+                }
+            }
+            else if (canMoveUp(red, tempX, y) && up) upDateMoveUp(red);
+            else if (canMoveDown(red, tempX, tempY)){
+                up = false;
+                upDateMoveDown(red);
+            }
+
+        } else {
+            _else = true;
+            if (rootY > red.point.y) {
+                if (canMoveDown(red, tempX, tempY)){
+                    _else = false;
+                    right = true;left = true;
+                    upDateMoveDown(red);
+                }
+                else if (canMoveRight(red, tempX, tempY) && right) upDateMoveRight(red);
+                else if (canMoveLeft(red, x, tempY)){
+                    right = false;
+                    upDateMoveLeft(red);
+                }
+            } else if (rootY < red.point.y) {
+                if (canMoveUp(red, tempX, y)){
+                    _else = false;
+                    upDateMoveUp(red);
+                }
+                else if (canMoveRight(red, tempX, tempY) && right) upDateMoveRight(red);
+                else if (canMoveLeft(red, x, tempY)){
+                    right = false;
+                    upDateMoveLeft(red);
+                }
+            }
+
+        }
+    }
 }
+
