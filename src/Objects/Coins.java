@@ -65,7 +65,7 @@ public class Coins extends GeneralElement implements Eatable{
         for (int i = 0; i < coins.coins.size(); i++) {
             Coins coins1 = coins.coins.get(i);
             if (x == coins1.getPoint().x && y == coins1.getPoint().y){
-                Sound sound = new Sound("src/Sounds/eating.wav");
+                new Sound("src/Sounds/pacman_eating2.wav");
                 coins.coins.remove(i);
                 generalElements[y / coins.height][x / coins.width] = new Empty();
                 pacMan.score += 10;

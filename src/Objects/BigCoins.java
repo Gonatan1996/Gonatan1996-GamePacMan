@@ -1,5 +1,7 @@
 package Objects;
 
+import Sounds.Sound;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -52,6 +54,7 @@ public class BigCoins extends Coins implements Eatable{
             if (x == bigcoins1.getPoint().x && y == bigcoins1.getPoint().y){
                 bigCoins.bigCoins.remove(i);
                 generalElements[y / bigCoins.height][x / bigCoins.width] = new Empty();
+                new Sound("src/Sounds/eat_coin.wav");
                 pacMan.score += 50;
                 return true;
             }

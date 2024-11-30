@@ -266,17 +266,16 @@ public class GamePanel extends JPanel implements Runnable {
             timer1.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (level2) {
                         pacMan.endGame = false;
                         pacMan.stopGame = false;
                         panelText = true;
                         level2 = false;
+                        updatePointLevel();
                         GamePanel.this.keyHandler.gameBreak = true;
                         GamePanel.this.remove(textLabel2);
                         GamePanel.this.requestFocus();
                         revalidate();
                         repaint();
-                    }
                 }
             },2000);
         }
@@ -284,18 +283,16 @@ public class GamePanel extends JPanel implements Runnable {
             int life = pacMan.life;
             pacMan.life = life + 1;
             pacMan.score = 0;
-            update.speed = 5;
             bigCoins.bigCoins = new ArrayList<>();
             coins.coins = new ArrayList<>();
             generalElements = createArrayElement();
-            updatePointLevel();
             panelText = false;
         }
 
     }
 
     public void screenLevel3() {
-        Sound sound = new Sound("src/Sounds/next_level.wav");
+        new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 3",Color.white);
         Timer timer1 = new Timer();
         timer1.schedule(new TimerTask() {
@@ -305,6 +302,7 @@ public class GamePanel extends JPanel implements Runnable {
                     level3 = false;
                     pacMan.stopGame = false;
                     pacMan.endGame = false;
+                    updatePointLevel();
                     GamePanel.this.keyHandler.gameBreak = true;
                     GamePanel.this.remove(textLabel2);
                     GamePanel.this.requestFocus();
@@ -317,11 +315,9 @@ public class GamePanel extends JPanel implements Runnable {
             int life = pacMan.life;
             pacMan.life = life + 1;
             pacMan.score = 0;
-            update.speed = 10;
             bigCoins.bigCoins = new ArrayList<>();
             coins.coins = new ArrayList<>();
             generalElements = createArrayElement();
-            updatePointLevel();
             panelText = false;
         }
     }

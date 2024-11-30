@@ -86,7 +86,7 @@ public class Fruit extends GeneralElement implements Eatable {
         int x = pacMan.getPoint().x,
                 y = pacMan.getPoint().y;
         if (x == this.getPoint().x && y == this.getPoint().y && show){
-            Sound sound = new Sound("src/Sounds/eat_coin.wav");
+            new Sound("src/Sounds/eat_coin.wav");
         show = false;
         pacMan.score += this.getValue();
         this.isEaten = true;

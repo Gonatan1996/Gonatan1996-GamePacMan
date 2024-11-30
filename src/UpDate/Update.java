@@ -128,7 +128,7 @@ public class Update {
 
     public void flipDirectionLeft(GeneralElement generalElement){
         if ((generalElement.getPoint().x) < 10) {
-            generalElement.getPoint().x = 560;
+            generalElement.getPoint().x = 540;
         }
     }
 
@@ -143,8 +143,6 @@ public class Update {
     }
 
     public void ghostRedMove(Ghost red) {
-        flipDirectionLeft(red);
-        flipDirectionRight(red);
 
         if (red.getIsEaten()){
             ghostRedEatenMove(red);
@@ -170,6 +168,7 @@ public class Update {
             if (canMoveRight(red, tempX, tempY) && !left) {
                 down = true;
                 up = true;
+                flipDirectionRight(red);
                 upDateMoveRight(red);
                 if (pacMan.getPoint().y > red.point.y && canMoveDown(red,tempX,tempY))upDateMoveDown(red);
                 if (pacMan.getPoint().y < red.point.y && canMoveUp(red,tempX,y))upDateMoveUp(red);
@@ -185,6 +184,7 @@ public class Update {
                     down = false;
                     upDateMoveUp(red);
                 } else if (canMoveLeft(red, x, tempY)) {
+                    flipDirectionLeft(red);
                     upDateMoveLeft(red);
                     left = true;
                 }
@@ -198,6 +198,7 @@ public class Update {
                     left = false;
                     upDateMoveDown(red);
                 } else if (canMoveLeft(red, x, tempY)) {
+                   flipDirectionLeft(red);
                     upDateMoveLeft(red);
                     left = true;
                 }
@@ -214,6 +215,7 @@ public class Update {
 
         else if (pacMan.getPoint().x < red.point.x && !_else) {
             if (canMoveLeft(red, x, tempY) && !right) {
+                flipDirectionLeft(red);
                 down = true;
                 up = true;
                 upDateMoveLeft(red);
@@ -231,6 +233,7 @@ public class Update {
                 } else if (canMoveRight(red, tempX, tempY)) {
                     down = true;
                     up = false;
+                    flipDirectionRight(red);
                     upDateMoveRight(red);
                     right = true;
                 }
@@ -246,6 +249,7 @@ public class Update {
                 } else if (canMoveRight(red, tempX, tempY)) {
                     up = true;
                     down = false;
+                    flipDirectionRight(red);
                     upDateMoveRight(red);
                     right = true;
                 }
@@ -258,11 +262,13 @@ public class Update {
                 up = false;
                 upDateMoveDown(red);
             }else if (canMoveRight(red, tempX, tempY)) {
+                flipDirectionRight(red);
                 upDateMoveRight(red);
                 right = true;
             }
 
         } else {
+            System.out.println(3);
             _else = true;
             if (pacMan.getPoint().y > red.point.y) {
                 if (canMoveDown(red, tempX, tempY) && down) {
@@ -272,10 +278,12 @@ public class Update {
                     upDateMoveDown(red);
                 }
                 else if (canMoveRight(red, tempX, tempY) && right){
+                    flipDirectionRight(red);
                     up = false;
                     upDateMoveRight(red);
                 }
                 else if (canMoveLeft(red, x, tempY)) {
+                    flipDirectionLeft(red);
                     right = false;
                     up = false;
                     upDateMoveLeft(red);
@@ -291,9 +299,11 @@ public class Update {
                 }
                 else if (canMoveRight(red, tempX, tempY) && right){
                     down = false;
+                    flipDirectionRight(red);
                     upDateMoveRight(red);
                 }
                 else if (canMoveLeft(red, x, tempY)) {
+                    flipDirectionLeft(red);
                     upDateMoveLeft(red);
                     down = false;
                     right = false;
@@ -321,6 +331,7 @@ public class Update {
             if (canMoveRight(red, tempX, tempY) && !left) {
                 down = true;
                 up = true;
+                flipDirectionRight(red);
                 upDateMoveRight(red);
                 if (rootY > red.point.y && canMoveDown(red,tempX,tempY))upDateMoveDown(red);
                 if (rootY < red.point.y && canMoveUp(red,tempX,y))upDateMoveUp(red);
@@ -336,6 +347,7 @@ public class Update {
                     down = false;
                     upDateMoveUp(red);
                 } else if (canMoveLeft(red, x, tempY)) {
+                    flipDirectionLeft(red);
                     upDateMoveLeft(red);
                     left = true;
                 }
@@ -349,6 +361,7 @@ public class Update {
                     left = false;
                     upDateMoveDown(red);
                 } else if (canMoveLeft(red, x, tempY)) {
+                    flipDirectionLeft(red);
                     upDateMoveLeft(red);
                     left = true;
                 }
@@ -367,6 +380,7 @@ public class Update {
             if (canMoveLeft(red, x, tempY) && !right) {
                 down = true;
                 up = true;
+                flipDirectionLeft(red);
                 upDateMoveLeft(red);
                 if (rootY > red.point.y && canMoveDown(red,tempX,tempY))upDateMoveDown(red);
                 if (rootY < red.point.y && canMoveUp(red,tempX,y))upDateMoveUp(red);
@@ -382,6 +396,7 @@ public class Update {
                 } else if (canMoveRight(red, tempX, tempY)) {
                     down = true;
                     up = false;
+                    flipDirectionRight(red);
                     upDateMoveRight(red);
                     right = true;
                 }
@@ -397,6 +412,7 @@ public class Update {
                 } else if (canMoveRight(red, tempX, tempY)) {
                     up = true;
                     down = false;
+                    flipDirectionRight(red);
                     upDateMoveRight(red);
                     right = true;
                 }
@@ -409,6 +425,7 @@ public class Update {
                 up = false;
                 upDateMoveDown(red);
             }else if (canMoveRight(red, tempX, tempY)) {
+                flipDirectionRight(red);
                 upDateMoveRight(red);
                 right = true;
             }
@@ -424,11 +441,13 @@ public class Update {
                 }
                 else if (canMoveRight(red, tempX, tempY) && right){
                     up = false;
+                    flipDirectionRight(red);
                     upDateMoveRight(red);
                 }
                 else if (canMoveLeft(red, x, tempY)) {
                     right = false;
                     up = false;
+                    flipDirectionLeft(red);
                     upDateMoveLeft(red);
                 } else if (canMoveUp(red, tempX, y)) {
                     up = true;
@@ -442,9 +461,11 @@ public class Update {
                 }
                 else if (canMoveRight(red, tempX, tempY) && right){
                     down = false;
+                    flipDirectionRight(red);
                     upDateMoveRight(red);
                 }
                 else if (canMoveLeft(red, x, tempY)) {
+                    flipDirectionLeft(red);
                     upDateMoveLeft(red);
                     down = false;
                     right = false;
