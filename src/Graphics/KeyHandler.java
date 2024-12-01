@@ -16,10 +16,8 @@ public class
 
         public KeyHandler() {
             moves = new ArrayList<>();
-            moves.add(KeyEvent.VK_ENTER);
             timeStamps = new ArrayList<>();
             lastKeyPressedTime = System.currentTimeMillis();
-            timeStamps.add(2000L);
         }
 
     @Override
@@ -75,6 +73,11 @@ public class
             }
         }
         public void moveAuto (){
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             for (int i = 0; i < moves.size(); i++) {
                 int move = moves.get(i);
                 switch (move) {

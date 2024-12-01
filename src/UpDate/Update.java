@@ -523,11 +523,14 @@ public class Update {
 
 
 
-        System.out.println("pointY " + ghost.getPoint().y);
-        System.out.println("gy " +gy);
-        System.out.println("rootY " +rootY);
+//        System.out.println("pointY " + ghost.getPoint().y);
+//        System.out.println("gy " +gy);
+//        System.out.println("rootY " +rootY);
 
         if (rootX > gx && !_else) {
+            if (rootY < gy && canMoveUp(ghost,tempX,gy)){
+                System.out.println(53);upDateMoveUp(ghost);
+            }
             if (canMoveRight(ghost, tempX, tempY) && !left) {
                 System.out.println(51);
                 down = true;
