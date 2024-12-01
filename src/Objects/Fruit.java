@@ -55,16 +55,6 @@ public class Fruit extends GeneralElement implements Eatable {
     }
 
     @Override
-    public int getImageWidth() {
-        return width;
-    }
-
-    @Override
-    public int getImageHeight() {
-        return height;
-    }
-
-    @Override
     public int getValue() {
         if (B_cherry)return 100;
         if (B_strawberry)return 300;

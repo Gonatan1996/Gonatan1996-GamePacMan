@@ -14,6 +14,7 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     public boolean B_red, B_yellow, B_blue, B_pink;
     public boolean up, down, left, right,canMove,startPoint;
     String direction = "UP";
+    public Point point;
 
     public Ghost() {
         pink =  new Ghost(13*width,13*height,Ghost.Pink);
@@ -79,17 +80,6 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     @Override
     public boolean getIsEaten() {
         return isEaten;
-    }
-
-    @Override
-    public int getImageWidth() {
-        return width;
-    }
-
-
-    @Override
-    public int getImageHeight() {
-        return height;
     }
 
     @Override

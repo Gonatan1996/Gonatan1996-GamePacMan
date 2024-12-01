@@ -103,6 +103,33 @@ public class GamePanel extends JPanel implements Runnable {
         update.moveElement(pacMan,tempX,tempY,x,y);
         }
 
+
+//        public void updatePacManMoveAutomatic(PacMan pacMan) {
+//        if (keyHandler.up) pacMan.setPreferredDirection("UP");
+//        if (keyHandler.down) pacMan.setPreferredDirection("DOWN");
+//        if (keyHandler.right){
+//            update.flipDirectionRight(pacMan);
+//            pacMan.setPreferredDirection("RIGHT");
+//        }
+//        if (keyHandler.left){
+//            update.flipDirectionLeft(pacMan);
+//            pacMan.setPreferredDirection("LEFT");
+//        }
+//        String preferredDirection = pacMan.getPreferredDirection();
+//
+//        int x = pacMan.getPoint().x,
+//                y = pacMan.getPoint().y,
+//                tempX = x / width_height,
+//                tempY = y / width_height;
+//
+//
+//        if (preferredDirection != null && update.canTurn(pacMan,preferredDirection, tempX, tempY, x, y)) {
+//            pacMan.setDirection(preferredDirection);
+//            pacMan.setPreferredDirection(null);
+//        }
+//        update.moveElement(pacMan,tempX,tempY,x,y);
+//        }
+
     public void upDateGhosts(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow){
         update.ghostRedMove(ghostRed);
         upDateGhost(ghostPink);
@@ -111,6 +138,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void upDateGhost(Ghost ghost){
+//        if (ghost.getIsEaten()){
+//            System.out.println("guyfascjhoasc");
+//            update.ghostEatenMove(ghost);
+//        }
         int x = ghost.getPoint().x,
                 y = ghost.getPoint().y,
                 tempX = x / width_height,
@@ -187,7 +218,7 @@ public class GamePanel extends JPanel implements Runnable {
         while (!pacMan.stopGame) {
             if (!keyHandler.gameBreak && !soundGameForMove) {
                 updatePacMan(pacMan);
-                upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
+                //upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
                 fruit.upDateScoreOfFruits(pacMan);
                 try {
                     if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
@@ -272,6 +303,7 @@ public class GamePanel extends JPanel implements Runnable {
                         level2 = false;
                         updatePointLevel();
                         GamePanel.this.keyHandler.gameBreak = true;
+                        keyHandler.startMoveAuto();
                         GamePanel.this.remove(textLabel2);
                         GamePanel.this.requestFocus();
                         revalidate();

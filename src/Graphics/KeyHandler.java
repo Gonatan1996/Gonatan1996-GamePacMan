@@ -1,17 +1,28 @@
 package Graphics;
 
 import java.awt.event.*;
+import java.util.ArrayList;
 
-    public class
-
-
-
-    KeyHandler implements KeyListener {
-        public boolean up, down, left, right, gameBreak = true;
+public class
 
 
 
-        @Override
+    KeyHandler implements KeyListener,Runnable {
+        Thread thread;
+        public ArrayList<Integer> moves;
+        public ArrayList<Long> timeStamps = new ArrayList<>();
+        private long lastKeyPressedTime;
+        public boolean up, down, left, right, gameBreak,keyAuto;
+
+        public KeyHandler() {
+            moves = new ArrayList<>();
+            moves.add(KeyEvent.VK_ENTER);
+            timeStamps = new ArrayList<>();
+            lastKeyPressedTime = System.currentTimeMillis();
+            timeStamps.add(2000L);
+        }
+
+    @Override
         public void keyTyped(KeyEvent e) {
 
 
@@ -19,34 +30,93 @@ import java.awt.event.*;
 
         @Override
         public void keyPressed(KeyEvent e) {
-            int code = e.getKeyCode();
-            switch (code){
-                case KeyEvent.VK_ENTER -> {
-                    if (!gameBreak) gameBreak = true;
-                    else gameBreak = false;
+            if (!keyAuto) {
+                long currentTime = System.currentTimeMillis();
+                int code = e.getKeyCode();
+                switch (code) {
+                    case KeyEvent.VK_ENTER -> {
+                        if (!gameBreak) gameBreak = true;
+                        else gameBreak = false;
+                    }
+                    case KeyEvent.VK_UP -> {
+                        gameBreak = false;
+                        up = true;
+                        flipToFalse("Up");
+                    }
+                    case KeyEvent.VK_DOWN -> {
+                        gameBreak = false;
+                        down = true;
+                        flipToFalse("Down");
+                    }
+                    case KeyEvent.VK_LEFT -> {
+                        gameBreak = false;
+                        left = true;
+                        flipToFalse("Left");
+                    }
+                    case KeyEvent.VK_RIGHT -> {
+                        gameBreak = false;
+                        right = true;
+                        flipToFalse("Right");
+                    }
                 }
-                case KeyEvent.VK_UP -> {
-                    gameBreak = false;
-                    up = true;
-                    flipToFalse("Up");
+                moves.add(code);
+                long timeElapsed = currentTime - lastKeyPressedTime;
+                timeStamps.add(timeElapsed);
+                System.out.println(timeElapsed);
+                lastKeyPressedTime = currentTime;
                 }
-                case KeyEvent.VK_DOWN -> {
-                    gameBreak = false;
-                    down = true;
-                    flipToFalse("Down");
-                }
-                case KeyEvent.VK_LEFT -> {
-                    gameBreak = false;
-                    left = true;
-                    flipToFalse("Left");
-                }
-                case KeyEvent.VK_RIGHT -> {
-                    gameBreak = false;
-                    right = true;
-                    flipToFalse("Right");
-                }
+
+        }
+        public void startMoveAuto(){
+            if (thread == null) {
+                keyAuto = true;
+                thread = new Thread(this);
+                thread.start();
             }
         }
+        public void moveAuto (){
+            for (int i = 0; i < moves.size(); i++) {
+                int move = moves.get(i);
+                switch (move) {
+                    case KeyEvent.VK_ENTER -> {
+                        if (!gameBreak) gameBreak = true;
+                        else gameBreak = false;
+                    }
+                    case KeyEvent.VK_UP -> {
+                        gameBreak = false;
+                        up = true;
+                        flipToFalse("Up");
+                    }
+                    case KeyEvent.VK_DOWN -> {
+                        gameBreak = false;
+                        down = true;
+                        flipToFalse("Down");
+                    }
+                    case KeyEvent.VK_LEFT -> {
+                        gameBreak = false;
+                        left = true;
+                        flipToFalse("Left");
+                    }
+                    case KeyEvent.VK_RIGHT -> {
+                        gameBreak = false;
+                        right = true;
+                        flipToFalse("Right");
+                    }
+                }
+                long delay = timeStamps.get(i);
+                System.out.println(delay);
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+
+        }
+
+
+
 
         @Override
         public void keyReleased(KeyEvent e) {
@@ -76,4 +146,8 @@ import java.awt.event.*;
             }
         }
 
+    @Override
+    public void run() {
+        this.moveAuto();
     }
+}

@@ -39,13 +39,4 @@ public class Block extends GeneralElement {
         return imageIcon.getImage();
     }
 
-    @Override
-    public int getImageWidth() {
-        return width;
-    }
-
-    @Override
-    public int getImageHeight() {
-        return height;
-    }
 }

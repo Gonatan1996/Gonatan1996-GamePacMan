@@ -62,16 +62,6 @@ public class PacMan extends GeneralElement implements Speed{
     }
 
     @Override
-    public int getImageWidth() {
-        return width;
-    }
-
-    @Override
-    public int getImageHeight() {
-        return height;
-    }
-
-    @Override
     public double getSpeed() {
         return 0;
     }

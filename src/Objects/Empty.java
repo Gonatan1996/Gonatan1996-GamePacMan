@@ -34,13 +34,4 @@ public class Empty extends GeneralElement{
         return imageIcon.getImage();
     }
 
-    @Override
-    public int getImageWidth() {
-        return 0;
-    }
-
-    @Override
-    public int getImageHeight() {
-        return 0;
-    }
 }

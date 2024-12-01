@@ -41,15 +41,7 @@ public class Coins extends GeneralElement implements Eatable{
         return imageIcon.getImage();
     }
 
-    @Override
-    public int getImageWidth() {
-        return width;
-    }
 
-    @Override
-    public int getImageHeight() {
-        return height;
-    }
 
     @Override
     public int getValue() {
