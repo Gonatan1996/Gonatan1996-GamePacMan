@@ -9,6 +9,7 @@ public class TopPanel extends JPanel implements Runnable{
     PacMan pacMan;
     JLabel label = new JLabel();
     Thread thread;
+    public String name = "";
 
 
     public TopPanel(PacMan pacMan) {
@@ -22,9 +23,9 @@ public class TopPanel extends JPanel implements Runnable{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        label.setText("Score : " + pacMan.score);
+        label.setText( name +" Score : " + pacMan.score);
         label.setSize(150,50);
-        label.setFont(new Font("Arial",Font.BOLD,24));
+        label.setFont(new Font("Arial",Font.BOLD,15));
         this.add(label);
     }
 

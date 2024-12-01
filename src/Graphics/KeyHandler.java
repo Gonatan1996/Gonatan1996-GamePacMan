@@ -40,45 +40,51 @@ public class
                         gameBreak = false;
                         up = true;
                         flipToFalse("Up");
+                        System.out.println("up");
                     }
                     case KeyEvent.VK_DOWN -> {
                         gameBreak = false;
                         down = true;
                         flipToFalse("Down");
+                        System.out.println("down");
                     }
                     case KeyEvent.VK_LEFT -> {
                         gameBreak = false;
                         left = true;
+                        System.out.println("left");
                         flipToFalse("Left");
                     }
                     case KeyEvent.VK_RIGHT -> {
                         gameBreak = false;
                         right = true;
+                        System.out.println("right");
                         flipToFalse("Right");
                     }
                 }
                 moves.add(code);
                 long timeElapsed = currentTime - lastKeyPressedTime;
                 timeStamps.add(timeElapsed);
-                System.out.println(timeElapsed);
+                //System.out.println(timeElapsed);
                 lastKeyPressedTime = currentTime;
                 }
 
         }
         public void startMoveAuto(){
-            if (thread == null) {
+            if (thread == null || thread.isAlive()) {
                 keyAuto = true;
                 thread = new Thread(this);
                 thread.start();
             }
         }
-        public void moveAuto (){
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+        public synchronized void moveAuto (){
             for (int i = 0; i < moves.size(); i++) {
+                long delay = timeStamps.get(i);
+               // System.out.println(delay);
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 int move = moves.get(i);
                 switch (move) {
                     case KeyEvent.VK_ENTER -> {
@@ -88,31 +94,30 @@ public class
                     case KeyEvent.VK_UP -> {
                         gameBreak = false;
                         up = true;
+                        System.out.println("up");
                         flipToFalse("Up");
                     }
                     case KeyEvent.VK_DOWN -> {
                         gameBreak = false;
                         down = true;
+                        System.out.println("down");
                         flipToFalse("Down");
                     }
                     case KeyEvent.VK_LEFT -> {
                         gameBreak = false;
                         left = true;
+                        System.out.println("left");
                         flipToFalse("Left");
                     }
                     case KeyEvent.VK_RIGHT -> {
                         gameBreak = false;
                         right = true;
+                        System.out.println("right");
                         flipToFalse("Right");
                     }
                 }
-                long delay = timeStamps.get(i);
-                System.out.println(delay);
-                try {
-                    Thread.sleep(delay);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+
+
             }
 
 

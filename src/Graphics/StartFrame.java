@@ -4,25 +4,69 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Scanner;
 
 public class StartFrame extends JPanel{
+   // static Scanner scan = new Scanner(System.in);
 int x = 220,y = 250;
-JButton buttonStart = new JButton("Start Game");
+JButton buttonStart = new JButton("Guest");
 JButton buttonInstructions = new JButton("instruction");
 JButton buttonBack = new JButton("Back");
+JButton buttonAddUser = new JButton("AddUser");
+JButton buttonSignIn = new JButton("Sign In");
+
+
 JTextArea textArea;
 
     public StartFrame(GameFrame gameFrame) {
         settings();
+        addButton(buttonAddUser);
+        addButton(buttonSignIn);
         addButton(buttonStart);
         addButton(buttonInstructions);
         gameFrame.currentPanel = this;
+        buttonAddUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userName = "";
+                while (userName.trim().isEmpty()) {
+                    userName = JOptionPane.showInputDialog("Enter User Name");
+                }
+                gameFrame.gamePanel.user.addUser(userName);
+//                gameFrame.gameTopPanel.name = userName;
+//                gameFrame.setCurrentPanel(gameFrame.main);
+            }
+        });
+
+        buttonSignIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userName = "";
+                while (userName.trim().isEmpty()) {
+                    userName = JOptionPane.showInputDialog("Enter User Name");
+                }
+                boolean b = true;
+                for (int i = 0; i < gameFrame.gamePanel.user.users.size(); i++) {
+                    if (userName.equals(gameFrame.gamePanel.user.users.get(i).name)){
+                        JOptionPane.showMessageDialog(null,"Login successful !","Success",JOptionPane.INFORMATION_MESSAGE);
+                        gameFrame.gameTopPanel.name = userName;
+                        gameFrame.setCurrentPanel(gameFrame.main);
+                        b = false;
+                        break;
+                    }
+                }
+                if (b)JOptionPane.showMessageDialog(null,"Login Filed.","Error",JOptionPane.ERROR_MESSAGE);
+
+            }
+        });
+
         buttonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gameFrame.setCurrentPanel(gameFrame.main);
             }
         });
+
         buttonInstructions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

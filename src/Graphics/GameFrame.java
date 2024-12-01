@@ -31,6 +31,7 @@ public class GameFrame extends JFrame{
     }
 
     private void setInstructions(){
+        this.setTitle("PacMan Nachum");
         this.setLayout(new BorderLayout());
         this.setSize(575, 720);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -3,6 +3,7 @@ package Graphics;
 import Objects.*;
 import Sounds.Sound;
 import UpDate.Update;
+import Users.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +31,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     KeyHandler keyHandler = new KeyHandler();
     Thread gameTread;
+    User user;
 
     Block block = new Block();
     PacMan pacMan = new PacMan();
@@ -75,6 +77,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         setFocusable(true);
         generalElements = createArrayElement();
+        user = new User();
     }
 
     public void updatePacMan(PacMan pacMan) {
@@ -303,7 +306,9 @@ public class GamePanel extends JPanel implements Runnable {
                         level2 = false;
                         updatePointLevel();
                         GamePanel.this.keyHandler.gameBreak = true;
-                        keyHandler.startMoveAuto();
+                        if (keyHandler.thread == null) {
+                            keyHandler.startMoveAuto();
+                        }
                         GamePanel.this.remove(textLabel2);
                         GamePanel.this.requestFocus();
                         revalidate();
