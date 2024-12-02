@@ -11,7 +11,7 @@ import javax.swing.*;
 public class Update {
     PacMan pacMan;
     Ghost ghost;
-    public int speed = 10;
+    public int speed = 4;
     private final int width = 20;
     private final int height = 20;
     private boolean right = true,left= true,up= true,down= true,_else;
@@ -319,10 +319,13 @@ public class Update {
                     upDateMoveLeft(red);
                     down = false;
                     right = false;
+                    _else = false;
+
 
                 } else if (canMoveDown(red, tempX, tempY) && down) {
                     upDateMoveDown(red);
                     down = true;
+                    _else = false;
                 }
             }
 
@@ -332,189 +335,6 @@ public class Update {
 
     }
 
-//    public void ghostPinkMove(Ghost pink) {
-//
-//        if (pink.getIsEaten()){
-//            ghostEatenMove(pink);
-//            return;
-//        }
-//
-//        int pinkX = pink.getPoint().x,
-//                pinkY = pink.getPoint().y,
-//                tempX = pinkX / width,
-//                tempY = pinkY / height,
-//        pacmanX = pacMan.getPoint().x - 80,
-//        pacmanY = pacMan.getPoint().y - 80;
-//
-//
-//        if (pinkX > 259 && pinkY == 260 && pinkX < 280) {
-//            upDateMoveRight(pink);
-//            return;
-//        }
-//            if (pinkX == 280 && pinkY == 260) {
-//                for (int i = 0; i < 10; i++) {
-//                    if (canMoveUp(pink, tempX, pinkY)) upDateMoveUp(pink);
-//                }
-//                if (pacmanX > pinkX) upDateMoveRight(pink);
-//                else upDateMoveLeft(pink);
-//                return;
-//            }
-//
-//        if (pacmanX > pinkX && !_else) {
-//            if (canMoveRight(pink, tempX, tempY) && !left) {
-//                down = true;
-//                up = true;
-//                flipDirectionRight(pink);
-//                upDateMoveRight(pink);
-//                if (pacmanY > pinkY && canMoveDown(pink,tempX,tempY))upDateMoveDown(pink);
-//                if (pacmanY < pinkY && canMoveUp(pink,tempX, pinkY))upDateMoveUp(pink);
-//            }
-//            else if (pacmanY > pinkY) {
-//                if (canMoveDown(pink, tempX, tempY) && down) {
-//                    left = false;
-//                    up = false;
-//                    upDateMoveDown(pink);
-//                } else if (canMoveUp(pink, tempX, pinkY)) {
-//                    up = true;
-//                    left = false;
-//                    down = false;
-//                    upDateMoveUp(pink);
-//                } else if (canMoveLeft(pink, pinkX, tempY)) {
-//                    flipDirectionLeft(pink);
-//                    upDateMoveLeft(pink);
-//                    left = true;
-//                }
-//            } else if (pacmanY < pinkY) {
-//                if (canMoveUp(pink,tempX, pinkY) && up){
-//                    left = false;
-//                    upDateMoveUp(pink);
-//                }
-//                else if (canMoveDown(pink, tempX, tempY) && down) {
-//                    up = false;
-//                    left = false;
-//                    upDateMoveDown(pink);
-//                } else if (canMoveLeft(pink, pinkX, tempY)) {
-//                   flipDirectionLeft(pink);
-//                    upDateMoveLeft(pink);
-//                    left = true;
-//                }
-//            }
-//            else if (canMoveUp(pink, tempX, pinkY) && up){
-//                down = false;
-//                upDateMoveUp(pink);
-//            }
-//            else if (canMoveDown(pink, tempX, tempY) && down) {
-//                up = false;
-//                upDateMoveDown(pink);
-//            }
-//        }
-//
-//        else if (pacmanX < pinkX && !_else) {
-//            if (canMoveLeft(pink, pinkX, tempY) && !right) {
-//                flipDirectionLeft(pink);
-//                down = true;
-//                up = true;
-//                upDateMoveLeft(pink);
-//                if (pacmanY > pinkY && canMoveDown(pink,tempX,tempY))upDateMoveDown(pink);
-//                if (pacmanY < pinkY && canMoveUp(pink,tempX, pinkY))upDateMoveUp(pink);
-//            } else if (pacmanY > pinkY) {
-//                if (canMoveDown(pink, tempX, tempY) && down){
-//                    right = false;
-//                    upDateMoveDown(pink);
-//                }
-//                else if (canMoveUp(pink, tempX, pinkY)) {
-//                    down = false;
-//                    right = false;
-//                    upDateMoveUp(pink);
-//                } else if (canMoveRight(pink, tempX, tempY)) {
-//                    down = true;
-//                    up = false;
-//                    flipDirectionRight(pink);
-//                    upDateMoveRight(pink);
-//                    right = true;
-//                }
-//            } else if (pacmanY < pinkY) {
-//                if (canMoveUp(pink, tempX, pinkY) && up){
-//                    right = false;
-//                    upDateMoveUp(pink);
-//                }
-//                else if (canMoveDown(pink, tempX, tempY)) {
-//                    up = false;
-//                    right = false;
-//                    upDateMoveDown(pink);
-//                } else if (canMoveRight(pink, tempX, tempY)) {
-//                    up = true;
-//                    down = false;
-//                    flipDirectionRight(pink);
-//                    upDateMoveRight(pink);
-//                    right = true;
-//                }
-//            }
-//            else if (canMoveUp(pink, tempX, pinkY) && up){
-//                down = false;
-//                upDateMoveUp(pink);
-//            }
-//            else if (canMoveDown(pink, tempX, tempY)) {
-//                up = false;
-//                upDateMoveDown(pink);
-//            }else if (canMoveRight(pink, tempX, tempY)) {
-//                flipDirectionRight(pink);
-//                upDateMoveRight(pink);
-//                right = true;
-//            }
-//
-//        } else {
-//            _else = true;
-//            if (pacmanY > pinkY) {
-//                if (canMoveDown(pink, tempX, tempY) && down) {
-//                    _else = false;
-//                    right = true;
-//                    left = true;
-//                    upDateMoveDown(pink);
-//                }
-//                else if (canMoveRight(pink, tempX, tempY) && right){
-//                    flipDirectionRight(pink);
-//                    up = false;
-//                    upDateMoveRight(pink);
-//                }
-//                else if (canMoveLeft(pink, pinkX, tempY)) {
-//                    flipDirectionLeft(pink);
-//                    right = false;
-//                    up = false;
-//                    upDateMoveLeft(pink);
-//                } else if (canMoveUp(pink, tempX, pinkY)) {
-//                    up = true;
-//                    upDateMoveUp(pink);
-//                }
-//
-//            } else if (pacmanY < pinkY) {
-//                if (canMoveUp(pink, tempX, pinkY) && up) {
-//                    _else = false;
-//                    upDateMoveUp(pink);
-//                }
-//                else if (canMoveRight(pink, tempX, tempY) && right){
-//                    down = false;
-//                    flipDirectionRight(pink);
-//                    upDateMoveRight(pink);
-//                }
-//                else if (canMoveLeft(pink, pinkX, tempY)) {
-//                    flipDirectionLeft(pink);
-//                    upDateMoveLeft(pink);
-//                    down = false;
-//                    right = false;
-//
-//                } else if (canMoveDown(pink, tempX, tempY) && down) {
-//                    upDateMoveDown(pink);
-//                    down = true;
-//                }
-//            }
-//
-//
-//
-//        }
-//
-//    }
-
     public void ghostEatenMove(Ghost ghost){
         int rootX = 280,rootY = 260,gx = ghost.getPoint().x,
                 gy = ghost.getPoint().y,
@@ -523,14 +343,11 @@ public class Update {
 
 
 
-//        System.out.println("pointY " + ghost.getPoint().y);
-//        System.out.println("gy " +gy);
-//        System.out.println("rootY " +rootY);
+        System.out.println("pointY " + ghost.getPoint().y);
+        System.out.println("gy " +gy);
+        System.out.println("rootY " +rootY);
 
         if (rootX > gx && !_else) {
-            if (rootY < gy && canMoveUp(ghost,tempX,gy)){
-                System.out.println(53);upDateMoveUp(ghost);
-            }
             if (canMoveRight(ghost, tempX, tempY) && !left) {
                 System.out.println(51);
                 down = true;

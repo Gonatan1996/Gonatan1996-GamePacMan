@@ -76,9 +76,14 @@ public class PacMan extends GeneralElement implements Speed{
         }
         return false;
     }
+    public boolean ifOnSamePosition(Ghost ghost){
+        Rectangle rectangle1 = new Rectangle(this.point.x,this.point.y,width,height);
+        Rectangle rectangle2 = new Rectangle(ghost.getPoint().x,ghost.getPoint().y,width,height);
+        return rectangle1.intersects(rectangle2);
+    }
 
     public boolean lossLife(Ghost ghost) throws InterruptedException {
-        if (this.point.x == ghost.getPoint().x && this.point.y == ghost.getPoint().y && eatTimer == 0){
+        if (ifOnSamePosition(ghost) && eatTimer == 0){
             new Sound("src/Sounds/died.wav");
             life--;
             Thread.sleep(2000);

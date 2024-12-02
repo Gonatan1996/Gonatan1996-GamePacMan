@@ -124,7 +124,7 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
 
     public void GhostInDanger(PacMan pacMan) {
         if (isEaten) {
-            if (pacMan.getPoint().x == this.getPoint().x && pacMan.getPoint().y == this.getPoint().y) {
+            if (pacMan.ifOnSamePosition(this)) {
                 upDatePoint();
                 if (B_red){
                   //  this.startPoint = false;

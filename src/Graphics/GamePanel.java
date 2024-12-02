@@ -16,7 +16,6 @@ import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements Runnable {
 
-
     int x, y;
     final int width_height = 20;
     boolean startGame = true,level2 = true,level3 = true;
@@ -46,23 +45,27 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
        if (startGame) {
            screenStartGame();
-       }else if (pacMan.endGame) {
-           if (pacMan.life >= 0){
-               if (level2){
-                       screenLevel2();
-               }else if (level3){
-                       screenLevel3();
-               }
-                else screenEndGameWin();
 
-           }
-           else  screenEndGameLoss();
+       }else if (pacMan.endGame) {
+//           if (pacMan.life >= 0){
+//               if (level2){
+//                       screenLevel2();
+//               }else if (level3){
+//                       screenLevel3();
+//               }
+//                else{
+                   screenEndGameWin();
+//               }
+//
+//           }
+//           else  screenEndGameLoss();
 
        }
        else {
             createScreenGame(g);
             if (pacMan.stopGame) {
                 if (pacMan.life >= 0 && !coins.coins.isEmpty()) {
+                   if (!user.recorders.isEmpty())user.recorders.getLast().recording = false;
                     pacMan.stopGame = false;
                     pacMan.startAgain();
                 }else {
@@ -70,9 +73,12 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
         }
+        pacMan.stopGame = true;
+        screenEndGameWin();
+
     }
 
-    public GamePanel() {
+    public GamePanel() throws AWTException {
         this.setBackground(Color.BLACK);
         this.addKeyListener(keyHandler);
         setFocusable(true);
@@ -105,33 +111,6 @@ public class GamePanel extends JPanel implements Runnable {
         }
         update.moveElement(pacMan,tempX,tempY,x,y);
         }
-
-
-//        public void updatePacManMoveAutomatic(PacMan pacMan) {
-//        if (keyHandler.up) pacMan.setPreferredDirection("UP");
-//        if (keyHandler.down) pacMan.setPreferredDirection("DOWN");
-//        if (keyHandler.right){
-//            update.flipDirectionRight(pacMan);
-//            pacMan.setPreferredDirection("RIGHT");
-//        }
-//        if (keyHandler.left){
-//            update.flipDirectionLeft(pacMan);
-//            pacMan.setPreferredDirection("LEFT");
-//        }
-//        String preferredDirection = pacMan.getPreferredDirection();
-//
-//        int x = pacMan.getPoint().x,
-//                y = pacMan.getPoint().y,
-//                tempX = x / width_height,
-//                tempY = y / width_height;
-//
-//
-//        if (preferredDirection != null && update.canTurn(pacMan,preferredDirection, tempX, tempY, x, y)) {
-//            pacMan.setDirection(preferredDirection);
-//            pacMan.setPreferredDirection(null);
-//        }
-//        update.moveElement(pacMan,tempX,tempY,x,y);
-//        }
 
     public void upDateGhosts(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow){
         update.ghostRedMove(ghostRed);
@@ -221,10 +200,11 @@ public class GamePanel extends JPanel implements Runnable {
         while (!pacMan.stopGame) {
             if (!keyHandler.gameBreak && !soundGameForMove) {
                 updatePacMan(pacMan);
-                //upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
+                upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
                 fruit.upDateScoreOfFruits(pacMan);
                 try {
                     if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
+                        //if (!user.recorders.isEmpty())user.recorders.getLast().ifSave(user);
                         pacMan.stopGame = true;
                     }
                 } catch (InterruptedException e) {
@@ -243,6 +223,9 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
         }
+        user.recorders.getLast().ifSave(user);
+
+
     }
 
     public void startGame(){
@@ -305,10 +288,10 @@ public class GamePanel extends JPanel implements Runnable {
                         panelText = true;
                         level2 = false;
                         updatePointLevel();
-                        GamePanel.this.keyHandler.gameBreak = true;
-                        if (keyHandler.thread == null) {
-                            keyHandler.startMoveAuto();
-                        }
+//                        GamePanel.this.keyHandler.gameBreak = true;
+//                        if (keyHandler.thread == null) {
+//                            keyHandler.startMoveAuto();
+//                        }
                         GamePanel.this.remove(textLabel2);
                         GamePanel.this.requestFocus();
                         revalidate();
@@ -340,7 +323,7 @@ public class GamePanel extends JPanel implements Runnable {
                     pacMan.stopGame = false;
                     pacMan.endGame = false;
                     updatePointLevel();
-                    GamePanel.this.keyHandler.gameBreak = true;
+//                    GamePanel.this.keyHandler.gameBreak = true;
                     GamePanel.this.remove(textLabel2);
                     GamePanel.this.requestFocus();
                     revalidate();
@@ -380,7 +363,11 @@ public class GamePanel extends JPanel implements Runnable {
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GameFrame gameFrame = new GameFrame();
+                try {
+                    GameFrame gameFrame = new GameFrame();
+                } catch (AWTException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         jButton.setBorderPainted(false);

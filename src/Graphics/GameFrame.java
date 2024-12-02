@@ -6,15 +6,19 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameFrame extends JFrame{
+
+
     JPanel main = new JPanel();
-    GamePanel gamePanel = new GamePanel();
+    GamePanel gamePanel = new GamePanel(this);
     TopPanel gameTopPanel = new TopPanel(gamePanel.pacMan);
     BottomPanel gameBottomPanel = new BottomPanel(gamePanel);
     StartFrame startFrame = new StartFrame(this);
     JPanel currentPanel;
 
-
-    public GameFrame(){
+    public GameFrame(int i) throws AWTException {
+        super();
+    }
+    public GameFrame() throws AWTException {
         screenGame();
         setInstructions();
         this.add(startFrame);
@@ -30,7 +34,7 @@ public class GameFrame extends JFrame{
         main.add(gameBottomPanel, BorderLayout.SOUTH);   // פאנל תחתון
     }
 
-    private void setInstructions(){
+    private void setInstructions() throws AWTException {
         this.setTitle("PacMan Nachum");
         this.setLayout(new BorderLayout());
         this.setSize(575, 720);
@@ -48,6 +52,13 @@ public class GameFrame extends JFrame{
             repaint();
         }else currentPanel = newPanel;
         gamePanel.requestFocus();
+    }
+    public void newFrame(){
+        this.remove(main);
+        this.add(startFrame);
+        revalidate();
+        repaint();
+
     }
 
 }
