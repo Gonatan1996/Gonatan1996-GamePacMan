@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,25 +48,24 @@ public class GamePanel extends JPanel implements Runnable {
            screenStartGame();
 
        }else if (pacMan.endGame) {
-//           if (pacMan.life >= 0){
-//               if (level2){
-//                       screenLevel2();
-//               }else if (level3){
-//                       screenLevel3();
-//               }
-//                else{
-                   screenEndGameWin();
-//               }
-//
-//           }
-//           else  screenEndGameLoss();
+           if (pacMan.life >= 0){
+               if (level2){
+                       screenLevel2();
+               }else if (level3){
+                       screenLevel3();
+               }
+                else{
+               screenEndGameWin();
+               }
+           }
+           else  screenEndGameLoss();
 
        }
        else {
             createScreenGame(g);
             if (pacMan.stopGame) {
                 if (pacMan.life >= 0 && !coins.coins.isEmpty()) {
-                   if (!user.recorders.isEmpty())user.recorders.getLast().recording = false;
+                   //if (!user.recorders.isEmpty())user.recorders.getLast().recording = false;
                     pacMan.stopGame = false;
                     pacMan.startAgain();
                 }else {
@@ -73,12 +73,12 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
         }
-        pacMan.stopGame = true;
-        screenEndGameWin();
+       // pacMan.stopGame = true;
+      //  screenEndGameWin();
 
     }
 
-    public GamePanel() throws AWTException {
+    public GamePanel() throws AWTException, FileNotFoundException {
         this.setBackground(Color.BLACK);
         this.addKeyListener(keyHandler);
         setFocusable(true);
@@ -200,7 +200,7 @@ public class GamePanel extends JPanel implements Runnable {
         while (!pacMan.stopGame) {
             if (!keyHandler.gameBreak && !soundGameForMove) {
                 updatePacMan(pacMan);
-                upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
+                //upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
                 fruit.upDateScoreOfFruits(pacMan);
                 try {
                     if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
@@ -223,7 +223,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
         }
-        user.recorders.getLast().ifSave(user);
+      //  user.recorders.getLast().ifSave(user);
 
 
     }
@@ -283,30 +283,33 @@ public class GamePanel extends JPanel implements Runnable {
             timer1.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                        pacMan.endGame = false;
-                        pacMan.stopGame = false;
-                        panelText = true;
-                        level2 = false;
-                        updatePointLevel();
-//                        GamePanel.this.keyHandler.gameBreak = true;
-//                        if (keyHandler.thread == null) {
-//                            keyHandler.startMoveAuto();
-//                        }
-                        GamePanel.this.remove(textLabel2);
-                        GamePanel.this.requestFocus();
-                        revalidate();
-                        repaint();
+                    level2 = false;
+//                        pacMan.endGame = false;
+//                        pacMan.stopGame = false;
+//                        panelText = true;
+//                        level2 = false;
+//                        updatePointLevel();
+////                        GamePanel.this.keyHandler.gameBreak = true;
+////                        if (keyHandler.thread == null) {
+////                            keyHandler.startMoveAuto();
+////                        }
+//                        GamePanel.this.remove(textLabel2);
+//                        GamePanel.this.requestFocus();
+//                        revalidate();
+//                        repaint();
                 }
             },2000);
         }
         if (panelText) {
-            int life = pacMan.life;
-            pacMan.life = life + 1;
-            pacMan.score = 0;
-            bigCoins.bigCoins = new ArrayList<>();
-            coins.coins = new ArrayList<>();
-            generalElements = createArrayElement();
-            panelText = false;
+            user.recorders.getLast().ifSave(user);
+
+//            int life = pacMan.life;
+//            pacMan.life = life + 1;
+//            pacMan.score = 0;
+//            bigCoins.bigCoins = new ArrayList<>();
+//            coins.coins = new ArrayList<>();
+//            generalElements = createArrayElement();
+//            panelText = false;
         }
 
     }
@@ -366,6 +369,8 @@ public class GamePanel extends JPanel implements Runnable {
                 try {
                     GameFrame gameFrame = new GameFrame();
                 } catch (AWTException ex) {
+                    throw new RuntimeException(ex);
+                } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
             }

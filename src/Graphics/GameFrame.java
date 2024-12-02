@@ -4,21 +4,22 @@ package Graphics;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 public class GameFrame extends JFrame{
 
 
     JPanel main = new JPanel();
-    GamePanel gamePanel = new GamePanel(this);
+    GamePanel gamePanel = new GamePanel();
     TopPanel gameTopPanel = new TopPanel(gamePanel.pacMan);
     BottomPanel gameBottomPanel = new BottomPanel(gamePanel);
     StartFrame startFrame = new StartFrame(this);
     JPanel currentPanel;
 
-    public GameFrame(int i) throws AWTException {
+    public GameFrame(int i) throws AWTException, FileNotFoundException {
         super();
     }
-    public GameFrame() throws AWTException {
+    public GameFrame() throws AWTException, FileNotFoundException {
         screenGame();
         setInstructions();
         this.add(startFrame);
