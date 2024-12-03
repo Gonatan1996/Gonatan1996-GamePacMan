@@ -12,7 +12,7 @@ public class User {
  //   public ArrayList<ScreenRecorder> recorders = new ArrayList<>();
     public ArrayList<User> users = new ArrayList<>();
     public String name;
-    
+
 
 
     public User() throws AWTException, FileNotFoundException {
