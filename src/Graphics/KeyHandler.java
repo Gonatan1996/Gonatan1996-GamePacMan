@@ -8,16 +8,23 @@ public class
 
 
     KeyHandler implements KeyListener,Runnable {
+    public static KeyHandler keyHandler;
         Thread thread;
         public ArrayList<Integer> moves;
         public ArrayList<Long> timeStamps = new ArrayList<>();
         private long lastKeyPressedTime;
         public boolean up, down, left, right, gameBreak,keyAuto;
 
-        public KeyHandler() {
+        private KeyHandler() {
             moves = new ArrayList<>();
             timeStamps = new ArrayList<>();
             lastKeyPressedTime = System.currentTimeMillis();
+        }
+        public static KeyHandler newKeyHandler(){
+            if (KeyHandler.keyHandler == null){
+                KeyHandler.keyHandler = new KeyHandler();
+            }
+            return KeyHandler.keyHandler;
         }
 
     @Override

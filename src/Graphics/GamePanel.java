@@ -1,5 +1,7 @@
 package Graphics;
 
+import Listener.DrawImage;
+import Listener.Observer;
 import Objects.*;
 import Sounds.Sound;
 import UpDate.Update;
@@ -9,13 +11,27 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.ImageObserver;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable, DrawImage {
+
+
+    HashMap<String,ArrayList<Observer>> listeners = new HashMap<>();
+//
+    public void register(String name,Observer listener){
+        if (listeners.get(name) == null){
+            listeners.put(name,new ArrayList<>());
+        }
+        listeners.get(name).add(listener);
+    }
+
+    ArrayList<DrawImage> drawImages = new ArrayList<>();
 
     int x, y;
     final int width_height = 20;
@@ -29,16 +45,16 @@ public class GamePanel extends JPanel implements Runnable {
 
     boolean soundGameForSound = true,soundGameForMove = true,panelText = true;;
 
-    KeyHandler keyHandler = new KeyHandler();
+    KeyHandler keyHandler = KeyHandler.newKeyHandler();
     Thread gameTread;
     User user;
 
-    Block block = new Block();
-    PacMan pacMan = new PacMan();
-    public static Coins coins = new Coins();
-    BigCoins bigCoins = new BigCoins();
-    Ghost ghost = new Ghost();
-    Fruit fruit;
+    Block block = Block.newBlock();
+    PacMan pacMan = PacMan.newPacman();
+    Coins coins =Coins.newCoins();
+    BigCoins bigCoins = BigCoins.newBigCoin();
+    Ghost ghost = Ghost.newGhost();
+    Fruit fruit = Fruit.newFruit();
     Update update = new Update(pacMan,ghost);
 
     @Override
@@ -84,6 +100,14 @@ public class GamePanel extends JPanel implements Runnable {
         setFocusable(true);
         generalElements = createArrayElement();
         user = new User();
+//        register("drawImages",pacMan);
+//        register("drawImages",ghost);
+
+        register("Draw", ghost);
+        register("BigCoin", ghost);
+        drawImages.add(pacMan);
+        drawImages.add(ghost);
+        drawImages.add(this);
     }
 
     public void updatePacMan(PacMan pacMan) {
@@ -269,9 +293,16 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
         }
-        drawImageGhost(g);
-        drawImagePacman(g);
-        drawImageFruit(g);
+
+        ArrayList<Observer> list = listeners.get("Draw");
+        for (Observer observer : list) {
+            observer.notify(g, this);
+        }
+
+        for (DrawImage drawImage : drawImages) {
+            drawImage.drawImage(g,this);
+        }
+//        drawImageFruit(g);
 
     }
 
@@ -301,7 +332,7 @@ public class GamePanel extends JPanel implements Runnable {
             },2000);
         }
         if (panelText) {
-            user.recorders.getLast().ifSave(user);
+            //        user.recorders.getLast().ifSave(user);
 
 //            int life = pacMan.life;
 //            pacMan.life = life + 1;
@@ -338,7 +369,7 @@ public class GamePanel extends JPanel implements Runnable {
             int life = pacMan.life;
             pacMan.life = life + 1;
             pacMan.score = 0;
-            bigCoins.bigCoins = new ArrayList<>();
+            bigCoins.bigCoinses = new ArrayList<>();
             coins.coins = new ArrayList<>();
             generalElements = createArrayElement();
             panelText = false;
@@ -399,19 +430,21 @@ public class GamePanel extends JPanel implements Runnable {
         repaint();
     }
 
-    public void drawImageGhost(Graphics g){
-        g.drawImage(ghost.red.getImage(), ghost.red.getPoint().x,ghost.red.getPoint().y,ghost.width, ghost.height, this);
-        g.drawImage(ghost.yellow.getImage(), ghost.yellow.getPoint().x,ghost.yellow.getPoint().y,ghost.width, ghost.height, this);
-        g.drawImage(ghost.pink.getImage(), ghost.pink.getPoint().x,ghost.pink.getPoint().y,ghost.width, ghost.height, this);
-        g.drawImage(ghost.blue.getImage(), ghost.blue.getPoint().x,ghost.blue.getPoint().y,ghost.width, ghost.height, this);
-    }
-
-    public void drawImagePacman(Graphics g){
-        g.drawImage(pacMan.getImage(), pacMan.getPoint().x, pacMan.getPoint().y, pacMan.width, pacMan.height, this);
-    }
 
     public Fruit drawImageFruit(Graphics g){
-        if (fruit == null)fruit = new Fruit();
+        return fruit;
+    }
+
+    public void updatePointLevel(){
+        pacMan.point = new Point(13 * width_height,21 * width_height);
+        ghost.pink.point = new Point(13*width_height,13*width_height);
+        ghost.blue.point = new Point(15*width_height,13*width_height);
+        ghost.yellow.point = new Point(12* width_height,13*width_height);
+        ghost.red.point = new Point(14*width_height,13*width_height);
+    }
+
+    @Override
+    public void drawImage(Graphics g, ImageObserver imageObserver) {
         if (pacMan.score >= 100 && pacMan.score < 250 && !fruit.cherry.getIsEaten()){
             fruit.cherry.show = true;
             g.drawImage(fruit.cherry.getImage(),fruit.cherry.getPoint().x,fruit.cherry.getPoint().y ,fruit.width,fruit.height,this);
@@ -432,17 +465,8 @@ public class GamePanel extends JPanel implements Runnable {
             fruit.melon.show = true;
             g.drawImage(fruit.melon.getImage(),fruit.melon.getPoint().x,fruit.melon.getPoint().y,fruit.width,fruit.height,this);
         }else fruit.melon.show = false;
-        return fruit;
-    }
-
-    public void updatePointLevel(){
-        pacMan.point = new Point(13 * width_height,21 * width_height);
-        ghost.pink.point = new Point(13*width_height,13*width_height);
-        ghost.blue.point = new Point(15*width_height,13*width_height);
-        ghost.yellow.point = new Point(12* width_height,13*width_height);
-        ghost.red.point = new Point(14*width_height,13*width_height);
-    }
 
     }
+}
 
 

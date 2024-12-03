@@ -1,12 +1,18 @@
 package Objects;
 
-import UpDate.Update;
+import Listener.DrawImage;
+import Listener.GhostEat;
+import Listener.Observer;
 
+import javax.lang.model.type.NullType;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.*;
 
-public class Ghost extends GeneralElement implements Eatable, Speed {
+public class Ghost extends GeneralElement implements Eatable, Speed, DrawImage , Observer<Graphics, ImageObserver, NullType>, GhostEat {
+    public static Ghost ghost;
+
     public Ghost pink,blue,yellow,red;
     Random random = new Random();
     private int Speed = 4;
@@ -16,7 +22,7 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     String direction = "UP";
     public Point point;
 
-    public Ghost() {
+    private Ghost() {
         pink =  new Ghost(13*width,13*height,Ghost.Pink);
         blue = new Ghost(15*width,13*height,Ghost.Green);
         yellow = new Ghost(12* width,13*height,Ghost.Yellow);
@@ -24,9 +30,17 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
         setImageStart();
     }
 
-    public Ghost(int x, int y, String booleanColor) {
+
+
+    private Ghost(int x, int y, String booleanColor) {
         setPoint(x,y);
         currentColor(booleanColor);
+    }
+    public static Ghost newGhost(){
+        if (Ghost.ghost == null){
+            ghost = newGhost();
+        }
+        return ghost;
     }
 
     public String randomMove(Coins coins) {
@@ -195,4 +209,32 @@ public class Ghost extends GeneralElement implements Eatable, Speed {
     }
 
 
+    @Override
+    public void drawImage(Graphics g, ImageObserver imageObserver) {
+        g.drawImage(red.getImage(),red.getPoint().x,red.getPoint().y,width,height, imageObserver);
+        g.drawImage(yellow.getImage(),yellow.getPoint().x,yellow.getPoint().y,width,height, imageObserver);
+        g.drawImage(pink.getImage(),pink.getPoint().x,pink.getPoint().y,width,height, imageObserver);
+        g.drawImage(blue.getImage(),blue.getPoint().x,blue.getPoint().y,width,height, imageObserver);
+    }
+
+
+
+    @Override
+    public void ghostEat(boolean eat) {
+
+    }
+
+    @Override
+    public NullType notify(Graphics obg) {
+        return null;
+    }
+
+    @Override
+    public NullType notify(Graphics g, ImageObserver imageObserver) {
+        g.drawImage(red.getImage(),red.getPoint().x,red.getPoint().y,width,height, imageObserver);
+        g.drawImage(yellow.getImage(),yellow.getPoint().x,yellow.getPoint().y,width,height, imageObserver);
+        g.drawImage(pink.getImage(),pink.getPoint().x,pink.getPoint().y,width,height, imageObserver);
+        g.drawImage(blue.getImage(),blue.getPoint().x,blue.getPoint().y,width,height, imageObserver);
+        return null;
+    }
 }

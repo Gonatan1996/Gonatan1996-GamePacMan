@@ -5,19 +5,26 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Block extends GeneralElement {
+    public static Block block;
     ArrayList<Block> blocks = new ArrayList<>();
 
-    public Block() {
+    private Block() {
+    }
+    public Block(int x,int y) {
+        setPoint(x,y);
     }
 
     public Block addBlock(Block block){
         blocks.add(block);
         return block;
     }
-
-    public Block(int x,int y) {
-       setPoint(x,y);
+    public static Block newBlock(){
+        if (Block.block == null){
+            Block.block = new Block();
+        }
+        return Block.block;
     }
+
 
     @Override
     public Point getPoint() {

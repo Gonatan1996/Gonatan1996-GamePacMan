@@ -7,19 +7,27 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class BigCoins extends Coins implements Eatable{
+    public static BigCoins bigCoin;
     int counterImage = 0;
-    public ArrayList<BigCoins> bigCoins = new ArrayList<>();
+    public ArrayList<BigCoins> bigCoinses = new ArrayList<>();
 
-    public BigCoins() {
-
+    private BigCoins() {
+        super(0,0);
+    }
+    public static BigCoins newBigCoin(){
+        if (BigCoins.bigCoin == null){
+            BigCoins.bigCoin = new BigCoins();
+        }
+        return BigCoins.bigCoin;
     }
 
+
     public BigCoins addBigCoins(BigCoins newBigCoins){
-        bigCoins.add(newBigCoins);
+        bigCoinses.add(newBigCoins);
         return newBigCoins;
     }
     public BigCoins(int x, int y) {
-        setPoint(x,y);
+        super(x,y);
     }
 
     @Override
@@ -49,10 +57,10 @@ public class BigCoins extends Coins implements Eatable{
         int x = pacMan.getPoint().x,
                 y = pacMan.getPoint().y;
 
-        for (int i = 0; i < bigCoins.bigCoins.size(); i++) {
-            BigCoins bigcoins1 = bigCoins.bigCoins.get(i);
+        for (int i = 0; i < bigCoins.bigCoinses.size(); i++) {
+            BigCoins bigcoins1 = bigCoins.bigCoinses.get(i);
             if (x == bigcoins1.getPoint().x && y == bigcoins1.getPoint().y){
-                bigCoins.bigCoins.remove(i);
+                bigCoins.bigCoinses.remove(i);
                 generalElements[y / bigCoins.height][x / bigCoins.width] = new Empty();
                 new Sound("src/Sounds/eat_coin.wav");
                 pacMan.score += 50;

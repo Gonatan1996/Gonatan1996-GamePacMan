@@ -7,17 +7,24 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Coins extends GeneralElement implements Eatable{
+    public static Coins coin;
     public ArrayList<Coins> coins = new ArrayList<>();
 
-    public Coins() {
+    private Coins() {
+    }
+    public Coins(int x, int y) {
+        setPoint(x,y);
+    }
+    public static Coins newCoins(){
+        if (Coins.coin == null){
+        Coins.coin = newCoins();
+        }
+        return Coins.coin;
     }
 
     public Coins addCoins(Coins newCoins){
         coins.add(newCoins);
         return newCoins;
-    }
-    public Coins(int x, int y) {
-        setPoint(x,y);
     }
 
     @Override

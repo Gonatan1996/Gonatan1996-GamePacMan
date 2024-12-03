@@ -1,14 +1,19 @@
 package Objects;
 
+import Listener.BigCoinEat;
+import Listener.DrawImage;
+import Listener.Observer;
 import Sounds.Sound;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class PacMan extends GeneralElement implements Speed{
+public class PacMan extends GeneralElement implements Speed, DrawImage,Observer {
+    public static PacMan pacMan;
     public int life = 3;
     public int score = 0;
     public int eatTimer = 0;
@@ -34,10 +39,16 @@ public class PacMan extends GeneralElement implements Speed{
         this.preferredDirection = preferredDirection;
     }
 
-    public PacMan() {
+    private PacMan() {
        this.point = new Point(13 * width,21 * height);
        this.image = new ImageIcon("src/Images/pacmanLeft.gif").getImage() ;
        this.currentDirection = "";
+    }
+    public static PacMan newPacman (){
+        if (PacMan.pacMan == null){
+            PacMan.pacMan = new PacMan();
+        }
+        return pacMan;
     }
 
     @Override
@@ -119,5 +130,14 @@ public class PacMan extends GeneralElement implements Speed{
                 },8000);
         }
 
+    @Override
+    public void drawImage(Graphics g, ImageObserver imageObserver) {
+        g.drawImage(image,getPoint().x,getPoint().y,width,height,imageObserver);
     }
+
+    @Override
+    public Object notify(Object obg) {
+        return null;
+    }
+}
 

@@ -32,7 +32,7 @@ JTextArea textArea;
                     userName = JOptionPane.showInputDialog("Enter User Name");
                 }
                 gameFrame.gamePanel.user.addUser(userName);
-                ifRecord(gameFrame);
+     //           ifRecord(gameFrame);
                 gameFrame.gameTopPanel.name = userName;
                 gameFrame.setCurrentPanel(gameFrame.main);
             }
@@ -50,12 +50,12 @@ JTextArea textArea;
                     if (userName.equals(gameFrame.gamePanel.user.users.get(i).name)){
                         JOptionPane.showMessageDialog(null,"Login successful !","Success",JOptionPane.INFORMATION_MESSAGE);
                         gameFrame.gameTopPanel.name = userName;
-                        try {
-                            ifShowRecorders(gameFrame);
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        ifRecord(gameFrame);
+//                        try {
+//                            ifShowRecorders(gameFrame);
+//                        } catch (IOException ex) {
+//                            throw new RuntimeException(ex);
+//                        }
+ //                       ifRecord(gameFrame);
                         gameFrame.setCurrentPanel(gameFrame.main);
                         b = false;
                         break;
@@ -146,25 +146,25 @@ JTextArea textArea;
         this.setBackground(Color.BLACK);
         this.setVisible(true);
     }
-    public void ifRecord(GameFrame gameFrame){
-        int response = JOptionPane.showConfirmDialog(null,"Do you want to start recording?","question",JOptionPane.YES_NO_OPTION);
-        if (response == JOptionPane.YES_OPTION){
-            System.out.println("ההקלטה החלה");
-            gameFrame.gamePanel.user.recorders.getLast().startRecord();
-        }else {
-            System.out.println("ההקלטה לא התבצעה");
-        }
-    }
-    public void ifShowRecorders(GameFrame gameFrame) throws IOException {
-        int response = JOptionPane.showConfirmDialog(null,"Do you want to see your saved games ?","question",JOptionPane.YES_NO_OPTION);
-        if (response == JOptionPane.YES_OPTION && !gameFrame.gamePanel.user.recorders.isEmpty()){
-            int choice = JOptionPane.showOptionDialog(null,"choice game ","recorders",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,null,gameFrame.gamePanel.user.recorders.toArray(),gameFrame.gamePanel.user.recorders.toArray()[0]);
-            if (choice > 0) {
-                gameFrame.gamePanel.user.recorders.get(choice-1).playRecording();
-            }
-                    gameFrame.gamePanel.user.recorders.getLast().startRecord();
-        }else {
-            System.out.println("Game not found");
-        }
-    }
+//    public void ifRecord(GameFrame gameFrame){
+//        int response = JOptionPane.showConfirmDialog(null,"Do you want to start recording?","question",JOptionPane.YES_NO_OPTION);
+//        if (response == JOptionPane.YES_OPTION){
+//            System.out.println("ההקלטה החלה");
+// //           gameFrame.gamePanel.user.recorders.getLast().startRecord();
+//        }else {
+//            System.out.println("ההקלטה לא התבצעה");
+//        }
+//    }
+//    public void ifShowRecorders(GameFrame gameFrame) throws IOException {
+//        int response = JOptionPane.showConfirmDialog(null,"Do you want to see your saved games ?","question",JOptionPane.YES_NO_OPTION);
+//        if (response == JOptionPane.YES_OPTION && !gameFrame.gamePanel.user.recorders.isEmpty()){
+//            int choice = JOptionPane.showOptionDialog(null,"choice game ","recorders",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,null,gameFrame.gamePanel.user.recorders.toArray(),gameFrame.gamePanel.user.recorders.toArray()[0]);
+//            if (choice > 0) {
+//                gameFrame.gamePanel.user.recorders.get(choice-1).playRecording();
+//            }
+//                    gameFrame.gamePanel.user.recorders.getLast().startRecord();
+//        }else {
+//            System.out.println("Game not found");
+//        }
+//    }
 }

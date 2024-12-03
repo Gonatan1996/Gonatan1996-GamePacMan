@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Fruit extends GeneralElement implements Eatable {
+    public static Fruit fruit;
     static Random random = new Random();
     public Fruit cherry,apple,orange,melon,strawberry;
     public static String Melon = "melon",Apple = "apple",Cherry = "cherry",Orange = "orange",Strawberry = "strawberry";
@@ -16,7 +17,7 @@ public class Fruit extends GeneralElement implements Eatable {
     public static ArrayList<Point> randomPoint = new ArrayList<>();
     ImageIcon imageIcon = new ImageIcon();
 
-    public Fruit() {
+    private Fruit() {
         cherry = new Fruit(Fruit.Cherry,randomPoint());
         apple = new Fruit(Fruit.Apple,randomPoint());
         orange = new Fruit(Fruit.Orange,randomPoint());
@@ -24,9 +25,15 @@ public class Fruit extends GeneralElement implements Eatable {
         strawberry = new Fruit(Fruit.Strawberry,randomPoint());
     }
 
-    public Fruit(String booleanFruit,Point point) {
+    private Fruit(String booleanFruit,Point point) {
         currentFruit(booleanFruit);
         this.point = point;
+    }
+    public static Fruit newFruit(){
+        if(Fruit.fruit == null){
+            Fruit.fruit = newFruit();
+        }
+        return Fruit.fruit;
     }
 
     @Override
