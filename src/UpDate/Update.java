@@ -11,7 +11,7 @@ import javax.swing.*;
 public class Update {
     PacMan pacMan;
     Ghost ghost;
-    public int speed = 10;
+    public int speed = 4;
     private final int width = 20;
     private final int height = 20;
     private boolean right = true,left= true,up= true,down= true,_else;

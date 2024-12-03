@@ -200,7 +200,7 @@ public class GamePanel extends JPanel implements Runnable {
         while (!pacMan.stopGame) {
             if (!keyHandler.gameBreak && !soundGameForMove) {
                 updatePacMan(pacMan);
-                //upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
+                upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
                 fruit.upDateScoreOfFruits(pacMan);
                 try {
                     if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
