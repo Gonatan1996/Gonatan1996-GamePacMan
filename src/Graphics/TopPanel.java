@@ -6,16 +6,16 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TopPanel extends JPanel implements Runnable{
-    PacMan pacMan;
+
+    PacMan pacMan = PacMan.newPacman();
     JLabel label = new JLabel();
     Thread thread;
     public String name = "";
 
 
-    public TopPanel(PacMan pacMan) {
+    public TopPanel() {
         this.setBackground(Color.white);
         this.setPreferredSize(new Dimension(0, 50));
-        this.pacMan = pacMan;
         this.setVisible(true);
     }
 

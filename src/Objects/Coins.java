@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Coins extends GeneralElement implements Eatable{
     public static Coins coin;
-    public ArrayList<Coins> coins = new ArrayList<>();
+    public static ArrayList<Coins> coins = new ArrayList<>();
 
     private Coins() {
     }
@@ -17,7 +17,7 @@ public class Coins extends GeneralElement implements Eatable{
     }
     public static Coins newCoins(){
         if (Coins.coin == null){
-        Coins.coin = newCoins();
+        Coins.coin = new Coins();
         }
         return Coins.coin;
     }

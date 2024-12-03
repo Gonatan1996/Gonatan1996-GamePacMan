@@ -1,14 +1,19 @@
 package Objects;
 
+import Listener.Observer;
 import Sounds.Sound;
 
+import javax.lang.model.type.NullType;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Fruit extends GeneralElement implements Eatable {
+public class Fruit extends GeneralElement implements Eatable , Observer<Graphics, ImageObserver, NullType> {
     public static Fruit fruit;
+    PacMan pacMan = PacMan.newPacman();
+    Coins coins = Coins.newCoins();
     static Random random = new Random();
     public Fruit cherry,apple,orange,melon,strawberry;
     public static String Melon = "melon",Apple = "apple",Cherry = "cherry",Orange = "orange",Strawberry = "strawberry";
@@ -31,7 +36,7 @@ public class Fruit extends GeneralElement implements Eatable {
     }
     public static Fruit newFruit(){
         if(Fruit.fruit == null){
-            Fruit.fruit = newFruit();
+            Fruit.fruit = new Fruit();
         }
         return Fruit.fruit;
     }
@@ -98,9 +103,57 @@ public class Fruit extends GeneralElement implements Eatable {
     }
 
     public static Point randomPoint(){
+        System.out.println(Fruit.randomPoint.size());
         int rand = random.nextInt(Fruit.randomPoint.size());
         int x = Fruit.randomPoint.get(rand).x;
         int y = Fruit.randomPoint.get(rand).y;
         return new Point(x,y);
+    }
+
+    @Override
+    public NullType notify(Graphics obg) {
+        return null;
+    }
+
+    @Override
+    public void drawImages(Graphics g, ImageObserver imageObserver,int x,int y) {
+        if (x == -1 && y == -1) {
+            if (pacMan.score >= 100 && pacMan.score < 250 && !cherry.getIsEaten()) {
+                g.drawImage(cherry.getImage(), cherry.getPoint().x, cherry.getPoint().y, fruit.width, fruit.height, imageObserver);
+                cherry.show = true;
+            }else cherry.show = false;
+            if (pacMan.score >= 400 && pacMan.score < 650 && !fruit.strawberry.getIsEaten()) {
+                g.drawImage(fruit.strawberry.getImage(), fruit.strawberry.getPoint().x, fruit.strawberry.getPoint().y, fruit.width, fruit.height, imageObserver);
+                strawberry.show = true;
+            }else strawberry.show = false;
+            if (pacMan.score >= 1000 && pacMan.score < 1300 && !fruit.orange.getIsEaten()) {
+                g.drawImage(fruit.orange.getImage(), fruit.orange.getPoint().x, fruit.orange.getPoint().y, fruit.width, fruit.height, imageObserver);
+                orange.show = true;
+            }else orange.show = false;
+            if (pacMan.score >= 2000 && pacMan.score < 2200 && !fruit.apple.getIsEaten()) {
+                g.drawImage(fruit.apple.getImage(), fruit.apple.getPoint().x, fruit.apple.getPoint().y, fruit.width, fruit.height, imageObserver);
+                apple.show = true;
+            }else apple.show = false;
+            if (pacMan.score >= 3000 && pacMan.score < 3200 && !fruit.melon.getIsEaten()) {
+                g.drawImage(fruit.melon.getImage(), fruit.melon.getPoint().x, fruit.melon.getPoint().y, fruit.width, fruit.height, imageObserver);
+                melon.show = true;
+            }else melon.show = false;
+        } else {
+            if (pacMan.score >= 100 && pacMan.score < 250 && !cherry.getIsEaten()) {
+                g.drawImage(cherry.getImage(), x,y, fruit.width, fruit.height, imageObserver);
+            }
+            if (pacMan.score >= 400 && pacMan.score < 650 && !fruit.strawberry.getIsEaten()) {
+                g.drawImage(fruit.strawberry.getImage(),x,y, fruit.width, fruit.height, imageObserver);
+            }
+            if (pacMan.score >= 1000 && pacMan.score < 1300 && !fruit.orange.getIsEaten()) {
+                g.drawImage(fruit.orange.getImage(),x,y, fruit.width, fruit.height, imageObserver);
+            }
+            if (pacMan.score >= 2000 && pacMan.score < 2200 && !fruit.apple.getIsEaten()) {
+                g.drawImage(fruit.apple.getImage(), x,y,width, fruit.height, imageObserver);
+            }
+            if (pacMan.score >= 3000 && pacMan.score < 3200 && !fruit.melon.getIsEaten()) {
+                g.drawImage(fruit.melon.getImage(), x, y, fruit.width, fruit.height, imageObserver);
+            }
+        }
     }
 }

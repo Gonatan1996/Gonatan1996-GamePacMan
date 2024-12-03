@@ -5,6 +5,7 @@ import Listener.DrawImage;
 import Listener.Observer;
 import Sounds.Sound;
 
+import javax.lang.model.type.NullType;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -12,7 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class PacMan extends GeneralElement implements Speed, DrawImage,Observer {
+public class PacMan extends GeneralElement implements Speed,Observer<Graphics, ImageObserver, NullType> {
     public static PacMan pacMan;
     public int life = 3;
     public int score = 0;
@@ -130,14 +131,18 @@ public class PacMan extends GeneralElement implements Speed, DrawImage,Observer 
                 },8000);
         }
 
+
     @Override
-    public void drawImage(Graphics g, ImageObserver imageObserver) {
-        g.drawImage(image,getPoint().x,getPoint().y,width,height,imageObserver);
+    public NullType notify(Graphics obg) {
+        return null;
     }
 
     @Override
-    public Object notify(Object obg) {
-        return null;
+    public void drawImages(Graphics g, ImageObserver imageObserver,int x,int y) {
+        if(x == -1 && y == -1){
+            g.drawImage(new ImageIcon("src/Images/pacmanLeft.gif").getImage(),getPoint().x,getPoint().y,width,height,imageObserver);
+        }
+        g.drawImage(image,getPoint().x,getPoint().y,width,height,imageObserver);
     }
 }
 

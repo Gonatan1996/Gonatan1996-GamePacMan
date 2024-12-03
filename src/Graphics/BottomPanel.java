@@ -1,40 +1,36 @@
 package Graphics;
 
+import Listener.Observer;
 import Objects.Fruit;
 import Objects.PacMan;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class BottomPanel extends JPanel implements Runnable {
-    GamePanel gamePanel;
-    PacMan pacMan;
-    Fruit fruit;
+    GamePanel gamePanel = GamePanel.newGamePanel();
+    PacMan pacMan = PacMan.newPacman();
+    Fruit fruit = Fruit.newFruit();
     Thread thread;
+    ArrayList<Observer> listener = new ArrayList<>();
 
 
-    public BottomPanel(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
-        this.pacMan = gamePanel.pacMan;
+    public BottomPanel() throws FileNotFoundException, AWTException {
         this.setBackground(Color.BLACK);
         this.setPreferredSize(new Dimension(0, 50));
-
+        listener.add(pacMan);
+        listener.add(fruit);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         for (int i = 0; i < pacMan.life; i++) {
-            ImageIcon imageIcon = new ImageIcon("src/Images/pacmanLeft.gif");
-            g.drawImage(imageIcon.getImage(), i * 30,0,25,25,this);
+            listener.getFirst().drawImages(g,this,0,0);
         }
-        if (fruit == null)fruit = gamePanel.drawImageFruit(g);
-        else
-            if (fruit.melon.show) g.drawImage(fruit.melon.getImage(), 535, 0, 25, 25, this);
-            if (fruit.cherry.show) g.drawImage(fruit.cherry.getImage(), 535, 0, 25, 25, this);
-            if (fruit.strawberry.show) g.drawImage(fruit.strawberry.getImage(), 535, 0, 25, 25, this);
-            if (fruit.orange.show) g.drawImage(fruit.orange.getImage(), 535, 0, 25, 25, this);
-            if (fruit.apple.show) g.drawImage(fruit.apple.getImage(), 535, 0, 25, 25, this);
+        listener.getLast().drawImages(g,this,535,0);
 
     }
 

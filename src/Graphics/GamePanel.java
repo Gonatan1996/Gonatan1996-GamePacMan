@@ -7,6 +7,7 @@ import Sounds.Sound;
 import UpDate.Update;
 import Users.User;
 
+import javax.lang.model.type.NullType;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,19 +20,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class GamePanel extends JPanel implements Runnable, DrawImage {
-
+public class GamePanel extends JPanel implements Runnable {
+public static GamePanel gamePanel;
 
     HashMap<String,ArrayList<Observer>> listeners = new HashMap<>();
-//
-    public void register(String name,Observer listener){
-        if (listeners.get(name) == null){
-            listeners.put(name,new ArrayList<>());
-        }
-        listeners.get(name).add(listener);
-    }
 
-    ArrayList<DrawImage> drawImages = new ArrayList<>();
+
 
     int x, y;
     final int width_height = 20;
@@ -54,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
     Coins coins =Coins.newCoins();
     BigCoins bigCoins = BigCoins.newBigCoin();
     Ghost ghost = Ghost.newGhost();
-    Fruit fruit = Fruit.newFruit();
+    Fruit fruit;
     Update update = new Update(pacMan,ghost);
 
     @Override
@@ -81,7 +75,6 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
             createScreenGame(g);
             if (pacMan.stopGame) {
                 if (pacMan.life >= 0 && !coins.coins.isEmpty()) {
-                   //if (!user.recorders.isEmpty())user.recorders.getLast().recording = false;
                     pacMan.stopGame = false;
                     pacMan.startAgain();
                 }else {
@@ -89,25 +82,24 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
                 }
             }
         }
-       // pacMan.stopGame = true;
-      //  screenEndGameWin();
-
     }
 
-    public GamePanel() throws AWTException, FileNotFoundException {
+    private GamePanel() throws AWTException, FileNotFoundException {
         this.setBackground(Color.BLACK);
         this.addKeyListener(keyHandler);
         setFocusable(true);
         generalElements = createArrayElement();
         user = new User();
-//        register("drawImages",pacMan);
-//        register("drawImages",ghost);
 
         register("Draw", ghost);
-        register("BigCoin", ghost);
-        drawImages.add(pacMan);
-        drawImages.add(ghost);
-        drawImages.add(this);
+        register("Draw", pacMan);
+        register("Draw", fruit);
+    }
+    public static GamePanel newGamePanel() throws FileNotFoundException, AWTException {
+        if (GamePanel.gamePanel == null){
+            GamePanel.gamePanel = new GamePanel();
+        }
+        return GamePanel.gamePanel;
     }
 
     public void updatePacMan(PacMan pacMan) {
@@ -144,10 +136,6 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
     }
 
     public void upDateGhost(Ghost ghost){
-//        if (ghost.getIsEaten()){
-//            System.out.println("guyfascjhoasc");
-//            update.ghostEatenMove(ghost);
-//        }
         int x = ghost.getPoint().x,
                 y = ghost.getPoint().y,
                 tempX = x / width_height,
@@ -179,6 +167,7 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
                 }
             }
         }
+        fruit = Fruit.newFruit();
         return generalElements;
     }
 
@@ -219,6 +208,8 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
 
         return board;
     }
+
+
     @Override
     public void run() {
         while (!pacMan.stopGame) {
@@ -228,7 +219,6 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
                 fruit.upDateScoreOfFruits(pacMan);
                 try {
                     if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
-                        //if (!user.recorders.isEmpty())user.recorders.getLast().ifSave(user);
                         pacMan.stopGame = true;
                     }
                 } catch (InterruptedException e) {
@@ -247,12 +237,10 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
             }
 
         }
-      //  user.recorders.getLast().ifSave(user);
-
 
     }
 
-    public void startGame(){
+    public synchronized void startGame(){
         gameTread = new Thread(this);
         gameTread.start();
     }
@@ -296,13 +284,8 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
 
         ArrayList<Observer> list = listeners.get("Draw");
         for (Observer observer : list) {
-            observer.notify(g, this);
+            observer.drawImages(g, this,-1,-1);
         }
-
-        for (DrawImage drawImage : drawImages) {
-            drawImage.drawImage(g,this);
-        }
-//        drawImageFruit(g);
 
     }
 
@@ -315,32 +298,27 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
                 @Override
                 public void run() {
                     level2 = false;
-//                        pacMan.endGame = false;
-//                        pacMan.stopGame = false;
-//                        panelText = true;
-//                        level2 = false;
-//                        updatePointLevel();
-////                        GamePanel.this.keyHandler.gameBreak = true;
-////                        if (keyHandler.thread == null) {
-////                            keyHandler.startMoveAuto();
-////                        }
-//                        GamePanel.this.remove(textLabel2);
-//                        GamePanel.this.requestFocus();
-//                        revalidate();
-//                        repaint();
+                        pacMan.endGame = false;
+                        pacMan.stopGame = false;
+                        panelText = true;
+                        level2 = false;
+                        updatePointLevel();
+                        GamePanel.this.remove(textLabel2);
+                        GamePanel.this.requestFocus();
+                        revalidate();
+                        repaint();
                 }
             },2000);
         }
         if (panelText) {
-            //        user.recorders.getLast().ifSave(user);
 
-//            int life = pacMan.life;
-//            pacMan.life = life + 1;
-//            pacMan.score = 0;
-//            bigCoins.bigCoins = new ArrayList<>();
-//            coins.coins = new ArrayList<>();
-//            generalElements = createArrayElement();
-//            panelText = false;
+            int life = pacMan.life;
+            pacMan.life = life + 1;
+            pacMan.score = 0;
+            bigCoins.bigCoinses = new ArrayList<>();
+            coins.coins = new ArrayList<>();
+            generalElements = createArrayElement();
+            panelText = false;
         }
 
     }
@@ -357,7 +335,6 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
                     pacMan.stopGame = false;
                     pacMan.endGame = false;
                     updatePointLevel();
-//                    GamePanel.this.keyHandler.gameBreak = true;
                     GamePanel.this.remove(textLabel2);
                     GamePanel.this.requestFocus();
                     revalidate();
@@ -443,30 +420,13 @@ public class GamePanel extends JPanel implements Runnable, DrawImage {
         ghost.red.point = new Point(14*width_height,13*width_height);
     }
 
-    @Override
-    public void drawImage(Graphics g, ImageObserver imageObserver) {
-        if (pacMan.score >= 100 && pacMan.score < 250 && !fruit.cherry.getIsEaten()){
-            fruit.cherry.show = true;
-            g.drawImage(fruit.cherry.getImage(),fruit.cherry.getPoint().x,fruit.cherry.getPoint().y ,fruit.width,fruit.height,this);
-        }else fruit.cherry.show = false;
-        if (pacMan.score >= 400 && pacMan.score < 650 && !fruit.strawberry.getIsEaten()){
-            fruit.strawberry.show = true;
-            g.drawImage(fruit.strawberry.getImage(),fruit.strawberry.getPoint().x,fruit.strawberry.getPoint().y,fruit.width,fruit.height,this);
-        }else fruit.strawberry.show = false;
-        if (pacMan.score >= 1000 && pacMan.score < 1300 && !fruit.orange.getIsEaten()){
-            fruit.orange.show = true;
-            g.drawImage(fruit.orange.getImage(),fruit.orange.getPoint().x,fruit.orange.getPoint().y,fruit.width,fruit.height,this);
-        }else fruit.orange.show = false;
-        if (pacMan.score >= 2000 && pacMan.score < 2200 && !fruit.apple.getIsEaten()){
-            fruit.apple.show = true;
-            g.drawImage(fruit.apple.getImage(),fruit.apple.getPoint().x,fruit.apple.getPoint().y,fruit.width,fruit.height,this);
-        }else fruit.apple.show = false;
-        if (pacMan.score >= 3000 && pacMan.score < 3200 && !fruit.melon.getIsEaten()){
-            fruit.melon.show = true;
-            g.drawImage(fruit.melon.getImage(),fruit.melon.getPoint().x,fruit.melon.getPoint().y,fruit.width,fruit.height,this);
-        }else fruit.melon.show = false;
-
+    public void register(String name,Observer listener){
+        if (listeners.get(name) == null){
+            listeners.put(name,new ArrayList<>());
+        }
+        listeners.get(name).add(listener);
     }
+
 }
 
 

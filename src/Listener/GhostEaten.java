@@ -1,5 +1,5 @@
 package Listener;
 
-public interface GhostEat {
+public interface GhostEaten {
     void ghostEat(boolean eat);
 }

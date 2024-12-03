@@ -10,9 +10,9 @@ public class GameFrame extends JFrame{
 
 
     JPanel main = new JPanel();
-    GamePanel gamePanel = new GamePanel();
-    TopPanel gameTopPanel = new TopPanel(gamePanel.pacMan);
-    BottomPanel gameBottomPanel = new BottomPanel(gamePanel);
+    GamePanel gamePanel = GamePanel.newGamePanel();
+    TopPanel gameTopPanel = new TopPanel();
+    BottomPanel gameBottomPanel = new BottomPanel();
     StartFrame startFrame = new StartFrame(this);
     JPanel currentPanel;
 

@@ -1,7 +1,6 @@
 package Objects;
 
-import Listener.DrawImage;
-import Listener.GhostEat;
+import Listener.GhostEaten;
 import Listener.Observer;
 
 import javax.lang.model.type.NullType;
@@ -10,7 +9,7 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.*;
 
-public class Ghost extends GeneralElement implements Eatable, Speed, DrawImage , Observer<Graphics, ImageObserver, NullType>, GhostEat {
+public class Ghost extends GeneralElement implements Eatable, Speed , Observer<Graphics, ImageObserver, NullType>, GhostEaten {
     public static Ghost ghost;
 
     public Ghost pink,blue,yellow,red;
@@ -38,7 +37,7 @@ public class Ghost extends GeneralElement implements Eatable, Speed, DrawImage ,
     }
     public static Ghost newGhost(){
         if (Ghost.ghost == null){
-            ghost = newGhost();
+            ghost = new Ghost();
         }
         return ghost;
     }
@@ -209,15 +208,6 @@ public class Ghost extends GeneralElement implements Eatable, Speed, DrawImage ,
     }
 
 
-    @Override
-    public void drawImage(Graphics g, ImageObserver imageObserver) {
-        g.drawImage(red.getImage(),red.getPoint().x,red.getPoint().y,width,height, imageObserver);
-        g.drawImage(yellow.getImage(),yellow.getPoint().x,yellow.getPoint().y,width,height, imageObserver);
-        g.drawImage(pink.getImage(),pink.getPoint().x,pink.getPoint().y,width,height, imageObserver);
-        g.drawImage(blue.getImage(),blue.getPoint().x,blue.getPoint().y,width,height, imageObserver);
-    }
-
-
 
     @Override
     public void ghostEat(boolean eat) {
@@ -230,11 +220,11 @@ public class Ghost extends GeneralElement implements Eatable, Speed, DrawImage ,
     }
 
     @Override
-    public NullType notify(Graphics g, ImageObserver imageObserver) {
+    public void drawImages(Graphics g, ImageObserver imageObserver,int x,int y) {
         g.drawImage(red.getImage(),red.getPoint().x,red.getPoint().y,width,height, imageObserver);
         g.drawImage(yellow.getImage(),yellow.getPoint().x,yellow.getPoint().y,width,height, imageObserver);
         g.drawImage(pink.getImage(),pink.getPoint().x,pink.getPoint().y,width,height, imageObserver);
         g.drawImage(blue.getImage(),blue.getPoint().x,blue.getPoint().y,width,height, imageObserver);
-        return null;
     }
+
 }
