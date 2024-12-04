@@ -23,8 +23,6 @@ public static GamePanel gamePanel;
 
     HashMap<String,ArrayList<Observer>> listeners = new HashMap<>();
 
-
-
     int x, y;
     final int width_height = 20;
     boolean startGame = true,level2 = true,level3 = true;
@@ -47,7 +45,6 @@ public static GamePanel gamePanel;
     BigCoins bigCoins = BigCoins.newBigCoin();
     Ghost ghost = Ghost.newGhost();
     Fruit fruit;
-    Update update = Update.newUpdate();
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -84,7 +81,7 @@ public static GamePanel gamePanel;
        else {
             createScreenGame(g);
             if (pacMan.stopGame) {
-                if (pacMan.life >= 0 && !coins.coins.isEmpty()) {
+                if (pacMan.life >= 0 && !Coins.getCoins().isEmpty()) {
                     pacMan.stopGame = false;
                     pacMan.startAgain();
                 }else {
@@ -105,6 +102,7 @@ public static GamePanel gamePanel;
         updatePointOfLevel();
         drawImages();
     }
+
     public static GamePanel newGamePanel() throws FileNotFoundException, AWTException {
         if (GamePanel.gamePanel == null){
             GamePanel.gamePanel = new GamePanel();
@@ -182,23 +180,18 @@ public static GamePanel gamePanel;
         while (!pacMan.stopGame) {
             if (!keyHandler.gameBreak && !soundGameForMove) {
                 pacManChackCollisioin();
-
                 pacMan.updateMovePacMan(keyHandler);
                 ghost.upDateMoveGhosts();
-
-
-                fruit.upDateScoreOfFruits(pacMan);
-                try {
-                    if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
-                        pacMan.stopGame = true;
-                    }
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-              //  Coins.upDateCoins(pacMan,coins, generalElements);
-                if (BigCoins.upDateBigCoins(pacMan, bigCoins, generalElements)) {
-                    pacMan.pacManEatGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
-                }
+//                try {
+//                 //   if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
+//                        pacMan.stopGame = true;
+//                    }
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                if (BigCoins.upDateBigCoins(pacMan, bigCoins, generalElements)) {
+//                    pacMan.pacManEatGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
+//                }
             }
             repaint();
             try {
@@ -212,10 +205,21 @@ public static GamePanel gamePanel;
     }
 
     private void pacManChackCollisioin() {
-        if (pacMan.checkCollision(coins))coins.collisionPacMan();
-        if (pacMan.checkCollision(bigCoins))bigCoins.collisionPacMan();
-        if (pacMan.checkCollision(fruit))fruit.collisionPacMan();
-        if (pacMan.checkCollision(ghost))ghost.collisionPacMan();
+        for (int i = 0; i < Coins.getCoins().size(); i++) {
+            if (pacMan.checkCollision(Coins.getCoins().get(i)))coins.collisionPacMan();
+        }
+        for (int i = 0; i < bigCoins.getBigCoinses().size(); i++) {
+            if (pacMan.checkCollision(bigCoins.getBigCoinses().get(i))){
+                bigCoins.collisionPacMan();
+                ghost.collisionPacMan();
+            }
+        }
+        for (int i = 0; i < fruit.fruits.size(); i++) {
+            if (pacMan.checkCollision(fruit.fruits.get(i)))fruit.collisionPacMan();
+        }
+        for (int i = 0; i < ghost.getGhosts().size(); i++) {
+            if (pacMan.checkCollision(ghost.getGhosts().get(i)))ghost.getGhosts().get(i).collisionPacMan();
+        }
     }
 
     public synchronized void startGame(){
@@ -279,7 +283,7 @@ public static GamePanel gamePanel;
                         level2 = false;
                         ArrayList<Observer> list = listeners.get("level");
                         for (Observer observer : list) {
-                            observer.updatePointLevel();
+                            observer.updatePointLevel(5);
                         }
                         GamePanel.this.remove(textLabel2);
                         GamePanel.this.requestFocus();
@@ -306,7 +310,7 @@ public static GamePanel gamePanel;
                     level3 = false;
                     ArrayList<Observer> list = listeners.get("level");
                     for (Observer observer : list) {
-                        observer.updatePointLevel();
+                        observer.updatePointLevel(10);
                     }
                     GamePanel.this.remove(textLabel2);
                     GamePanel.this.requestFocus();
@@ -390,6 +394,7 @@ public static GamePanel gamePanel;
         register("level",coins);
         register("level",bigCoins);
     }
+
     private void drawImages(){
         register("Draw",pacMan);
         register("Draw",ghost);

@@ -8,26 +8,22 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.*;
 
-public class Ghost extends GeneralElement implements Speed , Observer {
+public class Ghost extends GeneralElement implements  Observer {
     public static Ghost ghost;
-    private Queue<Ghost> startMove;
-    public Ghost pink,blue,yellow,red;
+    private Queue<Ghost> startMove ;
     Random random = new Random();
-    private double Speed = 4;
+    private ArrayList<Ghost> ghosts = new ArrayList<>();
+    private int Speed = 4;
     public static String Red = "red",Yellow = "yellow",Green = "green",Pink = "pink";
     public boolean B_red, B_yellow, B_blue, B_pink;
     public boolean up, down, left, right,canMove,startPoint;
     String direction = "UP";
-    public Point point;
     public Update update = Update.newUpdate();
 
 
     private Ghost() {
-        pink =  new Ghost(13*width,13*height,Ghost.Pink);
-        blue = new Ghost(15*width,13*height,Ghost.Green);
-        yellow = new Ghost(12* width,13*height,Ghost.Yellow);
-        red = new Ghost(14*width,13*height,Ghost.Red);
-        setImageStart();
+        createGhosts();
+        startMove = createQueueStart();
     }
 
 
@@ -35,17 +31,28 @@ public class Ghost extends GeneralElement implements Speed , Observer {
     private Ghost(int x, int y, String booleanColor) {
         setPoint(new Point(x,y));
         currentColor(booleanColor);
-        startMove = createQueueStart();
     }
+
     public static Ghost newGhost(){
         if (Ghost.ghost == null){
             ghost = new Ghost();
         }
         return ghost;
     }
+    private void createGhosts(){
+        Ghost pink =  new Ghost(13*width,13*height,Ghost.Pink);
+        Ghost blue = new Ghost(15*width,13*height,Ghost.Green);
+        Ghost yellow = new Ghost(12* width,13*height,Ghost.Yellow);
+        Ghost red = new Ghost(14*width,13*height,Ghost.Red);
+        ghosts.add(pink);
+        ghosts.add(blue);
+        ghosts.add(yellow);
+        ghosts.add(red);
+        setImageStart();
+    }
 
     public String randomMove() {
-        startPoint();
+     //   startPoint();
         if (startPoint) {
             if (canMove) {
                 if (up) return "UP";
@@ -105,10 +112,10 @@ public class Ghost extends GeneralElement implements Speed , Observer {
     }
 
     private void setImageStart(){
-        this.red.image = new ImageIcon("src/Images/red startPoint.gif").getImage();
-        this.blue.image = new ImageIcon("src/Images/blue startPoint.gif").getImage();
-        this.pink.image = new ImageIcon("src/Images/pink startPoint.gif").getImage();
-        this.yellow.image = new ImageIcon("src/Images/yellow startPoint.gif").getImage();
+        ghosts.get(0).image = new ImageIcon("src/Images/red startPoint.gif").getImage();
+        ghosts.get(1).image = new ImageIcon("src/Images/blue startPoint.gif").getImage();
+        ghosts.get(2).image = new ImageIcon("src/Images/pink startPoint.gif").getImage();
+        ghosts.get(3).image = new ImageIcon("src/Images/yellow startPoint.gif").getImage();
     }
 
     public void currentColor(String booleanColor){
@@ -160,15 +167,22 @@ public class Ghost extends GeneralElement implements Speed , Observer {
 //        }
 //    }
 
-    @Override
-    public void collisionPacMan() {
-        if (isEaten) {
-            red.startPoint = false;
-            pink.setPoint(new Point(13 * width, 13 * height));
-            blue.setPoint(new Point(15 * width, 13 * height));
-            yellow.setPoint(new Point(12 * width, 13 * height));
-        }else this.setPoint(new Point(14*width,13*height));
+    public ArrayList<Ghost> getGhosts() {
+        return ghosts;
     }
+
+
+    @Override
+    public void collisionPacMan()  {
+            for (int i = 0; i < ghosts.size(); i++) {
+                if (ghosts.get(i).checkCollision(PacMan.newPacman())) {
+                    PacMan.newPacman().collisionGhost();
+                    ghosts.get(i).setPoint(new Point(14 * width, 13 * height));
+            }
+        }
+    }
+
+
 
     public void startPoint(){
         Ghost ghost1 = pollStart();
@@ -191,10 +205,10 @@ public class Ghost extends GeneralElement implements Speed , Observer {
     }
     public Queue<Ghost> createQueueStart(){
         Queue<Ghost> start = new LinkedList<>();
-        start.add(red);
-        start.add(pink);
-        start.add(yellow);
-        start.add(blue);
+        start.add(ghosts.get(0));
+        start.add(ghosts.get(1));
+        start.add(ghosts.get(2));
+        start.add(ghosts.get(3));
         return start;
     }
 
@@ -222,26 +236,26 @@ public class Ghost extends GeneralElement implements Speed , Observer {
 
 
     @Override
-    public void updatePointLevel() {
-        pink.setPoint(new Point(13*width,13*height));
-        blue.setPoint(new Point(15*width,13*height));
-        yellow.setPoint(new Point(12*width,13*height));
-        red.setPoint(new Point(14*width,13*height));
+    public void updatePointLevel(int speed) {
+        ghosts.get(0).setPoint(new Point(13*width,13*height));
+        ghosts.get(1).setPoint(new Point(15*width,13*height));
+        ghosts.get(2).setPoint(new Point(12*width,13*height));
+        ghosts.get(3).setPoint(new Point(14*width,13*height));
     }
 
     @Override
     public void drawImages(Graphics g, ImageObserver imageObserver,int x,int y) {
-        g.drawImage(red.getImage(),red.getPoint().x,red.getPoint().y,width,height, imageObserver);
-        g.drawImage(yellow.getImage(),yellow.getPoint().x,yellow.getPoint().y,width,height, imageObserver);
-        g.drawImage(pink.getImage(),pink.getPoint().x,pink.getPoint().y,width,height, imageObserver);
-        g.drawImage(blue.getImage(),blue.getPoint().x,blue.getPoint().y,width,height, imageObserver);
+        g.drawImage(ghosts.get(0).getImage(),ghosts.get(0).getPoint().x,ghosts.get(0).getPoint().y,width,height, imageObserver);
+        g.drawImage(ghosts.get(1).getImage(),ghosts.get(1).getPoint().x,ghosts.get(1).getPoint().y,width,height, imageObserver);
+        g.drawImage(ghosts.get(2).getImage(),ghosts.get(2).getPoint().x,ghosts.get(2).getPoint().y,width,height, imageObserver);
+        g.drawImage(ghosts.get(3).getImage(),ghosts.get(3).getPoint().x,ghosts.get(3).getPoint().y,width,height, imageObserver);
     }
 
     public void upDateMoveGhosts(){
-        update.ghostRedMove(red,PacMan.newPacman());
-        upDateMoveGhost(pink);
-        upDateMoveGhost(blue);
-        upDateMoveGhost(yellow);
+        update.ghostRedMove(ghosts.get(0),PacMan.newPacman());
+        upDateMoveGhost(ghosts.get(1));
+        upDateMoveGhost(ghosts.get(2));
+        upDateMoveGhost(ghosts.get(3));
     }
 
     private void upDateMoveGhost(Ghost ghost){
@@ -275,10 +289,5 @@ public class Ghost extends GeneralElement implements Speed , Observer {
     public void moveDown() {
         super.moveDown();
         setImageUp_Down();
-    }
-
-    @Override
-    public double getSpeed() {
-        return 0;
     }
 }

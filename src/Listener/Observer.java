@@ -6,12 +6,14 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 
 public interface Observer {
-    default void updatePointLevel(){
+    default void updatePointLevel(int speed){
 
     }
-    default void drawImages(Graphics g, ImageObserver imageObserver, int x, int y){}
+    default void drawImages(Graphics g, ImageObserver imageObserver, int x, int y){
 
-    default void collisionPacMan() {
+    }
+
+    default void collisionPacMan() throws InterruptedException {
 
     }
 
@@ -29,7 +31,7 @@ public interface Observer {
 
     }
     default void scoreUp(int score){
-
+        PacMan.newPacman().scoreUp(score);
     }
 
 }

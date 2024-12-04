@@ -11,12 +11,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class PacMan extends GeneralElement implements Speed,Observer {
+public class PacMan extends GeneralElement implements Observer {
 
     public static PacMan pacMan;
     public int life = 3;
     public int score = 0;
-    public int eatTimer = 0;
+    private int eatTimer = 0;
     String currentDirection;
     String preferredDirection ;
     public static boolean stopGame,endGame;
@@ -42,6 +42,7 @@ public class PacMan extends GeneralElement implements Speed,Observer {
 
     private PacMan() {
        setPoint(new Point(13 * width,21 * height));
+       this.speed = 4;
        this.image = new ImageIcon("src/Images/pacmanLeft.gif").getImage() ;
        this.currentDirection = "";
     }
@@ -74,22 +75,22 @@ public class PacMan extends GeneralElement implements Speed,Observer {
         return(lossLife(ghostPink) || lossLife(ghostGreen) || lossLife(ghostRed) || lossLife(ghostYellow));
     }
 
-    public boolean lossLife(Ghost ghost) throws InterruptedException {
-        if (checkCollision(ghost)){
-            collisionGhost();
-            ghost.setEaten(eatTimer != 0);
-            ghost.collisionPacMan();
-            return true;
-        }
-        return false;
-    }
+//    public boolean lossLife(Ghost ghost) throws InterruptedException {
+//        if (checkCollision(ghost)){
+//            collisionGhost();
+//            ghost.setEaten(eatTimer != 0);
+//            ghost.collisionPacMan();
+//            return true;
+//        }
+//        return false;
+//    }
 
     @Override
-    public void collisionGhost() throws InterruptedException {
+    public void collisionGhost() {
         if (eatTimer == 0) {
             new Sound("src/Sounds/died.wav");
             life--;
-            Thread.sleep(2000);
+            if (life == 0)stopGame = true;
         }else scoreUp(200);
     }
 
@@ -123,7 +124,8 @@ public class PacMan extends GeneralElement implements Speed,Observer {
         }
 
     @Override
-    public void updatePointLevel() {
+    public void updatePointLevel(int speed) {
+        this.speed = speed;
         life += 1;
         score = 0;
         stopGame = false;
@@ -134,9 +136,17 @@ public class PacMan extends GeneralElement implements Speed,Observer {
     @Override
     public void drawImages(Graphics g, ImageObserver imageObserver,int x,int y) {
         if(x == -1 && y == -1){
-            g.drawImage(new ImageIcon("src/Images/pacmanLeft.gif").getImage(),getPoint().x,getPoint().y,width,height,imageObserver);
+            g.drawImage(image,getPoint().x,getPoint().y,width,height,imageObserver);
+        }else {
+            int xy = x;
+            for (int i = 0; i < life; i++) {
+                g.drawImage(new ImageIcon("src/Images/pacmanLeft.gif").getImage(),xy,y,width,height,imageObserver);
+            xy+=30;
+            }
         }
-        g.drawImage(image,getPoint().x,getPoint().y,width,height,imageObserver);
+    }
+    public int getSpeed() {
+        return speed;
     }
 
 
@@ -173,7 +183,9 @@ public class PacMan extends GeneralElement implements Speed,Observer {
 
     @Override
     public void moveLeft() {
-        super.moveLeft();
+//        super.moveLeft();
+        System.out.println("LEFT");
+        point.x -= speed;
         image = new ImageIcon("src/Images/pacmanLeft.gif").getImage();
     }
 
@@ -195,9 +207,7 @@ public class PacMan extends GeneralElement implements Speed,Observer {
         image = new ImageIcon("src/Images/pacmanUp.gif").getImage();
     }
 
-    @Override
-    public double getSpeed() {
-        return 0;
-    }
+
+
 }
 

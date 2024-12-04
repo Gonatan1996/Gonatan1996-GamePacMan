@@ -10,7 +10,6 @@ import javax.swing.*;
 
 public class Update {
     public static Update update;
-    Ghost ghost = Ghost.newGhost();
     public int speed = 4;
     private final int width = 20;
     private final int height = 20;
@@ -27,27 +26,7 @@ public class Update {
     }
 
 
-    public void upDateMoveUp(GeneralElement element) {
-        element.moveUp();
-    }
-
-    public void upDateMoveDown(GeneralElement element) {
-       element.moveDown();
-    }
-
-    public void upDateMoveRight(GeneralElement element) {
-        element.moveRight();
-
-    }
-
-    public void upDateMoveLeft(GeneralElement element) {
-        element.moveLeft();
-    }
-
     private boolean canMoveUp(GeneralElement generalElement,int tempX, int y) {
-        if (tempX * generalElement.getWidth() == generalElement.getPoint().x && !(GamePanel.generalElements[(y-speed)/generalElement.getWidth()][tempX] instanceof Block)){
-            return true;
-        }
         return tempX * generalElement.getWidth() == generalElement.getPoint().x && !(GamePanel.generalElements[(y-speed)/generalElement.getWidth()][tempX] instanceof Block);
     }
 
@@ -63,46 +42,46 @@ public class Update {
         return tempY * generalElement.getWidth() == generalElement.getPoint().y && !(GamePanel.generalElements[tempY][tempX + 1] instanceof Block);
     }
 
-    public void moveElement(GeneralElement generalElement,int tempX,int tempY,int x,int y){
+    public void moveElement(GeneralElement element,int tempX,int tempY,int x,int y){
 
-        switch (generalElement.getDirection()) {
+        switch (element.getDirection()) {
             case "UP" -> {
-                if (canTurn(generalElement,"UP", tempX, tempY, x, y)){
-                    upDateMoveUp(generalElement);
+                if (canTurn(element,"UP", tempX, tempY, x, y)){
+                    element.moveUp();
                 }else {
-                    if (generalElement instanceof Ghost) {
-                        ((Ghost) generalElement).canMove = false;
-                        ((Ghost) generalElement).up = false;
+                    if (element instanceof Ghost) {
+                        ((Ghost) element).canMove = false;
+                        ((Ghost) element).up = false;
                     }
                 }
             }
             case "DOWN" -> {
-                if (canTurn(generalElement,"DOWN", tempX, tempY, x, y)) {
-                    upDateMoveDown(generalElement);
+                if (canTurn(element,"DOWN", tempX, tempY, x, y)) {
+                    element.moveDown();
                 }else {
-                    if (generalElement instanceof Ghost) {
-                        ((Ghost) generalElement).canMove = false;
-                        ((Ghost) generalElement).down = false;
+                    if (element instanceof Ghost) {
+                        ((Ghost) element).canMove = false;
+                        ((Ghost) element).down = false;
                     }
                 }
             }
             case "RIGHT" -> {
-                if (canTurn(generalElement,"RIGHT", tempX, tempY, x, y)){
-                    upDateMoveRight(generalElement);
+                if (canTurn(element,"RIGHT", tempX, tempY, x, y)){
+                    element.moveRight();
                 }else {
-                    if (generalElement instanceof Ghost) {
-                        ((Ghost) generalElement).canMove = false;
-                        ((Ghost) generalElement).right = false;
+                    if (element instanceof Ghost) {
+                        ((Ghost) element).canMove = false;
+                        ((Ghost) element).right = false;
                     }
                 }
             }
             case "LEFT" -> {
-                if (canTurn(generalElement,"LEFT", tempX, tempY, x, y)){
-                    upDateMoveLeft(generalElement);
+                if (canTurn(element,"LEFT", tempX, tempY, x, y)){
+                    element.moveLeft();
                 }else {
-                    if (generalElement instanceof Ghost) {
-                        ((Ghost) generalElement).canMove = false;
-                        ((Ghost) generalElement).left = false;
+                    if (element instanceof Ghost) {
+                        ((Ghost) element).canMove = false;
+                        ((Ghost) element).left = false;
                     }
                 }
             }
@@ -150,10 +129,10 @@ public class Update {
 
         if (redX == 280 && redY == 260) {
             for (int i = 0; i < 10; i++) {
-                if (canMoveUp(red,tempX, redY))upDateMoveUp(red);
+                if (canMoveUp(red,tempX, redY))red.moveUp();
             }
-            if (pacmanX > redX) upDateMoveRight(red);
-            else upDateMoveLeft(red);
+            if (pacmanX > redX) red.moveRight();
+            else red.moveLeft();
             return;
         }
 
@@ -162,52 +141,51 @@ public class Update {
                 down = true;
                 up = true;
                 flipDirectionRight(red);
-                upDateMoveRight(red);
+                red.moveRight();
                 if (pacmanY > redY && canMoveDown(red,tempX,tempY)){
-                    upDateMoveDown(red);
+                    red.moveDown();
                 }
                 if (pacmanY < redY && canMoveUp(red,tempX, redY)){
-                    upDateMoveUp(red);
+                    red.moveUp();
                 }
             }
             else if (pacmanY > redY) {
                 if (canMoveDown(red, tempX, tempY) && down) {
                     left = false;
                     up = false;
-                    upDateMoveDown(red);
+                    red.moveDown();
                 } else if (canMoveUp(red, tempX, redY)) {
                     up = true;
                     left = false;
                     down = false;
-                    upDateMoveUp(red);
+                    red.moveUp();
                 } else if (canMoveLeft(red, redX, tempY)) {
                     flipDirectionLeft(red);
-                    upDateMoveLeft(red);
+                    red.moveLeft();
                     left = true;
                 }
             } else if (pacmanY < redY) {
                 if (canMoveUp(red,tempX, redY) && up){
                     left = false;
-                    upDateMoveUp(red);
+                    red.moveUp();
                 }
                 else if (canMoveDown(red, tempX, tempY) && down) {
                     up = false;
                     left = false;
-                    upDateMoveDown(red);
+                    red.moveDown();
                 } else if (canMoveLeft(red, redX, tempY)) {
                    flipDirectionLeft(red);
-                    upDateMoveLeft(red);
+                    red.moveLeft();
                     left = true;
                 }
             }
             else if (canMoveUp(red, tempX, redY) && up){
                 down = false;
-                upDateMoveUp(red);
+                red.moveUp();
             }
             else if (canMoveDown(red, tempX, tempY) && down) {
                 up = false;
-                upDateMoveDown(red);
-            }
+                red.moveDown();            }
         }
 
         else if (pacmanX < redX && !_else) {
@@ -215,56 +193,56 @@ public class Update {
                 flipDirectionLeft(red);
                 down = true;
                 up = true;
-                upDateMoveLeft(red);
+                red.moveLeft();
                 if (pacmanY > redY && canMoveDown(red,tempX,tempY)){
-                    upDateMoveDown(red);
+                    red.moveDown();
                 }
                 if (pacmanY < redY && canMoveUp(red,tempX, redY)){
-                    upDateMoveUp(red);
+                    red.moveUp();
                 }
             } else if (pacmanY > redY) {
                 if (canMoveDown(red, tempX, tempY) && down){
                     right = false;
-                    upDateMoveDown(red);
+                    red.moveDown();
                 }
                 else if (canMoveUp(red, tempX, redY)) {
                     down = false;
                     right = false;
-                    upDateMoveUp(red);
+                    red.moveUp();
                 } else if (canMoveRight(red, tempX, tempY)) {
                     down = true;
                     up = false;
                     flipDirectionRight(red);
-                    upDateMoveRight(red);
+                    red.moveRight();
                     right = true;
                 }
             } else if (pacmanY < redY) {
                 if (canMoveUp(red, tempX, redY) && up){
                     right = false;
-                    upDateMoveUp(red);
+                    red.moveUp();
                 }
                 else if (canMoveDown(red, tempX, tempY)) {
                     up = false;
                     right = false;
-                    upDateMoveDown(red);
+                    red.moveDown();
                 } else if (canMoveRight(red, tempX, tempY)) {
                     up = true;
                     down = false;
                     flipDirectionRight(red);
-                    upDateMoveRight(red);
+                    red.moveRight();
                     right = true;
                 }
             }
             else if (canMoveUp(red, tempX, redY) && up){
                 down = false;
-                upDateMoveUp(red);
+                red.moveUp();
             }
             else if (canMoveDown(red, tempX, tempY)) {
                 up = false;
-                upDateMoveDown(red);
+                red.moveDown();
             }else if (canMoveRight(red, tempX, tempY)) {
                 flipDirectionRight(red);
-                upDateMoveRight(red);
+                red.moveRight();
                 right = true;
             }
 
@@ -275,44 +253,44 @@ public class Update {
                     _else = false;
                     right = true;
                     left = true;
-                    upDateMoveDown(red);
+                    red.moveDown();
                 }
                 else if (canMoveRight(red, tempX, tempY) && right){
                     flipDirectionRight(red);
                     up = false;
-                    upDateMoveRight(red);
+                    red.moveRight();
                 }
                 else if (canMoveLeft(red, redX, tempY)) {
                     flipDirectionLeft(red);
                     right = false;
                     up = false;
-                    upDateMoveLeft(red);
+                    red.moveLeft();
                 } else if (canMoveUp(red, tempX, redY)) {
                     up = true;
                     _else = false;
-                    upDateMoveUp(red);
+                    red.moveUp();
                 }
 
             } else if (pacmanY < redY) {
                 if (canMoveUp(red, tempX, redY) && up) {
                     _else = false;
-                    upDateMoveUp(red);
+                    red.moveUp();
                 }
                 else if (canMoveRight(red, tempX, tempY) && right){
                     down = false;
                     flipDirectionRight(red);
-                    upDateMoveRight(red);
+                    red.moveRight();
                 }
                 else if (canMoveLeft(red, redX, tempY)) {
                     flipDirectionLeft(red);
-                    upDateMoveLeft(red);
+                    red.moveLeft();
                     down = false;
                     right = false;
                     _else = false;
 
 
                 } else if (canMoveDown(red, tempX, tempY) && down) {
-                    upDateMoveDown(red);
+                    red.moveDown();
                     down = true;
                     _else = false;
                 }
@@ -324,206 +302,179 @@ public class Update {
 
     }
 
-    public void ghostEatenMove(Ghost ghost){
-        int rootX = 280,rootY = 260,gx = ghost.getPoint().x,
-                gy = ghost.getPoint().y,
-                tempX = gx / width,
-                tempY = gy / height;
+    public void ghostEatenMove(Ghost red){
+        int redX = red.getPoint().x,
+                redY = red.getPoint().y,
+                tempX = redX / width,
+                tempY = redY / height,
+                rootX = 280,
+                rootY = 260;
 
 
-
-//        System.out.println("pointY " + ghost.getPoint().y);
-//        System.out.println("gy " +gy);
-//        System.out.println("rootY " +rootY);
-
-        if (rootX > gx && !_else) {
-            if (canMoveRight(ghost, tempX, tempY) && !left) {
-                System.out.println(51);
+        if (rootX > redX && !_else) {
+            if (canMoveRight(red, tempX, tempY) && !left) {
                 down = true;
                 up = true;
-               flipDirectionRight(ghost);
-                upDateMoveRight(ghost);
-                if (rootY > gy && canMoveDown(ghost,tempX,tempY)){
-                    System.out.println(52);
-                    upDateMoveDown(ghost);
+                flipDirectionRight(red);
+                red.moveRight();
+                if (rootY > redY && canMoveDown(red,tempX,tempY)){
+                    red.moveDown();
                 }
-                if (rootY < gy && canMoveUp(ghost,tempX,gy)){
-                    System.out.println(53);upDateMoveUp(ghost);
+                if (rootY < redY && canMoveUp(red,tempX, redY)){
+                    red.moveUp();
                 }
             }
-            else if (rootY > gy) {
-                if (canMoveDown(ghost, tempX, tempY) && down) {
-                    System.out.println(54);
+            else if (rootY > redY) {
+                if (canMoveDown(red, tempX, tempY) && down) {
                     left = false;
                     up = false;
-                    upDateMoveDown(ghost);
-                } else if (canMoveUp(ghost, tempX, gy)) {
-                    System.out.println(55);
+                    red.moveDown();
+                } else if (canMoveUp(red, tempX, redY)) {
                     up = true;
                     left = false;
                     down = false;
-                    upDateMoveUp(ghost);
-                } else if (canMoveLeft(ghost, gx, tempY)) {
-                    System.out.println(56);
-                    flipDirectionLeft(ghost);
-                    upDateMoveLeft(ghost);
+                    red.moveUp();
+                } else if (canMoveLeft(red, redX, tempY)) {
+                    flipDirectionLeft(red);
+                    red.moveLeft();
                     left = true;
                 }
-            } else if (rootY < gy) {
-                if (canMoveUp(ghost,tempX,gy) && up){
-                    System.out.println(57);
+            } else if (rootY < redY) {
+                if (canMoveUp(red,tempX, redY) && up){
                     left = false;
-                    upDateMoveUp(ghost);
+                    red.moveUp();
                 }
-                else if (canMoveDown(ghost, tempX, tempY) && down) {
-                    System.out.println(58);
+                else if (canMoveDown(red, tempX, tempY) && down) {
                     up = false;
                     left = false;
-                    upDateMoveDown(ghost);
-                } else if (canMoveLeft(ghost, gx, tempY)) {
-                    System.out.println(59);
-                    flipDirectionLeft(ghost);
-                    upDateMoveLeft(ghost);
+                    red.moveDown();
+                } else if (canMoveLeft(red, redX, tempY)) {
+                    flipDirectionLeft(red);
+                    red.moveLeft();
                     left = true;
                 }
             }
-            else if (canMoveUp(ghost, tempX, gy) && up){
-                System.out.println(60);
+            else if (canMoveUp(red, tempX, redY) && up){
                 down = false;
-                upDateMoveUp(ghost);
+                red.moveUp();
             }
-            else if (canMoveDown(ghost, tempX, tempY) && down) {
-                System.out.println(61);
+            else if (canMoveDown(red, tempX, tempY) && down) {
                 up = false;
-                upDateMoveDown(ghost);
-            }
+                red.moveDown();            }
         }
 
-        else if (rootX < gx && !_else) {
-            if (canMoveLeft(ghost, gx, tempY) && !right) {
-                System.out.println(62);
+        else if (rootX < redX && !_else) {
+            if (canMoveLeft(red, redX, tempY) && !right) {
+                flipDirectionLeft(red);
                 down = true;
                 up = true;
-                flipDirectionLeft(ghost);
-                upDateMoveLeft(ghost);
-                if (rootY > gy && canMoveDown(ghost,tempX,tempY)){
-                    System.out.println(63);
-                    upDateMoveDown(ghost);
+                red.moveLeft();
+                if (rootY > redY && canMoveDown(red,tempX,tempY)){
+                    red.moveDown();
                 }
-                if (rootY < gy && canMoveUp(ghost,tempX,gy)){
-                    System.out.println(64);
-                    upDateMoveUp(ghost);
+                if (rootY < redY && canMoveUp(red,tempX, redY)){
+                    red.moveUp();
                 }
-            } else if (rootY > gy) {
-                if (canMoveDown(ghost, tempX, tempY) && down){
-                    System.out.println(65);
+            } else if (rootY > redY) {
+                if (canMoveDown(red, tempX, tempY) && down){
                     right = false;
-                    upDateMoveDown(ghost);
+                    red.moveDown();
                 }
-                else if (canMoveUp(ghost, tempX, gy)) {
-                    System.out.println(66);
+                else if (canMoveUp(red, tempX, redY)) {
                     down = false;
                     right = false;
-                    upDateMoveUp(ghost);
-                } else if (canMoveRight(ghost, tempX, tempY)) {
-                    System.out.println(67);
+                    red.moveUp();
+                } else if (canMoveRight(red, tempX, tempY)) {
                     down = true;
                     up = false;
-                    flipDirectionRight(ghost);
-                    upDateMoveRight(ghost);
+                    flipDirectionRight(red);
+                    red.moveRight();
                     right = true;
                 }
-            } else if (rootY < gy) {
-                if (canMoveUp(ghost, tempX, gy) && up){
-                    System.out.println(68);
+            } else if (rootY < redY) {
+                if (canMoveUp(red, tempX, redY) && up){
                     right = false;
-                    upDateMoveUp(ghost);
+                    red.moveUp();
                 }
-                else if (canMoveDown(ghost, tempX, tempY)) {
-                    System.out.println(69);
+                else if (canMoveDown(red, tempX, tempY)) {
                     up = false;
                     right = false;
-                    upDateMoveDown(ghost);
-                } else if (canMoveRight(ghost, tempX, tempY)) {
-                    System.out.println(70);
+                    red.moveDown();
+                } else if (canMoveRight(red, tempX, tempY)) {
                     up = true;
                     down = false;
-                    flipDirectionRight(ghost);
-                    upDateMoveRight(ghost);
+                    flipDirectionRight(red);
+                    red.moveRight();
                     right = true;
                 }
             }
-            else if (canMoveUp(ghost, tempX,gy) && up){
-                System.out.println(71);
+            else if (canMoveUp(red, tempX, redY) && up){
                 down = false;
-                upDateMoveUp(ghost);
+                red.moveUp();
             }
-            else if (canMoveDown(ghost, tempX, tempY)) {
-                System.out.println(72);
+            else if (canMoveDown(red, tempX, tempY)) {
                 up = false;
-                upDateMoveDown(ghost);
-            }else if (canMoveRight(ghost, tempX, tempY)) {
-                System.out.println(73);
-                flipDirectionRight(ghost);
-                upDateMoveRight(ghost);
+                red.moveDown();
+            }else if (canMoveRight(red, tempX, tempY)) {
+                flipDirectionRight(red);
+                red.moveRight();
                 right = true;
             }
 
-        } else {
+        }else {
             _else = true;
-            if (rootY > gy) {
-                if (canMoveDown(ghost, tempX, tempY) && down) {
-                    System.out.println(74);
+            if (rootY > redY) {
+                if (canMoveDown(red, tempX, tempY) && down) {
                     _else = false;
                     right = true;
                     left = true;
-                    upDateMoveDown(ghost);
+                    red.moveDown();
                 }
-                else if (canMoveRight(ghost, tempX, tempY) && right){
-                    System.out.println(75);
+                else if (canMoveRight(red, tempX, tempY) && right){
+                    flipDirectionRight(red);
                     up = false;
-                    flipDirectionRight(ghost);
-                    upDateMoveRight(ghost);
+                    red.moveRight();
                 }
-                else if (canMoveLeft(ghost, gx, tempY)) {
-                    System.out.println(76);
+                else if (canMoveLeft(red, redX, tempY)) {
+                    flipDirectionLeft(red);
                     right = false;
                     up = false;
-                    flipDirectionLeft(ghost);
-                    upDateMoveLeft(ghost);
-                } else if (canMoveUp(ghost, tempX, gy)) {
-                    System.out.println(77);
+                    red.moveLeft();
+                } else if (canMoveUp(red, tempX, redY)) {
                     up = true;
                     _else = false;
-                    upDateMoveUp(ghost);
+                    red.moveUp();
                 }
 
-            } else if (rootY < gy) {
-                if (canMoveUp(ghost, tempX, gy) && up) {
-                    System.out.println(78);
+            } else if (rootY < redY) {
+                if (canMoveUp(red, tempX, redY) && up) {
                     _else = false;
-                    upDateMoveUp(ghost);
+                    red.moveUp();
                 }
-                else if (canMoveRight(ghost, tempX, tempY) && right){
-                    System.out.println(79);
+                else if (canMoveRight(red, tempX, tempY) && right){
                     down = false;
-                    flipDirectionRight(ghost);
-                    upDateMoveRight(ghost);
+                    flipDirectionRight(red);
+                    red.moveRight();
                 }
-                else if (canMoveLeft(ghost, gx, tempY)) {
-                    System.out.println(80);
-                    flipDirectionLeft(ghost);
-                    upDateMoveLeft(ghost);
+                else if (canMoveLeft(red, redX, tempY)) {
+                    flipDirectionLeft(red);
+                    red.moveLeft();
                     down = false;
                     right = false;
+                    _else = false;
 
-                } else if (canMoveDown(ghost, tempX, tempY) && down) {
-                    System.out.println(81);
-                    upDateMoveDown(ghost);
+
+                } else if (canMoveDown(red, tempX, tempY) && down) {
+                    red.moveDown();
                     down = true;
+                    _else = false;
                 }
             }
+
+
+
         }
+
     }
 }
 

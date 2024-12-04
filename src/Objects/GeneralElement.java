@@ -9,6 +9,9 @@ public abstract class  GeneralElement implements Element{
     protected int width = 20,height = 20;
     protected Image image;
 
+    public int getSpeed() {
+        return speed;
+    }
 
     public void setSpeed(int speed) {
         this.speed = speed;
@@ -27,23 +30,12 @@ public abstract class  GeneralElement implements Element{
     }
 
     public void setEaten(boolean eaten) {
-        isEaten = eaten;
+        this.isEaten = eaten;
     }
+
 
     public int getWidth() {
         return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     @Override
@@ -74,19 +66,23 @@ public abstract class  GeneralElement implements Element{
         Rectangle rectangle2 = new Rectangle(element.getPoint().x,element.getPoint().y,width,height);
         return rectangle1.intersects(rectangle2);
     }
+
      public void moveUp(){
          point.y -= speed;
-
     }
+
     public void moveDown(){
          point.y += speed;
     }
+
     public void moveRight(){
          point.x += speed;
 
     }
+
     public void moveLeft(){
-         point.x -= speed;
+         this.point.x -= speed;
+         System.out.println(point.x);
 
     }
 

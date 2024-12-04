@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Coins extends GeneralElement implements Observer {
     PacMan pacMan = PacMan.newPacman();
     public static Coins coin;
-    public static ArrayList<Coins> coins = new ArrayList<>();
+    private static ArrayList<Coins> coins = new ArrayList<>();
 
     private Coins() throws FileNotFoundException, AWTException {
     }
@@ -26,7 +26,6 @@ public class Coins extends GeneralElement implements Observer {
         }
         return Coins.coin;
     }
-
     public static ArrayList<Coins> getCoins() {
         return coins;
     }
@@ -48,7 +47,7 @@ public class Coins extends GeneralElement implements Observer {
     }
 
     @Override
-    public void updatePointLevel() {
+    public void updatePointLevel(int speed) {
         coins = new ArrayList<>();
     }
     @Override
