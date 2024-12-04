@@ -17,7 +17,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable ,Observer{
+
 public static GamePanel gamePanel;
 
     HashMap<String,ArrayList<Observer>> listeners = new HashMap<>();
@@ -89,6 +90,7 @@ public static GamePanel gamePanel;
         register("Draw", ghost);
         register("Draw", pacMan);
         register("Draw", fruit);
+        updatePointOfLevel();
     }
     public static GamePanel newGamePanel() throws FileNotFoundException, AWTException {
         if (GamePanel.gamePanel == null){
@@ -209,6 +211,10 @@ public static GamePanel gamePanel;
     public void run() {
         while (!pacMan.stopGame) {
             if (!keyHandler.gameBreak && !soundGameForMove) {
+                if (pacMan.checkCollision(coins))coins.collisionPacMan();
+
+
+
                 updatePacMan(pacMan);
                 upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
                 fruit.upDateScoreOfFruits(pacMan);
@@ -219,7 +225,7 @@ public static GamePanel gamePanel;
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                Coins.upDateCoins(pacMan,coins, generalElements);
+              //  Coins.upDateCoins(pacMan,coins, generalElements);
                 if (BigCoins.upDateBigCoins(pacMan, bigCoins, generalElements)) {
                     pacMan.pacManEatGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
                 }
@@ -292,12 +298,12 @@ public static GamePanel gamePanel;
             timer1.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    level2 = false;
-                        pacMan.endGame = false;
-                        pacMan.stopGame = false;
                         panelText = true;
                         level2 = false;
-                        updatePointLevel();
+                        ArrayList<Observer> list = listeners.get("level");
+                        for (Observer observer : list) {
+                            observer.updatePointLevel();
+                        }
                         GamePanel.this.remove(textLabel2);
                         GamePanel.this.requestFocus();
                         revalidate();
@@ -306,12 +312,6 @@ public static GamePanel gamePanel;
             },2000);
         }
         if (panelText) {
-
-            int life = pacMan.life;
-            pacMan.life = life + 1;
-            pacMan.score = 0;
-            bigCoins.bigCoinses = new ArrayList<>();
-            coins.coins = new ArrayList<>();
             generalElements = createArrayElement();
             panelText = false;
         }
@@ -327,9 +327,10 @@ public static GamePanel gamePanel;
             public void run() {
                 if (level3) {
                     level3 = false;
-                    pacMan.stopGame = false;
-                    pacMan.endGame = false;
-                    updatePointLevel();
+                    ArrayList<Observer> list = listeners.get("level");
+                    for (Observer observer : list) {
+                        observer.updatePointLevel();
+                    }
                     GamePanel.this.remove(textLabel2);
                     GamePanel.this.requestFocus();
                     revalidate();
@@ -338,11 +339,6 @@ public static GamePanel gamePanel;
             }
         },2000);
         if (panelText) {
-            int life = pacMan.life;
-            pacMan.life = life + 1;
-            pacMan.score = 0;
-            bigCoins.bigCoinses = new ArrayList<>();
-            coins.coins = new ArrayList<>();
             generalElements = createArrayElement();
             panelText = false;
         }
@@ -403,18 +399,6 @@ public static GamePanel gamePanel;
     }
 
 
-    public Fruit drawImageFruit(Graphics g){
-        return fruit;
-    }
-
-    public void updatePointLevel(){
-        pacMan.point = new Point(13 * width_height,21 * width_height);
-        ghost.pink.point = new Point(13*width_height,13*width_height);
-        ghost.blue.point = new Point(15*width_height,13*width_height);
-        ghost.yellow.point = new Point(12* width_height,13*width_height);
-        ghost.red.point = new Point(14*width_height,13*width_height);
-    }
-
     public void register(String name,Observer listener){
         if (listeners.get(name) == null){
             listeners.put(name,new ArrayList<>());
@@ -422,6 +406,18 @@ public static GamePanel gamePanel;
         listeners.get(name).add(listener);
     }
 
+    private void updatePointOfLevel(){
+        register("level",pacMan);
+        register("level",ghost);
+        register("level",fruit);
+        register("level",coins);
+        register("level",bigCoins);
+    }
+
+    @Override
+    public void changeElement(int x, int y, GeneralElement newElement) {
+        generalElements[x][y] = newElement;
+    }
 }
 
 

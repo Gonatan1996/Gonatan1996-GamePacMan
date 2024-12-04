@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.*;
 
-public class Ghost extends GeneralElement implements Eatable, Speed , Observer {
+public class Ghost extends GeneralElement implements Speed , Observer {
     public static Ghost ghost;
     private Queue<Ghost> startMove;
     public Ghost pink,blue,yellow,red;
@@ -98,11 +98,6 @@ public class Ghost extends GeneralElement implements Eatable, Speed , Observer {
     @Override
     public double getSpeed() {
         return Speed;
-    }
-
-    @Override
-    public int getValue() {
-        return 200;
     }
 
     @Override
@@ -227,6 +222,14 @@ public class Ghost extends GeneralElement implements Eatable, Speed , Observer {
         if (B_red)this.image = new ImageIcon("src/Images/red startPoint.gif").getImage();
     }
 
+
+    @Override
+    public void updatePointLevel() {
+        pink.setPoint(new Point(13*width,13*height));
+        blue.setPoint(new Point(15*width,13*height));
+        yellow.setPoint(new Point(12*width,13*height));
+        red.setPoint(new Point(14*width,13*height));
+    }
 
     @Override
     public void drawImages(Graphics g, ImageObserver imageObserver,int x,int y) {

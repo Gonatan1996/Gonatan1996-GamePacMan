@@ -1,12 +1,16 @@
 package Objects;
 
+import Listener.Observer;
 import Sounds.Sound;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 
-public class Coins extends GeneralElement implements Eatable{
+public class Coins extends GeneralElement implements Observer {
+
+    PacMan pacMan = PacMan.newPacman();
     public static Coins coin;
     public static ArrayList<Coins> coins = new ArrayList<>();
 
@@ -42,27 +46,29 @@ public class Coins extends GeneralElement implements Eatable{
         return imageIcon.getImage();
     }
 
-
+    @Override
+    public void updatePointLevel() {
+        coins = new ArrayList<>();
+    }
+    @Override
+    public void drawImages(Graphics g, ImageObserver imageObserver, int x, int y) {
+    }
 
     @Override
-    public int getValue() {
-        return 10;
-    }
+    public void collisionPacMan() {
+        scoreUp(10);
+        new Sound("src/Sounds/pacman_eating2.wav");
+        if (coins.isEmpty())PacMan.endGame = true;
+        for (int i = 0; i < coins.size(); i++) {
+            Coins coins1 = coins.get(i);
+            if (coins1.checkCollision(pacMan)) {
 
-
-    public static void upDateCoins(PacMan pacMan,Coins coins,GeneralElement[][] generalElements){
-        int x = pacMan.getPoint().x,
-            y = pacMan.getPoint().y;
-
-        if (coins.coins.isEmpty())pacMan.endGame = true;
-        for (int i = 0; i < coins.coins.size(); i++) {
-            Coins coins1 = coins.coins.get(i);
-            if (x == coins1.getPoint().x && y == coins1.getPoint().y){
+            }
                 new Sound("src/Sounds/pacman_eating2.wav");
-                coins.coins.remove(i);
-                generalElements[y / coins.height][x / coins.width] = new Empty();
-                pacMan.score += 10;
+                coins.remove(i);
+
+               // generalElements[y / coins.height][x / coins.width] = new Empty();
             }
         }
-    }
+
 }

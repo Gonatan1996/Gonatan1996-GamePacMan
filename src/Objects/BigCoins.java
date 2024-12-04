@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class BigCoins extends Coins implements Eatable{
+public class BigCoins extends Coins{
     public static BigCoins bigCoin;
     int counterImage = 0;
     public ArrayList<BigCoins> bigCoinses = new ArrayList<>();
@@ -26,13 +26,9 @@ public class BigCoins extends Coins implements Eatable{
         bigCoinses.add(newBigCoins);
         return newBigCoins;
     }
+
     public BigCoins(int x, int y) {
         super(x,y);
-    }
-
-    @Override
-    public int getValue() {
-        return 50;
     }
 
     @Override
@@ -40,10 +36,6 @@ public class BigCoins extends Coins implements Eatable{
         return this.point;
     }
 
-    @Override
-    public void setPoint(int x, int y) {
-    this.point = new Point(x,y);
-    }
     @Override
     public Image getImage() {
         counterImage++;
@@ -70,4 +62,8 @@ public class BigCoins extends Coins implements Eatable{
         return false;
     }
 
+    @Override
+    public void updatePointLevel() {
+        bigCoinses = new ArrayList<>();
+    }
 }

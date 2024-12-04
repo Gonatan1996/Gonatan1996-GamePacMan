@@ -10,10 +10,9 @@ import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Fruit extends GeneralElement implements Eatable , Observer {
+public class Fruit extends GeneralElement implements Observer {
     public static Fruit fruit;
     PacMan pacMan = PacMan.newPacman();
-    Coins coins = Coins.newCoins();
     static Random random = new Random();
     public Fruit cherry,apple,orange,melon,strawberry;
     public static String Melon = "melon",Apple = "apple",Cherry = "cherry",Orange = "orange",Strawberry = "strawberry";
@@ -56,7 +55,7 @@ public class Fruit extends GeneralElement implements Eatable , Observer {
         return imageIcon.getImage();
     }
 
-    @Override
+
     public int getValue() {
         if (B_cherry)return 100;
         if (B_strawberry)return 300;
@@ -107,6 +106,11 @@ public class Fruit extends GeneralElement implements Eatable , Observer {
         show = false;
         this.isEaten = true;
         pacMan.scoreUp(this.getValue());
+    }
+
+    @Override
+    public void updatePointLevel() {
+
     }
 
     @Override

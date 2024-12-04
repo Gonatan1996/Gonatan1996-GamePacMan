@@ -11,7 +11,7 @@ public class Block extends GeneralElement {
     private Block() {
     }
     public Block(int x,int y) {
-        setPoint(x,y);
+        setPoint(new Point(x,y));
     }
 
     public Block addBlock(Block block){
@@ -31,10 +31,6 @@ public class Block extends GeneralElement {
         return null;
     }
 
-    @Override
-    public void setPoint(int x, int y) {
-        this.point = new Point(x, y);
-    }
 
     @Override
     public boolean getIsEaten() {

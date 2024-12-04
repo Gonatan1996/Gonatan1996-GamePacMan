@@ -17,7 +17,7 @@ public class PacMan extends GeneralElement implements Speed,Observer {
     public int eatTimer = 0;
     String currentDirection;
     String preferredDirection ;
-    public boolean stopGame,endGame;
+    public static boolean stopGame,endGame;
 
 
 
@@ -74,11 +74,6 @@ public class PacMan extends GeneralElement implements Speed,Observer {
     public boolean lossLife(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow) throws InterruptedException {
         return(lossLife(ghostPink) || lossLife(ghostGreen) || lossLife(ghostRed) || lossLife(ghostYellow));
     }
-//    public boolean ifOnSamePosition(GeneralElement element){
-//        Rectangle rectangle1 = new Rectangle(this.point.x,this.point.y,width,height);
-//        Rectangle rectangle2 = new Rectangle(element.getPoint().x,element.getPoint().y,width,height);
-//        return rectangle1.intersects(rectangle2);
-//    }
 
     public boolean lossLife(Ghost ghost) throws InterruptedException {
         if (checkCollision(ghost)){
@@ -99,6 +94,11 @@ public class PacMan extends GeneralElement implements Speed,Observer {
         }else scoreUp(200);
     }
 
+    @Override
+    public void collisionCoins() throws InterruptedException {
+
+    }
+
     public void startAgain(){
         setPoint(new Point(13 * width,21 * height));
     }
@@ -111,18 +111,26 @@ public class PacMan extends GeneralElement implements Speed,Observer {
     }
 
     public void pacManEatGhost(Ghost ghost){
-        ghost.isEaten = true;
+        ghost.setEaten(true);
         eatTimer = 1;
         Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     eatTimer = 0;
-                    ghost.isEaten = false;
+                    ghost.setEaten(false);
                 }
                 },8000);
         }
 
+    @Override
+    public void updatePointLevel() {
+        life += 1;
+        score = 0;
+        stopGame = false;
+        endGame = false;
+        setPoint(new Point(13 * width,21 * height));
+    }
 
     @Override
     public void drawImages(Graphics g, ImageObserver imageObserver,int x,int y) {
@@ -137,5 +145,6 @@ public class PacMan extends GeneralElement implements Speed,Observer {
     public void scoreUp(int score) {
         this.score += score;
     }
+
 }
 

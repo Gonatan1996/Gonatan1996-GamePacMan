@@ -19,11 +19,6 @@ public class Empty extends GeneralElement{
     }
 
     @Override
-    public void setPoint(int x, int y) {
-
-    }
-
-    @Override
     public boolean getIsEaten() {
         return false;
     }
@@ -33,5 +28,4 @@ public class Empty extends GeneralElement{
         ImageIcon imageIcon = new ImageIcon("src/Images/רקע שחור.jpg");
         return imageIcon.getImage();
     }
-
 }

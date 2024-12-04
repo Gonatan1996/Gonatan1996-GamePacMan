@@ -3,7 +3,7 @@ package Objects;
 import java.awt.*;
 
 public abstract class  GeneralElement implements Element{
-    protected Point point;
+    protected Point point = new Point();
     protected boolean isEaten;
     protected int width = 20,height = 20;
     protected Image image;
@@ -68,6 +68,7 @@ public abstract class  GeneralElement implements Element{
         Rectangle rectangle2 = new Rectangle(element.getPoint().x,element.getPoint().y,width,height);
         return rectangle1.intersects(rectangle2);
     }
+
 
 
 }
