@@ -70,10 +70,10 @@ public class PacMan extends GeneralElement implements Observer {
        this.image = image.getImage();
     }
 
-
-    public boolean lossLife(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow) throws InterruptedException {
-        return(lossLife(ghostPink) || lossLife(ghostGreen) || lossLife(ghostRed) || lossLife(ghostYellow));
-    }
+//
+//    public boolean lossLife(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow) throws InterruptedException {
+//        return(lossLife(ghostPink) || lossLife(ghostGreen) || lossLife(ghostRed) || lossLife(ghostYellow));
+//    }
 
 //    public boolean lossLife(Ghost ghost) throws InterruptedException {
 //        if (checkCollision(ghost)){
