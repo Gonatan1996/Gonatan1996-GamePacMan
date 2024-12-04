@@ -10,7 +10,6 @@ import javax.swing.*;
 
 public class Update {
     public static Update update;
-    PacMan pacMan = PacMan.newPacman();
     Ghost ghost = Ghost.newGhost();
     public int speed = 4;
     private final int width = 20;
@@ -29,42 +28,26 @@ public class Update {
 
 
     public void upDateMoveUp(GeneralElement element) {
-        element.getPoint().y -= speed;
-        if (element instanceof PacMan) {
-            pacMan.setImage(new ImageIcon("src/Images/pacmanUp.gif"));
-        } else if (element instanceof Ghost) {
-            ghost.setImageUp_Down();
-        }
+        element.moveUp();
     }
 
     public void upDateMoveDown(GeneralElement element) {
-        element.getPoint().y += speed;
-        if (element instanceof PacMan) {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanDown.gif"));
-        } else if (element instanceof Ghost) {
-            ghost.setImageUp_Down();
-        }
+       element.moveDown();
     }
 
     public void upDateMoveRight(GeneralElement element) {
-        element.getPoint().x += speed;
-        if (element instanceof PacMan) {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanRight.gif"));
-        } else if (element instanceof Ghost) {
-            ghost.setImageLeft_Right();
-        }
+        element.moveRight();
+
     }
 
     public void upDateMoveLeft(GeneralElement element) {
-        element.getPoint().x -= speed;
-        if (element instanceof PacMan) {
-                pacMan.setImage(new ImageIcon("src/Images/pacmanLeft.gif"));
-        } else if (element instanceof Ghost) {
-            ghost.setImageLeft_Right();
-        }
+        element.moveLeft();
     }
 
     private boolean canMoveUp(GeneralElement generalElement,int tempX, int y) {
+        if (tempX * generalElement.getWidth() == generalElement.getPoint().x && !(GamePanel.generalElements[(y-speed)/generalElement.getWidth()][tempX] instanceof Block)){
+            return true;
+        }
         return tempX * generalElement.getWidth() == generalElement.getPoint().x && !(GamePanel.generalElements[(y-speed)/generalElement.getWidth()][tempX] instanceof Block);
     }
 
@@ -148,7 +131,7 @@ public class Update {
         };
     }
 
-    public void ghostRedMove(Ghost red) {
+    public void ghostRedMove(Ghost red,PacMan pacMan) {
 
         if (red.getIsEaten()){
             ghostEatenMove(red);

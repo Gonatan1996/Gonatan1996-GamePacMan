@@ -104,7 +104,7 @@ public class Fruit extends GeneralElement implements Observer {
     public void collisionPacMan() {
         new Sound("src/Sounds/eat_coin.wav");
         show = false;
-        this.isEaten = true;
+        isEaten = true;
         pacMan.scoreUp(this.getValue());
     }
 

@@ -1,9 +1,10 @@
 package Objects;
-
+import Graphics.GamePanel;
 import Sounds.Sound;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class BigCoins extends Coins{
@@ -11,10 +12,10 @@ public class BigCoins extends Coins{
     int counterImage = 0;
     public ArrayList<BigCoins> bigCoinses = new ArrayList<>();
 
-    private BigCoins() {
+    private BigCoins() throws FileNotFoundException, AWTException {
         super(0,0);
     }
-    public static BigCoins newBigCoin(){
+    public static BigCoins newBigCoin() throws FileNotFoundException, AWTException {
         if (BigCoins.bigCoin == null){
             BigCoins.bigCoin = new BigCoins();
         }
@@ -27,7 +28,7 @@ public class BigCoins extends Coins{
         return newBigCoins;
     }
 
-    public BigCoins(int x, int y) {
+    public BigCoins(int x, int y) throws FileNotFoundException, AWTException {
         super(x,y);
     }
 
@@ -46,20 +47,22 @@ public class BigCoins extends Coins{
     }
 
     public static boolean upDateBigCoins(PacMan pacMan,BigCoins bigCoins,GeneralElement[][] generalElements) {
-        int x = pacMan.getPoint().x,
-                y = pacMan.getPoint().y;
 
-        for (int i = 0; i < bigCoins.bigCoinses.size(); i++) {
-            BigCoins bigcoins1 = bigCoins.bigCoinses.get(i);
-            if (x == bigcoins1.getPoint().x && y == bigcoins1.getPoint().y){
-                bigCoins.bigCoinses.remove(i);
-                generalElements[y / bigCoins.height][x / bigCoins.width] = new Empty();
-                new Sound("src/Sounds/eat_coin.wav");
-                pacMan.score += 50;
-                return true;
+
+        return false;
+    }
+
+    @Override
+    public void collisionPacMan() {
+        scoreUp(50);
+        new Sound("src/Sounds/eat_coin.wav");
+        for (int i = 0; i < bigCoinses.size(); i++) {
+            BigCoins bigcoins1 = bigCoinses.get(i);
+            if (checkCollision(pacMan)){
+                bigCoinses.remove(i);
+                GamePanel.changeElement(bigcoins1.getPoint().y / height,bigcoins1.getPoint().x / height,new Empty());
             }
         }
-        return false;
     }
 
     @Override

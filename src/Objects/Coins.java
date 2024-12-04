@@ -1,25 +1,26 @@
 package Objects;
-
+import Graphics.GamePanel;
 import Listener.Observer;
 import Sounds.Sound;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class Coins extends GeneralElement implements Observer {
 
+public class Coins extends GeneralElement implements Observer {
     PacMan pacMan = PacMan.newPacman();
     public static Coins coin;
     public static ArrayList<Coins> coins = new ArrayList<>();
 
-    private Coins() {
+    private Coins() throws FileNotFoundException, AWTException {
     }
-    public Coins(int x, int y) {
+    public Coins(int x, int y) throws FileNotFoundException, AWTException {
         setPoint(new Point(x,y));
     }
-    public static Coins newCoins(){
+    public static Coins newCoins() throws FileNotFoundException, AWTException {
         if (Coins.coin == null){
         Coins.coin = new Coins();
         }
@@ -62,12 +63,9 @@ public class Coins extends GeneralElement implements Observer {
         for (int i = 0; i < coins.size(); i++) {
             Coins coins1 = coins.get(i);
             if (coins1.checkCollision(pacMan)) {
-
-            }
-                new Sound("src/Sounds/pacman_eating2.wav");
+                GamePanel.changeElement(coins1.getPoint().y / height,coins1.getPoint().x / height,new Empty());
                 coins.remove(i);
-
-               // generalElements[y / coins.height][x / coins.width] = new Empty();
+            }
             }
         }
 

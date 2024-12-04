@@ -1,7 +1,8 @@
 package Objects;
-
+import Graphics.KeyHandler;
 import Listener.Observer;
 import Sounds.Sound;
+import UpDate.Update;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +12,7 @@ import java.util.TimerTask;
 
 
 public class PacMan extends GeneralElement implements Speed,Observer {
+
     public static PacMan pacMan;
     public int life = 3;
     public int score = 0;
@@ -18,6 +20,7 @@ public class PacMan extends GeneralElement implements Speed,Observer {
     String currentDirection;
     String preferredDirection ;
     public static boolean stopGame,endGame;
+    public Update update = Update.newUpdate();
 
 
 
@@ -66,10 +69,6 @@ public class PacMan extends GeneralElement implements Speed,Observer {
        this.image = image.getImage();
     }
 
-    @Override
-    public double getSpeed() {
-        return 0;
-    }
 
     public boolean lossLife(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow) throws InterruptedException {
         return(lossLife(ghostPink) || lossLife(ghostGreen) || lossLife(ghostRed) || lossLife(ghostYellow));
@@ -146,5 +145,59 @@ public class PacMan extends GeneralElement implements Speed,Observer {
         this.score += score;
     }
 
+    public void updateMovePacMan(KeyHandler keyHandler) {
+        if (keyHandler.up) pacMan.setPreferredDirection("UP");
+        if (keyHandler.down) pacMan.setPreferredDirection("DOWN");
+        if (keyHandler.right){
+            update.flipDirectionRight(pacMan);
+            pacMan.setPreferredDirection("RIGHT");
+        }
+        if (keyHandler.left){
+            update.flipDirectionLeft(pacMan);
+            pacMan.setPreferredDirection("LEFT");
+        }
+        String preferredDirection = pacMan.getPreferredDirection();
+
+        int x = pacMan.getPoint().x,
+                y = pacMan.getPoint().y,
+                tempX = x / width,
+                tempY = y / height;
+
+
+        if (preferredDirection != null && update.canTurn(pacMan,preferredDirection, tempX, tempY, x, y)) {
+            pacMan.setDirection(preferredDirection);
+            pacMan.setPreferredDirection(null);
+        }
+        update.moveElement(pacMan,tempX,tempY,x,y);
+    }
+
+    @Override
+    public void moveLeft() {
+        super.moveLeft();
+        image = new ImageIcon("src/Images/pacmanLeft.gif").getImage();
+    }
+
+    @Override
+    public void moveRight() {
+        super.moveRight();
+        image = new ImageIcon("src/Images/pacmanRight.gif").getImage();
+    }
+
+    @Override
+    public void moveDown() {
+        super.moveDown();
+        image = new ImageIcon("src/Images/pacmanDown.gif").getImage();
+    }
+
+    @Override
+    public void moveUp() {
+        super.moveUp();
+        image = new ImageIcon("src/Images/pacmanUp.gif").getImage();
+    }
+
+    @Override
+    public double getSpeed() {
+        return 0;
+    }
 }
 

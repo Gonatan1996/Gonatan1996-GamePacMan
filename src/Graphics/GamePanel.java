@@ -43,7 +43,7 @@ public static GamePanel gamePanel;
 
     Block block = Block.newBlock();
     PacMan pacMan = PacMan.newPacman();
-    Coins coins =Coins.newCoins();
+    Coins coins = Coins.newCoins();
     BigCoins bigCoins = BigCoins.newBigCoin();
     Ghost ghost = Ghost.newGhost();
     Fruit fruit;
@@ -58,9 +58,21 @@ public static GamePanel gamePanel;
        }else if (pacMan.endGame) {
            if (pacMan.life >= 0){
                if (level2){
+                   try {
                        screenLevel2();
+                   } catch (FileNotFoundException e) {
+                       throw new RuntimeException(e);
+                   } catch (AWTException e) {
+                       throw new RuntimeException(e);
+                   }
                }else if (level3){
+                   try {
                        screenLevel3();
+                   } catch (FileNotFoundException e) {
+                       throw new RuntimeException(e);
+                   } catch (AWTException e) {
+                       throw new RuntimeException(e);
+                   }
                }
                 else{
                screenEndGameWin();
@@ -91,6 +103,7 @@ public static GamePanel gamePanel;
         register("Draw", pacMan);
         register("Draw", fruit);
         updatePointOfLevel();
+        drawImages();
     }
     public static GamePanel newGamePanel() throws FileNotFoundException, AWTException {
         if (GamePanel.gamePanel == null){
@@ -99,51 +112,8 @@ public static GamePanel gamePanel;
         return GamePanel.gamePanel;
     }
 
-    public void updatePacMan(PacMan pacMan) {
-        if (keyHandler.up) pacMan.setPreferredDirection("UP");
-        if (keyHandler.down) pacMan.setPreferredDirection("DOWN");
-        if (keyHandler.right){
-            update.flipDirectionRight(pacMan);
-            pacMan.setPreferredDirection("RIGHT");
-        }
-        if (keyHandler.left){
-            update.flipDirectionLeft(pacMan);
-            pacMan.setPreferredDirection("LEFT");
-        }
-        String preferredDirection = pacMan.getPreferredDirection();
 
-        int x = pacMan.getPoint().x,
-                y = pacMan.getPoint().y,
-                tempX = x / width_height,
-                tempY = y / width_height;
-
-
-        if (preferredDirection != null && update.canTurn(pacMan,preferredDirection, tempX, tempY, x, y)) {
-            pacMan.setDirection(preferredDirection);
-            pacMan.setPreferredDirection(null);
-        }
-        update.moveElement(pacMan,tempX,tempY,x,y);
-        }
-
-    public void upDateGhosts(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow){
-        update.ghostRedMove(ghostRed);
-        upDateGhost(ghostPink);
-        upDateGhost(ghostGreen);
-        upDateGhost(ghostYellow);
-    }
-
-    public void upDateGhost(Ghost ghost){
-        int x = ghost.getPoint().x,
-                y = ghost.getPoint().y,
-                tempX = x / width_height,
-                tempY = y / width_height;
-        ghost.setDirection(ghost.randomMove());
-        update.moveElement(ghost,tempX,tempY,x,y);
-
-    }
-
-
-    public  GeneralElement[][] createArrayElement(){
+    public  GeneralElement[][] createArrayElement() throws FileNotFoundException, AWTException {
         for (int i = 0; i < numOfElement.length; i++) {
             for (int j = 0; j < numOfElement[i].length; j++) {
                int x = j * width_height;
@@ -211,12 +181,12 @@ public static GamePanel gamePanel;
     public void run() {
         while (!pacMan.stopGame) {
             if (!keyHandler.gameBreak && !soundGameForMove) {
-                if (pacMan.checkCollision(coins))coins.collisionPacMan();
+                pacManChackCollisioin();
+
+                pacMan.updateMovePacMan(keyHandler);
+                ghost.upDateMoveGhosts();
 
 
-
-                updatePacMan(pacMan);
-                upDateGhosts(ghost.pink, ghost.blue, ghost.red, ghost.yellow);
                 fruit.upDateScoreOfFruits(pacMan);
                 try {
                     if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
@@ -239,6 +209,13 @@ public static GamePanel gamePanel;
 
         }
 
+    }
+
+    private void pacManChackCollisioin() {
+        if (pacMan.checkCollision(coins))coins.collisionPacMan();
+        if (pacMan.checkCollision(bigCoins))bigCoins.collisionPacMan();
+        if (pacMan.checkCollision(fruit))fruit.collisionPacMan();
+        if (pacMan.checkCollision(ghost))ghost.collisionPacMan();
     }
 
     public synchronized void startGame(){
@@ -290,7 +267,7 @@ public static GamePanel gamePanel;
 
     }
 
-    public void screenLevel2() {
+    public void screenLevel2() throws FileNotFoundException, AWTException {
         new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 2",Color.white);
         Timer timer1 = new Timer();
@@ -318,7 +295,7 @@ public static GamePanel gamePanel;
 
     }
 
-    public void screenLevel3() {
+    public void screenLevel3() throws FileNotFoundException, AWTException {
         new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 3",Color.white);
         Timer timer1 = new Timer();
@@ -413,10 +390,17 @@ public static GamePanel gamePanel;
         register("level",coins);
         register("level",bigCoins);
     }
+    private void drawImages(){
+        register("Draw",pacMan);
+        register("Draw",ghost);
+        register("Draw",fruit);
+        register("Draw",coins);
+        register("Draw",bigCoins);
+    }
 
-    @Override
-    public void changeElement(int x, int y, GeneralElement newElement) {
-        generalElements[x][y] = newElement;
+
+    public static void changeElement(int y, int x, GeneralElement newElement) {
+        generalElements[y][x] = newElement;
     }
 }
 

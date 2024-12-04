@@ -31,6 +31,5 @@ public interface Observer {
     default void scoreUp(int score){
 
     }
-    default void changeElement(int x, int y, GeneralElement newElement){
-    }
+
 }

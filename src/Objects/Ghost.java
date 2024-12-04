@@ -1,6 +1,7 @@
 package Objects;
 
 import Listener.Observer;
+import UpDate.Update;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,13 +13,14 @@ public class Ghost extends GeneralElement implements Speed , Observer {
     private Queue<Ghost> startMove;
     public Ghost pink,blue,yellow,red;
     Random random = new Random();
-    private int Speed = 4;
+    private double Speed = 4;
     public static String Red = "red",Yellow = "yellow",Green = "green",Pink = "pink";
     public boolean B_red, B_yellow, B_blue, B_pink;
     public boolean up, down, left, right,canMove,startPoint;
     String direction = "UP";
     public Point point;
-    Coins coins = Coins.newCoins();
+    public Update update = Update.newUpdate();
+
 
     private Ghost() {
         pink =  new Ghost(13*width,13*height,Ghost.Pink);
@@ -95,10 +97,6 @@ public class Ghost extends GeneralElement implements Speed , Observer {
         return isEaten;
     }
 
-    @Override
-    public double getSpeed() {
-        return Speed;
-    }
 
     @Override
     public Image getImage() {
@@ -239,4 +237,48 @@ public class Ghost extends GeneralElement implements Speed , Observer {
         g.drawImage(blue.getImage(),blue.getPoint().x,blue.getPoint().y,width,height, imageObserver);
     }
 
+    public void upDateMoveGhosts(){
+        update.ghostRedMove(red,PacMan.newPacman());
+        upDateMoveGhost(pink);
+        upDateMoveGhost(blue);
+        upDateMoveGhost(yellow);
+    }
+
+    private void upDateMoveGhost(Ghost ghost){
+        int x = ghost.getPoint().x,
+                y = ghost.getPoint().y,
+                tempX = x / width,
+                tempY = y / height;
+        ghost.setDirection(ghost.randomMove());
+        update.moveElement(ghost,tempX,tempY,x,y);
+    }
+
+
+    @Override
+    public void moveLeft() {
+        super.moveLeft();
+
+    }
+
+    @Override
+    public void moveRight() {
+        super.moveRight();
+        ghost.setImageLeft_Right();
+    }
+
+    @Override
+    public void moveUp() {
+        super.moveUp();
+    }
+
+    @Override
+    public void moveDown() {
+        super.moveDown();
+        setImageUp_Down();
+    }
+
+    @Override
+    public double getSpeed() {
+        return 0;
+    }
 }
