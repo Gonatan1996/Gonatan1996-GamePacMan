@@ -13,7 +13,7 @@ public class Coins extends GeneralElement implements Eatable{
     private Coins() {
     }
     public Coins(int x, int y) {
-        setPoint(x,y);
+        setPoint(new Point(x,y));
     }
     public static Coins newCoins(){
         if (Coins.coin == null){
@@ -22,19 +22,13 @@ public class Coins extends GeneralElement implements Eatable{
         return Coins.coin;
     }
 
+    public static ArrayList<Coins> getCoins() {
+        return coins;
+    }
+
     public Coins addCoins(Coins newCoins){
         coins.add(newCoins);
         return newCoins;
-    }
-
-    @Override
-    public Point getPoint() {
-        return this.point;
-    }
-
-    @Override
-    public void setPoint(int x, int y) {
-        this.point = new Point(x, y);
     }
 
     @Override

@@ -1,18 +1,15 @@
 package Graphics;
 
-import Listener.DrawImage;
 import Listener.Observer;
 import Objects.*;
 import Sounds.Sound;
 import UpDate.Update;
 import Users.User;
 
-import javax.lang.model.type.NullType;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.ImageObserver;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +38,7 @@ public static GamePanel gamePanel;
 
     KeyHandler keyHandler = KeyHandler.newKeyHandler();
     Thread gameTread;
-    User user;
+    User user = User.newUser();
 
     Block block = Block.newBlock();
     PacMan pacMan = PacMan.newPacman();
@@ -49,7 +46,7 @@ public static GamePanel gamePanel;
     BigCoins bigCoins = BigCoins.newBigCoin();
     Ghost ghost = Ghost.newGhost();
     Fruit fruit;
-    Update update = new Update(pacMan,ghost);
+    Update update = Update.newUpdate();
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -89,8 +86,6 @@ public static GamePanel gamePanel;
         this.addKeyListener(keyHandler);
         setFocusable(true);
         generalElements = createArrayElement();
-        user = new User();
-
         register("Draw", ghost);
         register("Draw", pacMan);
         register("Draw", fruit);
@@ -140,7 +135,7 @@ public static GamePanel gamePanel;
                 y = ghost.getPoint().y,
                 tempX = x / width_height,
                 tempY = y / width_height;
-        ghost.setDirection(ghost.randomMove(coins));
+        ghost.setDirection(ghost.randomMove());
         update.moveElement(ghost,tempX,tempY,x,y);
 
     }

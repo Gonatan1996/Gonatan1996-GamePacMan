@@ -1,17 +1,15 @@
 package Objects;
 
-import Listener.GhostEaten;
 import Listener.Observer;
 
-import javax.lang.model.type.NullType;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.*;
 
-public class Ghost extends GeneralElement implements Eatable, Speed , Observer<Graphics, ImageObserver, NullType>, GhostEaten {
+public class Ghost extends GeneralElement implements Eatable, Speed , Observer {
     public static Ghost ghost;
-
+    private Queue<Ghost> startMove;
     public Ghost pink,blue,yellow,red;
     Random random = new Random();
     private int Speed = 4;
@@ -20,6 +18,7 @@ public class Ghost extends GeneralElement implements Eatable, Speed , Observer<G
     public boolean up, down, left, right,canMove,startPoint;
     String direction = "UP";
     public Point point;
+    Coins coins = Coins.newCoins();
 
     private Ghost() {
         pink =  new Ghost(13*width,13*height,Ghost.Pink);
@@ -32,8 +31,9 @@ public class Ghost extends GeneralElement implements Eatable, Speed , Observer<G
 
 
     private Ghost(int x, int y, String booleanColor) {
-        setPoint(x,y);
+        setPoint(new Point(x,y));
         currentColor(booleanColor);
+        startMove = createQueueStart();
     }
     public static Ghost newGhost(){
         if (Ghost.ghost == null){
@@ -42,8 +42,8 @@ public class Ghost extends GeneralElement implements Eatable, Speed , Observer<G
         return ghost;
     }
 
-    public String randomMove(Coins coins) {
-        startPoint(this,coins);
+    public String randomMove() {
+        startPoint();
         if (startPoint) {
             if (canMove) {
                 if (up) return "UP";
@@ -86,8 +86,8 @@ public class Ghost extends GeneralElement implements Eatable, Speed , Observer<G
     }
 
     @Override
-    public void setPoint(int x, int y) {
-        this.point = new Point(x, y);
+    public void setEaten(boolean eaten) {
+        super.setEaten(eaten);
     }
 
     @Override
@@ -135,62 +135,82 @@ public class Ghost extends GeneralElement implements Eatable, Speed , Observer<G
         return this.direction;
     }
 
-    public void GhostInDanger(PacMan pacMan) {
+
+//    public void GhostInDanger(PacMan pacMan) {
+//        if (isEaten) {
+////            if (pacMan.checkCollision(this)) {
+//                upDatePoint();
+//                if (B_red){
+//                  //  this.startPoint = false;
+////                }
+////                pacMan.score += 200;
+//            }
+//        }
+//    }
+
+//    public void upDatePoint(){
+//        if (B_yellow) {
+//            this.point.x = 12 * 20;
+//            this.point.y = 13 * 20;
+//        }
+//        if (B_pink) {
+//            this.point.x = 13 * 20;
+//            this.point.y = 13 * 20;
+//        }
+//        if (B_red) {
+//            this.point.x = 14 * 20;
+//            this.point.y = 13 * 20;
+//        }
+//        if (B_blue) {
+//            this.point.x = 15 * 20;
+//            this.point.y = 13 * 20;
+//        }
+//    }
+
+    @Override
+    public void collisionPacMan() {
         if (isEaten) {
-            if (pacMan.ifOnSamePosition(this)) {
-                upDatePoint();
-                if (B_red){
-                  //  this.startPoint = false;
-                }
-                pacMan.score += 200;
-            }
-        }
+            red.startPoint = false;
+            pink.setPoint(new Point(13 * width, 13 * height));
+            blue.setPoint(new Point(15 * width, 13 * height));
+            yellow.setPoint(new Point(12 * width, 13 * height));
+        }else this.setPoint(new Point(14*width,13*height));
     }
 
-    public void upDatePoint(){
-        if (B_yellow) {
-            this.point.x = 12 * 20;
-            this.point.y = 13 * 20;
-        }
-        if (B_pink) {
-            this.point.x = 13 * 20;
-            this.point.y = 13 * 20;
-        }
-        if (B_red) {
-            this.point.x = 14 * 20;
-            this.point.y = 13 * 20;
-        }
-        if (B_blue) {
-            this.point.x = 15 * 20;
-            this.point.y = 13 * 20;
-        }
-    }
-
-    public void startPoint(Ghost ghost, Coins coins){
-        if (ghost.point.x == 280 && ghost.point.y == 260){
-            startPoint = true;
-            canMove = true;
+    public void startPoint(){
+        Ghost ghost1 = pollStart();
+        if (ghost1.point.x == 280 && ghost1.point.y == 260){
             up = true;
-        }
-        if (ghost.point.x > 220 && ghost.point.x < 280
-        && ghost.point.y == 260 && coins.coins.size() < 100){
-            if (B_yellow && coins.coins.size() < 60){
-                startPoint = true;
-                canMove = true;
-                right = true;
-            }else if (B_pink){
-                startPoint = true;
-                canMove = true;
-                right = true;
-            }
-        }
-        if (ghost.point.x > 280 && ghost.point.x <= 300
-                && ghost.point.y == 260 && coins.coins.size() < 176){
             startPoint = true;
             canMove = true;
+        }
+        if (ghost1.point.x > 220 && ghost1.point.x < 280 && ghost1.point.y == 260){
+            right = true;
+            startPoint = true;
+            canMove = true;
+        }
+        if (ghost1.point.x > 280 && ghost1.point.x <= 300 && ghost1.point.y == 260){
             left = true;
+            startPoint = true;
+            canMove = true;
         }
 
+    }
+    public Queue<Ghost> createQueueStart(){
+        Queue<Ghost> start = new LinkedList<>();
+        start.add(red);
+        start.add(pink);
+        start.add(yellow);
+        start.add(blue);
+        return start;
+    }
+
+    public Ghost pollStart(){
+        Ghost ghost1 = startMove.peek();
+        if (Coins.getCoins().size() == 176)return startMove.poll();
+        if (Coins.getCoins().size() == 100)return startMove.poll();
+        if (Coins.getCoins().size() == 60 )return startMove.poll();
+        return ghost1;
     }
 
     public void setImageLeft_Right(){
@@ -207,17 +227,6 @@ public class Ghost extends GeneralElement implements Eatable, Speed , Observer<G
         if (B_red)this.image = new ImageIcon("src/Images/red startPoint.gif").getImage();
     }
 
-
-
-    @Override
-    public void ghostEat(boolean eat) {
-
-    }
-
-    @Override
-    public NullType notify(Graphics obg) {
-        return null;
-    }
 
     @Override
     public void drawImages(Graphics g, ImageObserver imageObserver,int x,int y) {

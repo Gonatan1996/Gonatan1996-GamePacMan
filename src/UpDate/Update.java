@@ -9,18 +9,24 @@ import Objects.PacMan;
 import javax.swing.*;
 
 public class Update {
-    PacMan pacMan;
-    Ghost ghost;
+    public static Update update;
+    PacMan pacMan = PacMan.newPacman();
+    Ghost ghost = Ghost.newGhost();
     public int speed = 4;
     private final int width = 20;
     private final int height = 20;
     private boolean right = true,left= true,up= true,down= true,_else;
 
 
-    public Update(PacMan pacMan, Ghost ghost) {
-        this.pacMan = pacMan;
-        this.ghost = ghost;
+    private Update() {
     }
+    public static Update newUpdate(){
+        if (Update.update == null){
+            Update.update = new Update();
+        }
+        return Update.update;
+    }
+
 
     public void upDateMoveUp(GeneralElement element) {
         element.getPoint().y -= speed;
@@ -59,19 +65,19 @@ public class Update {
     }
 
     private boolean canMoveUp(GeneralElement generalElement,int tempX, int y) {
-        return tempX * generalElement.width == generalElement.getPoint().x && !(GamePanel.generalElements[(y-speed)/generalElement.width][tempX] instanceof Block);
+        return tempX * generalElement.getWidth() == generalElement.getPoint().x && !(GamePanel.generalElements[(y-speed)/generalElement.getWidth()][tempX] instanceof Block);
     }
 
     private boolean canMoveDown(GeneralElement generalElement,int tempX, int tempY) {
-        return tempX * generalElement.width == generalElement.getPoint().x && !(GamePanel.generalElements[tempY + 1][tempX] instanceof Block);
+        return tempX * generalElement.getWidth() == generalElement.getPoint().x && !(GamePanel.generalElements[tempY + 1][tempX] instanceof Block);
     }
 
     private boolean canMoveLeft(GeneralElement generalElement,int x, int tempY) {
-        return tempY * generalElement.width == generalElement.getPoint().y && !(GamePanel.generalElements[tempY][(x - speed)/ generalElement.width] instanceof Block);
+        return tempY * generalElement.getWidth() == generalElement.getPoint().y && !(GamePanel.generalElements[tempY][(x - speed)/ generalElement.getWidth()] instanceof Block);
     }
 
     private boolean canMoveRight(GeneralElement generalElement,int tempX, int tempY) {
-        return tempY * generalElement.width == generalElement.getPoint().y && !(GamePanel.generalElements[tempY][tempX + 1] instanceof Block);
+        return tempY * generalElement.getWidth() == generalElement.getPoint().y && !(GamePanel.generalElements[tempY][tempX + 1] instanceof Block);
     }
 
     public void moveElement(GeneralElement generalElement,int tempX,int tempY,int x,int y){
@@ -121,7 +127,7 @@ public class Update {
     }
 
     public void flipDirectionRight(GeneralElement generalElement) {
-        if ((generalElement.getPoint().x + generalElement.width > 555)){
+        if ((generalElement.getPoint().x + generalElement.getWidth() > 555)){
             generalElement.getPoint().x = 4;
         }
     }
@@ -343,9 +349,9 @@ public class Update {
 
 
 
-        System.out.println("pointY " + ghost.getPoint().y);
-        System.out.println("gy " +gy);
-        System.out.println("rootY " +rootY);
+//        System.out.println("pointY " + ghost.getPoint().y);
+//        System.out.println("gy " +gy);
+//        System.out.println("rootY " +rootY);
 
         if (rootX > gx && !_else) {
             if (canMoveRight(ghost, tempX, tempY) && !left) {
