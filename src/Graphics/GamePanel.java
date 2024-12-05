@@ -379,7 +379,6 @@ public static GamePanel gamePanel;
         repaint();
     }
 
-
     public void register(String name,Observer listener){
         if (listeners.get(name) == null){
             listeners.put(name,new ArrayList<>());
