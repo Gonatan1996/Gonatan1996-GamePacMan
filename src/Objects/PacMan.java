@@ -46,7 +46,7 @@ public class PacMan extends GeneralElement implements Observer {
        this.image = new ImageIcon("src/Images/pacmanLeft.gif").getImage() ;
        this.currentDirection = "";
     }
-    public static PacMan newPacman (){
+    public synchronized static PacMan newPacman (){
         if (PacMan.pacMan == null){
             PacMan.pacMan = new PacMan();
         }
@@ -92,11 +92,6 @@ public class PacMan extends GeneralElement implements Observer {
             life--;
             if (life == 0)stopGame = true;
         }else scoreUp(200);
-    }
-
-    @Override
-    public void collisionCoins() throws InterruptedException {
-
     }
 
     public void startAgain(){
@@ -145,6 +140,7 @@ public class PacMan extends GeneralElement implements Observer {
             }
         }
     }
+
     public int getSpeed() {
         return speed;
     }
@@ -185,6 +181,7 @@ public class PacMan extends GeneralElement implements Observer {
     public void moveLeft() {
 //        super.moveLeft();
         System.out.println("LEFT");
+        System.out.println(point.x);
         point.x -= speed;
         image = new ImageIcon("src/Images/pacmanLeft.gif").getImage();
     }

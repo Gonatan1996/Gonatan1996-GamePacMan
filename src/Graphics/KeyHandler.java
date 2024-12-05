@@ -20,7 +20,7 @@ public class
             timeStamps = new ArrayList<>();
             lastKeyPressedTime = System.currentTimeMillis();
         }
-        public static KeyHandler newKeyHandler(){
+        public synchronized static KeyHandler newKeyHandler(){
             if (KeyHandler.keyHandler == null){
                 KeyHandler.keyHandler = new KeyHandler();
             }

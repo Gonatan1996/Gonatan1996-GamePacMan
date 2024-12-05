@@ -18,7 +18,7 @@ public class Block extends GeneralElement {
         blocks.add(block);
         return block;
     }
-    public static Block newBlock(){
+    public synchronized static Block newBlock(){
         if (Block.block == null){
             Block.block = new Block();
         }
