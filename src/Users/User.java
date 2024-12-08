@@ -21,7 +21,7 @@ public class User {
         this.users = new ArrayList<>();
     }
 
-    public static User newUser() throws FileNotFoundException, AWTException {
+    public static synchronized User newUser() throws FileNotFoundException, AWTException {
         if (User.user == null){
             User.user = new User();
         }

@@ -33,7 +33,7 @@ public class Ghost extends GeneralElement implements  Observer {
         currentColor(booleanColor);
     }
 
-    public static Ghost newGhost(){
+    public  synchronized static Ghost newGhost(){
         if (Ghost.ghost == null){
             ghost = new Ghost();
         }

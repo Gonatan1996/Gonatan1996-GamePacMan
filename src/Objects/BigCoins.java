@@ -15,7 +15,7 @@ public class BigCoins extends Coins{
     private BigCoins() throws FileNotFoundException, AWTException {
         super(0,0);
     }
-    public static BigCoins newBigCoin() throws FileNotFoundException, AWTException {
+    public  synchronized static BigCoins newBigCoin() throws FileNotFoundException, AWTException {
         if (BigCoins.bigCoin == null){
             BigCoins.bigCoin = new BigCoins();
         }

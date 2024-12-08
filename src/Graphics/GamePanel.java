@@ -103,7 +103,7 @@ public static GamePanel gamePanel;
         drawImages();
     }
 
-    public static GamePanel newGamePanel() throws FileNotFoundException, AWTException {
+    public synchronized static GamePanel newGamePanel() throws FileNotFoundException, AWTException {
         if (GamePanel.gamePanel == null){
             GamePanel.gamePanel = new GamePanel();
         }
@@ -111,7 +111,7 @@ public static GamePanel gamePanel;
     }
 
 
-    public  GeneralElement[][] createArrayElement() throws FileNotFoundException, AWTException {
+    private   GeneralElement[][] createArrayElement() throws FileNotFoundException, AWTException {
         for (int i = 0; i < numOfElement.length; i++) {
             for (int j = 0; j < numOfElement[i].length; j++) {
                int x = j * width_height;
@@ -136,7 +136,7 @@ public static GamePanel gamePanel;
         return generalElements;
     }
 
-    public static int[][] numOfElement(){
+    private static int[][] numOfElement(){
         // Empty = 0,Block = 1,Coins = 2,BigCoins = 3;
 
         int[][] board = {
@@ -181,7 +181,7 @@ public static GamePanel gamePanel;
             if (!keyHandler.gameBreak && !soundGameForMove) {
                 pacManChackCollisioin();
                 pacMan.updateMovePacMan(keyHandler);
-                ghost.upDateMoveGhosts();
+               // ghost.upDateMoveGhosts();
 //                try {
 //                 //   if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
 //                        pacMan.stopGame = true;
@@ -275,10 +275,10 @@ public static GamePanel gamePanel;
         new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 2",Color.white);
         Timer timer1 = new Timer();
-        if (level2){
             timer1.schedule(new TimerTask() {
                 @Override
                 public void run() {
+                    if (level2) {
                         panelText = true;
                         level2 = false;
                         ArrayList<Observer> list = listeners.get("level");
@@ -286,12 +286,12 @@ public static GamePanel gamePanel;
                             observer.updatePointLevel(5);
                         }
                         GamePanel.this.remove(textLabel2);
-                        GamePanel.this.requestFocus();
                         revalidate();
                         repaint();
+                    }
+                    GamePanel.this.requestFocus();
                 }
             },2000);
-        }
         if (panelText) {
             generalElements = createArrayElement();
             panelText = false;

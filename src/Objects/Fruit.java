@@ -27,7 +27,7 @@ public class Fruit extends GeneralElement implements Observer {
         currentFruit(booleanFruit);
         this.point = point;
     }
-    public static Fruit newFruit(){
+    public synchronized static Fruit newFruit(){
         if(Fruit.fruit == null){
             Fruit.fruit = new Fruit();
         }

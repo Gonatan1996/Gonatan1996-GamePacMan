@@ -20,7 +20,7 @@ public class Coins extends GeneralElement implements Observer {
     public Coins(int x, int y) throws FileNotFoundException, AWTException {
         setPoint(new Point(x,y));
     }
-    public static Coins newCoins() throws FileNotFoundException, AWTException {
+    public synchronized static Coins newCoins() throws FileNotFoundException, AWTException {
         if (Coins.coin == null){
         Coins.coin = new Coins();
         }
@@ -58,7 +58,6 @@ public class Coins extends GeneralElement implements Observer {
     public void collisionPacMan() {
         scoreUp(10);
         new Sound("src/Sounds/pacman_eating2.wav");
-        if (coins.isEmpty())PacMan.endGame = true;
         for (int i = 0; i < coins.size(); i++) {
             Coins coins1 = coins.get(i);
             if (coins1.checkCollision(pacMan)) {
@@ -66,6 +65,7 @@ public class Coins extends GeneralElement implements Observer {
                 coins.remove(i);
             }
             }
+        if (coins.isEmpty())PacMan.stopGame = true;
         }
 
 }
