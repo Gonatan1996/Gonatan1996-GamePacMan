@@ -272,24 +272,24 @@ public class Ghost extends GeneralElement implements  Observer {
 
     @Override
     public void moveLeft() {
-        super.moveLeft();
+        this.point.x -= speed;
 
     }
 
     @Override
     public void moveRight() {
-        super.moveRight();
+        this.point.x += speed;
         ghost.setImageLeft_Right();
     }
 
     @Override
     public void moveUp() {
-        super.moveUp();
+        this.point.y -= speed;
     }
 
     @Override
     public void moveDown() {
-        super.moveDown();
+        this.point.y += speed;
         setImageUp_Down();
     }
 }
