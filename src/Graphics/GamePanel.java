@@ -110,8 +110,7 @@ public static GamePanel gamePanel;
         return GamePanel.gamePanel;
     }
 
-
-    private   GeneralElement[][] createArrayElement() throws FileNotFoundException, AWTException {
+    private GeneralElement[][] createArrayElement() throws FileNotFoundException, AWTException {
         for (int i = 0; i < numOfElement.length; i++) {
             for (int j = 0; j < numOfElement[i].length; j++) {
                int x = j * width_height;
@@ -178,9 +177,10 @@ public static GamePanel gamePanel;
     @Override
     public void run() {
         while (!pacMan.stopGame) {
-            if (!keyHandler.gameBreak && !soundGameForMove) {
+            if (!keyHandler.isGameBreak() && !soundGameForMove) {
                 pacManChackCollisioin();
                 pacMan.updateMovePacMan(keyHandler);
+                ghost.upDateMoveGhosts();
                // ghost.upDateMoveGhosts();
 //                try {
 //                 //   if (pacMan.lossLife(ghost.pink, ghost.blue, ghost.red, ghost.yellow)) {
@@ -227,7 +227,7 @@ public static GamePanel gamePanel;
         gameTread.start();
     }
 
-    public void screenStartGame(){
+    private void screenStartGame(){
         addPanelText("Game Start",Color.CYAN);
         addPanelTextLabel2("level 1 ",Color.white);
         timer.schedule(new TimerTask() {
@@ -240,7 +240,7 @@ public static GamePanel gamePanel;
 
         }
 
-    public void createScreenGame(Graphics g) {
+    private void createScreenGame(Graphics g) {
         if (soundGameForSound && soundGameForMove){
             new Sound("src/Sounds/start_game.wav");
             this.remove(textStart);
@@ -271,7 +271,7 @@ public static GamePanel gamePanel;
 
     }
 
-    public void screenLevel2() throws FileNotFoundException, AWTException {
+    private void screenLevel2() throws FileNotFoundException, AWTException {
         new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 2",Color.white);
         Timer timer1 = new Timer();
@@ -299,7 +299,7 @@ public static GamePanel gamePanel;
 
     }
 
-    public void screenLevel3() throws FileNotFoundException, AWTException {
+    private void screenLevel3() throws FileNotFoundException, AWTException {
         new Sound("src/Sounds/next_level.wav");
         addPanelTextLabel2("level 3",Color.white);
         Timer timer1 = new Timer();
@@ -325,21 +325,21 @@ public static GamePanel gamePanel;
         }
     }
 
-    public void screenEndGameWin(){
+    private void screenEndGameWin(){
         addPanelText("You Winner",Color.white);
         addButtonPlayAgain("play again");
         revalidate();
         repaint();
     }
 
-    public void screenEndGameLoss(){
+    private void screenEndGameLoss(){
         addPanelText("  try again",Color.white);
         addButtonPlayAgain("try again");
         revalidate();
         repaint();
     }
 
-    public void addButtonPlayAgain(String text){
+    private void addButtonPlayAgain(String text){
         this.setLayout(null);
         jButton = new JButton(text);
         jButton.setBounds(230,270,100,30);
@@ -359,7 +359,7 @@ public static GamePanel gamePanel;
         this.add(jButton);
     }
 
-    public void addPanelText(String text,Color color){
+    private void addPanelText(String text,Color color){
         textStart.setText(text);
         textStart.setForeground(color);
         textStart.setBounds(150,50,300,325);
@@ -369,7 +369,7 @@ public static GamePanel gamePanel;
         repaint();
     }
 
-    public void addPanelTextLabel2(String text,Color color){
+    private void addPanelTextLabel2(String text,Color color){
         textLabel2.setText(text);
         textLabel2.setForeground(color);
         textLabel2.setBounds(200,100,300,325);
@@ -379,7 +379,7 @@ public static GamePanel gamePanel;
         repaint();
     }
 
-    public void register(String name,Observer listener){
+    private void register(String name,Observer listener){
         if (listeners.get(name) == null){
             listeners.put(name,new ArrayList<>());
         }
@@ -401,7 +401,6 @@ public static GamePanel gamePanel;
         register("Draw",coins);
         register("Draw",bigCoins);
     }
-
 
     public static void changeElement(int y, int x, GeneralElement newElement) {
         generalElements[y][x] = newElement;

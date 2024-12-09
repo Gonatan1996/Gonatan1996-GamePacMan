@@ -16,7 +16,7 @@ public class Fruit extends GeneralElement implements Observer {
     static Random random = new Random();
     public ArrayList<Fruit> fruits = new ArrayList<>();
     public static String Melon = "melon",Apple = "apple",Cherry = "cherry",Orange = "orange",Strawberry = "strawberry";
-    public boolean B_cherry, B_apple, B_orange, B_melon, B_strawberry;
+    public boolean B_cherry, B_apple, B_orange, B_melon, B_strawberry,show;
     public static ArrayList<Point> randomPoint = new ArrayList<>();
 
     private Fruit() {
@@ -83,7 +83,6 @@ public class Fruit extends GeneralElement implements Observer {
 
 
     public static Point randomPoint(){
-        System.out.println(Fruit.randomPoint.size());
         int rand = random.nextInt(Fruit.randomPoint.size());
         int x = Fruit.randomPoint.get(rand).x;
         int y = Fruit.randomPoint.get(rand).y;
@@ -94,7 +93,7 @@ public class Fruit extends GeneralElement implements Observer {
     public void collisionPacMan() {
         new Sound("src/Sounds/eat_coin.wav");
         for (int i = 0; i < fruits.size(); i++) {
-            if (fruits.get(i).checkCollision(pacMan)){
+            if (fruits.get(i).checkCollision(pacMan) && fruits.get(i).show){
                 pacMan.scoreUp(fruits.get(i).getValue());
                 fruits.remove(fruits.get(i));
             }
@@ -105,28 +104,39 @@ public class Fruit extends GeneralElement implements Observer {
     public void updatePointLevel(int speed) {
 
     }
+    private void ifShow(){
+        fruits.get(4).show = pacMan.score >= 100 && pacMan.score < 250;
+        fruits.get(3).show = pacMan.score >= 400 && pacMan.score < 650;
+        fruits.get(2).show = pacMan.score >= 1000 && pacMan.score < 1300;
+        fruits.get(1).show = pacMan.score >= 2000 && pacMan.score < 2200;
+        fruits.get(0).show = pacMan.score >= 3000 && pacMan.score < 3200;
+    }
 
     @Override
     public void drawImages(Graphics g, ImageObserver imageObserver, int x, int y) {
-        if (x == -1 && y == -1){
-            if (pacMan.score >= 100 && pacMan.score < 250) {
+        ifShow();
+
+            if (fruits.get(4).show){
+                if (x == -1 && y == -1){
+                g.drawImage(fruits.get(4).getImage(), fruits.get(4).getPoint().x, fruits.get(4).getPoint().y, fruit.width, fruit.height, imageObserver);
+                }else {
+                    g.drawImage(fruits.get(4).getImage(),x,y, fruit.width, fruit.height, imageObserver);
+                }
+
+            if (fruits.get(3).show) {
                 g.drawImage(fruits.get(3).getImage(), fruits.get(3).getPoint().x, fruits.get(3).getPoint().y, fruit.width, fruit.height, imageObserver);
             }
-            if (pacMan.score >= 400 && pacMan.score < 650) {
+            if (fruits.get(2).show) {
                 g.drawImage(fruits.get(2).getImage(), fruits.get(2).getPoint().x, fruits.get(2).getPoint().y, fruit.width, fruit.height, imageObserver);
             }
-            if (pacMan.score >= 1000 && pacMan.score < 1300) {
+            if (fruits.get(1).show) {
                 g.drawImage(fruits.get(1).getImage(), fruits.get(1).getPoint().x, fruits.get(1).getPoint().y, fruit.width, fruit.height, imageObserver);
             }
-            if (pacMan.score >= 2000 && pacMan.score < 2200) {
-                g.drawImage(fruits.get(1).getImage(), fruits.get(1).getPoint().x, fruits.get(1).getPoint().y, fruit.width, fruit.height, imageObserver);
-            }
-            if (pacMan.score >= 3000 && pacMan.score < 3200) {
+            if (fruits.get(0).show) {
                 g.drawImage(fruits.get(0).getImage(), fruits.get(0).getPoint().x, fruits.get(0).getPoint().y, fruit.width, fruit.height, imageObserver);
             }
         }else {
-            if (pacMan.score >= 100 && pacMan.score < 250) {
-                g.drawImage(fruits.get(3).getImage(),x,y, fruit.width, fruit.height, imageObserver);
+            if (fruits.get(4).show) {
             }
             if (pacMan.score >= 400 && pacMan.score < 650) {
                 g.drawImage(fruits.get(2).getImage(), x, y, fruit.width, fruit.height, imageObserver);

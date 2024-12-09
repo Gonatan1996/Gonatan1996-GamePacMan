@@ -111,7 +111,9 @@ public class Update {
     }
 
     public void ghostRedMove(Ghost red,PacMan pacMan) {
-        System.out.println("redMove");
+        //
+        //
+        // System.out.println("redMove");
         if (red.getIsEaten()){
             ghostEatenMove(red);
             return;

@@ -152,13 +152,13 @@ public class PacMan extends GeneralElement implements Observer {
     }
 
     public void updateMovePacMan(KeyHandler keyHandler) {
-        if (keyHandler.up) pacMan.setPreferredDirection("UP");
-        if (keyHandler.down) pacMan.setPreferredDirection("DOWN");
-        if (keyHandler.right){
+        if (keyHandler.isUp()) pacMan.setPreferredDirection("UP");
+        if (keyHandler.isDown()) pacMan.setPreferredDirection("DOWN");
+        if (keyHandler.isRight()){
             update.flipDirectionRight(pacMan);
             pacMan.setPreferredDirection("RIGHT");
         }
-        if (keyHandler.left){
+        if (keyHandler.isLeft()){
             update.flipDirectionLeft(pacMan);
             pacMan.setPreferredDirection("LEFT");
         }
@@ -180,7 +180,7 @@ public class PacMan extends GeneralElement implements Observer {
     @Override
     public void moveLeft() {
 //        super.moveLeft();
-        System.out.println("LEFT");
+      //  System.out.println("LEFT");
         System.out.println(point.x);
         point.x -= speed;
         image = new ImageIcon("src/Images/pacmanLeft.gif").getImage();

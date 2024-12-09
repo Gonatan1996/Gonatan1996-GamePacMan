@@ -27,11 +27,11 @@ public class BottomPanel extends JPanel implements Runnable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.println(listener.getFirst() +"");
+      //  System.out.println(listener.getFirst() +"");
         for (int i = 0; i < pacMan.life; i++) {
             listener.getFirst().drawImages(g,this,0,0);
         }
-        System.out.println(listener.getLast() + "");
+        //System.out.println(listener.getLast() + "");
         listener.getLast().drawImages(g,this,535,0);
 
     }

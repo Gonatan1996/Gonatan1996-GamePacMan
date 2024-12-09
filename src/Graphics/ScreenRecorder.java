@@ -29,7 +29,7 @@ public class ScreenRecorder implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Recording started...");
+        //System.out.println("Recording started...");
         int count=0;
         while (recording) {
             // הקלטת פריים והוספתו לזיכרון

@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Ghost extends GeneralElement implements  Observer {
     public static Ghost ghost;
-    private Queue<Ghost> startMove ;
+    private static Queue<Ghost> startMove ;
     Random random = new Random();
     private ArrayList<Ghost> ghosts = new ArrayList<>();
     private int Speed = 4;
@@ -52,7 +52,9 @@ public class Ghost extends GeneralElement implements  Observer {
     }
 
     public String randomMove() {
-     //   startPoint();
+        if (!startMove.isEmpty()){
+            startPoint();
+        }
         if (startPoint) {
             if (canMove) {
                 if (up) return "UP";
