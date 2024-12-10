@@ -3,7 +3,6 @@ package Graphics;
 import Listener.Observer;
 import Objects.*;
 import Sounds.Sound;
-import UpDate.Update;
 import Users.User;
 
 import javax.swing.*;
@@ -35,16 +34,16 @@ public static GamePanel gamePanel;
 
     boolean soundGameForSound = true,soundGameForMove = true,panelText = true;;
 
-    KeyHandler keyHandler = KeyHandler.newKeyHandler();
-    Thread gameTread;
-    User user = User.newUser();
+   private KeyHandler keyHandler = KeyHandler.newKeyHandler();
+   private Thread gameTread;
+   private User user = User.newUser();
 
-    Block block = Block.newBlock();
-    PacMan pacMan = PacMan.newPacman();
-    Coins coins = Coins.newCoins();
-    BigCoins bigCoins = BigCoins.newBigCoin();
-    Ghost ghost = Ghost.newGhost();
-    Fruit fruit;
+   private Block block = Block.newBlock();
+   private PacMan pacMan = PacMan.newPacman();
+   private Coins coins = Coins.newCoins();
+   private BigCoins bigCoins = BigCoins.newBigCoin();
+   private Ghost ghost = Ghost.newGhost();
+   private Fruit fruit;
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -52,8 +51,8 @@ public static GamePanel gamePanel;
        if (startGame) {
            screenStartGame();
 
-       }else if (pacMan.endGame) {
-           if (pacMan.life >= 0){
+       }else if (pacMan.getEndGame()) {
+           if (pacMan.getLife() >= 0){
                if (level2){
                    try {
                        screenLevel2();
@@ -80,8 +79,8 @@ public static GamePanel gamePanel;
        }
        else {
             createScreenGame(g);
-            if (pacMan.stopGame) {
-                if (pacMan.life >= 0 && !Coins.getCoins().isEmpty()) {
+            if (pacMan.getStopGame()) {
+                if (pacMan.getLife() >= 0 && !Coins.getCoins().isEmpty()) {
                     pacMan.stopGame = false;
                     pacMan.startAgain();
                 }else {

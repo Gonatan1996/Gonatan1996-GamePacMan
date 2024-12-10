@@ -1,12 +1,16 @@
 package Graphics;
 
+import Users.User;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class StartFrame extends JPanel{
+User user = User.newUser();
 int x = 220,y = 250;
 JButton buttonStart = new JButton("Guest");
 JButton buttonInstructions = new JButton("instruction");
@@ -17,7 +21,7 @@ JButton buttonSignIn = new JButton("Sign In");
 
 JTextArea textArea;
 
-    public StartFrame(GameFrame gameFrame) {
+    public StartFrame(GameFrame gameFrame) throws FileNotFoundException, AWTException {
         settings();
         addButton(buttonAddUser);
         addButton(buttonSignIn);
@@ -31,7 +35,7 @@ JTextArea textArea;
                 while (userName.trim().isEmpty()) {
                     userName = JOptionPane.showInputDialog("Enter User Name");
                 }
-                gameFrame.gamePanel.user.addUser(userName);
+                user.addUser(userName);
      //           ifRecord(gameFrame);
                 gameFrame.gameTopPanel.name = userName;
                 gameFrame.setCurrentPanel(gameFrame.main);
@@ -46,8 +50,8 @@ JTextArea textArea;
                     userName = JOptionPane.showInputDialog("Enter User Name");
                 }
                 boolean b = true;
-                for (int i = 0; i < gameFrame.gamePanel.user.users.size(); i++) {
-                    if (userName.equals(gameFrame.gamePanel.user.users.get(i).name)){
+                for (int i = 0; i < user.users.size(); i++) {
+                    if (userName.equals(user.users.get(i).name)){
                         JOptionPane.showMessageDialog(null,"Login successful !","Success",JOptionPane.INFORMATION_MESSAGE);
                         gameFrame.gameTopPanel.name = userName;
 //                        try {

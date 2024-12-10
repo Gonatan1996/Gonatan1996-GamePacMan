@@ -14,11 +14,11 @@ public class Ghost extends GeneralElement implements  Observer {
     Random random = new Random();
     private ArrayList<Ghost> ghosts = new ArrayList<>();
     private int Speed = 4;
-    public static String Red = "red",Yellow = "yellow",Green = "green",Pink = "pink";
-    public boolean B_red, B_yellow, B_blue, B_pink;
-    public boolean up, down, left, right,canMove,startPoint;
-    String direction = "UP";
-    public Update update = Update.newUpdate();
+    private static String Red = "red",Yellow = "yellow",Green = "green",Pink = "pink";
+    private boolean B_red, B_yellow, B_blue, B_pink;
+    private boolean up, down, left, right,canMove,startPoint;
+    private String direction = "UP";
+    private Update update = Update.newUpdate();
 
 
     private Ghost() {

@@ -11,9 +11,11 @@ import java.util.ArrayList;
 
 
 public class Coins extends GeneralElement implements Observer {
-    PacMan pacMan = PacMan.newPacman();
     public static Coins coin;
+
     private static ArrayList<Coins> coins = new ArrayList<>();
+
+    private PacMan pacMan = PacMan.newPacman();
 
     private Coins() throws FileNotFoundException, AWTException {
     }

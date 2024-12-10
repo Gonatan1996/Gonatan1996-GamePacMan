@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Block extends GeneralElement {
     public static Block block;
-    ArrayList<Block> blocks = new ArrayList<>();
+    private ArrayList<Block> blocks = new ArrayList<>();
 
     private Block() {
     }

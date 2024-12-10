@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class BigCoins extends Coins{
     public static BigCoins bigCoin;
-    int counterImage = 0;
+    private int counterImage = 0;
     private ArrayList<BigCoins> bigCoinses = new ArrayList<>();
 
     private BigCoins() throws FileNotFoundException, AWTException {

@@ -14,13 +14,13 @@ import java.util.TimerTask;
 public class PacMan extends GeneralElement implements Observer {
 
     public static PacMan pacMan;
-    public int life = 3;
-    public int score = 0;
+    private int life = 3;
+    private int score = 0;
     private int eatTimer = 0;
-    String currentDirection;
-    String preferredDirection ;
-    public static boolean stopGame,endGame;
-    public Update update = Update.newUpdate();
+    private String currentDirection;
+    private String preferredDirection ;
+    private boolean stopGame,endGame;
+    private Update update = Update.newUpdate();
 
 
 
@@ -70,7 +70,18 @@ public class PacMan extends GeneralElement implements Observer {
        this.image = image.getImage();
     }
 
-//
+    public boolean getEndGame() {
+        return endGame;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public boolean getStopGame() {
+        return stopGame;
+    }
+    //
 //    public boolean lossLife(Ghost ghostPink,Ghost ghostGreen,Ghost ghostRed,Ghost ghostYellow) throws InterruptedException {
 //        return(lossLife(ghostPink) || lossLife(ghostGreen) || lossLife(ghostRed) || lossLife(ghostYellow));
 //    }

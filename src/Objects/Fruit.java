@@ -14,10 +14,17 @@ public class Fruit extends GeneralElement implements Observer {
     public static Fruit fruit;
     PacMan pacMan = PacMan.newPacman();
     static Random random = new Random();
+<<<<<<< Updated upstream
     public ArrayList<Fruit> fruits = new ArrayList<>();
     public static String Melon = "melon",Apple = "apple",Cherry = "cherry",Orange = "orange",Strawberry = "strawberry";
     public boolean B_cherry, B_apple, B_orange, B_melon, B_strawberry,show,show2 = true;
     public static ArrayList<Point> randomPoint = new ArrayList<>();
+=======
+    private ArrayList<Fruit> fruits = new ArrayList<>();
+    private static String Melon = "melon",Apple = "apple",Cherry = "cherry",Orange = "orange",Strawberry = "strawberry";
+    private boolean B_cherry, B_apple, B_orange, B_melon, B_strawberry;
+    private static ArrayList<Point> randomPoint = new ArrayList<>();
+>>>>>>> Stashed changes
 
     private Fruit() {
     createFruits();
